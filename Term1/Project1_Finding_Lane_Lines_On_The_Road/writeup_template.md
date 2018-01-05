@@ -52,6 +52,8 @@ Here are some of the demo images to show how the pipeline works:
 ![alt text][image5]
 ![alt text][image6]
 
+Remark: It can be switched back to the original hough transform without the extrapolated one line by calling "hough_lines" instead of "hough_lines_improved".
+
 ### 2. Identification of potential shortcomings with the current pipeline
 
 One potential shortcoming would be what would happen when e.g. lighting conditions change. The pipeline currently relies on some parameters which might work for these sequences but for others not.

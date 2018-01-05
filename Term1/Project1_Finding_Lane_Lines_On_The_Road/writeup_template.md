@@ -25,6 +25,15 @@ The goals / steps of this project are the following:<br>
 
 ### Reflection
 
+Update 05 Jan 2018: According to first review, adapted the hough transform parameters in the following sense:
+increased the hough parameters threshold, min_line_len, and max_line_gap slightly (tested all combinations from 0-200 in steps of 10 for all three params)
+Additionally, abs values for slopes below 0.4 and above 0.8 identified as outliers and skipped associated line segments.
+By this, the lines could be centered better around the lane lines. However, sometimes, the estimation is completely wrong. One could mitigate it by temporal smoothing (exponential filtering etc.), but this is not a very good solution.
+When looking closer to these wrong frames, it correlates to the situation when there are no lines near the car, but all of the detected ones far away, and thereby small, due to the projective nature of the camera.
+One possible solution could be, by using the intrinsic and extrinsic camera calibration, to recalculate to a so called "TopView" representation looking from top, where all lines are metrically correct and their size independent of the distance to the camera; this would fit better to the algorithmic pipeline and the parameters. However, doing computer vision on a resampled version of an image can bring disadvantages, especially when the filter is very simple (such as linear/bilinear) due to real-time constraints.
+A better solution would be, IMHO, to operate on the original image, and using a linewise reweighting of the detected line segments. Model assumption is a plane around the car plus preknowledge about the cam calibration. By this, detected lines could be reweighted differently according to their distance from the camera. One reweighting could e.g. be a length correction to compensate for the camera projection. That would be some kind of an "implicit" TopView, without the need of resampling the original camera image.
+
+
 ### 1. Description of the pipeline including the modification of the draw_lines() function.
 
 My pipeline consisted of 7 steps. 
@@ -46,9 +55,9 @@ In order to draw a single line on the left and right lanes, I modified the draw_
 
 Here are some of the demo images to show how the pipeline works:
 
-![alt text][image1]
 ![alt text][image2]
 ![alt text][image3]
+![alt text][image4]
 ![alt text][image5]
 ![alt text][image6]
 

@@ -73,7 +73,7 @@ Here is an example of an original image and an augmented image:
 See cells Out6, Out7, Out8, Out9, Out10
 
 Example of a translation augmentation: 
-![augmentation translate](./images/Bildschirmfoto von 2018-08-12 19-43-07.png  "Augmentation by Translation")
+![augmentation translate](./images/screenshot1.png  "Augmentation by Translation")
 
 
 The difference between the original data set and the augmented data set can be seen in the histogram plots concerning numbers in the bins, compare 
@@ -102,7 +102,7 @@ My final model consisted of the following layers:
 #### 3. Describe how you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.
 
 To train the model, I used the LeNet approach from the previous lessons and adapted. Parameters>
-EPOCHS=50
+EPOCHS=100
 BATCH_SIZE=128
 mu=0
 sigma=0.1
@@ -113,9 +113,20 @@ I experimented with different parameter combinations. First, I thought, that inc
 #### 4. Describe the approach taken for finding a solution and getting the validation set accuracy to be at least 0.93. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
 
 My final model results were:
+* training set accuracy of 100%
+* validation set accuracy of 94.4% (sometimes went higher to over 95%, but 93% was postulated)
+* test set accuracy of 93.8% (comparingly higher when the above validation set accuracy was higher)
+
+Interestingly, after 60 EPOCHS, it seemed to converge to 94%, but then dropped immediately to 88.8% at EPOCH 97, and stabilized afterwards again to over 94%.
+
+Here is a plot of the validation accuracy over the epoch: 
+
+![](./images/screenshot3.png) 
+
+The results are heavily dependent on the amount of data augmentation. By changing the parameter "augmentationShortage" from e.g. 1 to 2 (meaning less augmentation), augmentation will be much faster, but then the results look like this:
 * training set accuracy of 99.7%
-* validation set accuracy of 93.6% (sometimes went higher to 95%, but 93% was postulated)
-* test set accuracy of 91.3% (comparingly higher when the above validation set accuracy was higher)
+* validation set accuracy of 93.6%
+* test set accuracy of 91.3%
 
 If an iterative approach was chosen:
 * What was the first architecture that was tried and why was it chosen?
@@ -137,21 +148,22 @@ If a well known architecture was chosen:
 
 Here are five German traffic signs that I found on the web:
 
-![](/home/klie/Udacity/github/SDCE_nanodegree/Term1/Project2_Traffic_Sign_Classifier_Project/images/screenshot2.png) 
+![](./images/screenshot2.png) 
+
 See also  Step 3: "Test a model on New Images" in the Jupyter Notebook.
 
 These signs were predicted properly: 
-The "Yield" sign (twice in different scenarios), No Entry sign, Road Work sign.
+The "Yield" sign (twice in different scenarios),  Road Work sign.
 
 This sign was not successfully predicted:
-Priority road
+Priority road, No Entry sign (strangely, the no entry sign was predicted properly in the above mentioned second experiment with the lower validation accuracy)
 
 I think the "priority road" was not detected as it is seen under a high yaw angle. Enriching the data augmentation process by larger angles could help.
 
 
 #### 2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).
 
-The model was able to correctly guess 4 of the 5 traffic signs, which gives an accuracy of 80%. 
+The model was able to correctly guess 3 of the 5 traffic signs, which gives an accuracy of 60%. 
 
 #### 3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
 

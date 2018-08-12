@@ -72,6 +72,9 @@ To add more data to the the data set, I used the  technique of data augmentation
 Here is an example of an original image and an augmented image:
 See cells Out6, Out7, Out8, Out9, Out10
 
+Example of a translation augmentation: 
+![augmentation translate](./images/Bildschirmfoto von 2018-08-12 19-43-07.png  "Augmentation by Translation")
+
 
 The difference between the original data set and the augmented data set can be seen in the histogram plots concerning numbers in the bins, compare 
 
@@ -105,14 +108,14 @@ mu=0
 sigma=0.1
 learning rate=0.001
 
-I experimented with 
+I experimented with different parameter combinations. First, I thought, that increasing the BATCH_SIZE would increase the accuracy, but this was not the case. Increasing EPOCHS was sucesful, but only to a certain degree, as the accuracy doesn't increase monotonically. From the course I learnt that learning to fast is not a good idea, but at the end I increased the learning_rate a l little bit in comparison to the original value which brought better results. One could of course systematically discretize the entire multidimensional parameter space, and try everything out, or find an optimum by gradient descent, but this would mean a high effort.
 
 #### 4. Describe the approach taken for finding a solution and getting the validation set accuracy to be at least 0.93. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
 
 My final model results were:
-* training set accuracy of ?
-* validation set accuracy of ? 
-* test set accuracy of ?
+* training set accuracy of 99.7%
+* validation set accuracy of 93.6% (sometimes went higher to 95%, but 93% was postulated)
+* test set accuracy of 91.3% (comparingly higher when the above validation set accuracy was higher)
 
 If an iterative approach was chosen:
 * What was the first architecture that was tried and why was it chosen?
@@ -126,6 +129,7 @@ If a well known architecture was chosen:
 * Why did you believe it would be relevant to the traffic sign application?
 * How does the final model's accuracy on the training, validation and test set provide evidence that the model is working well?
  
+ See section above.
 
 ### Test a Model on New Images
 
@@ -133,27 +137,27 @@ If a well known architecture was chosen:
 
 Here are five German traffic signs that I found on the web:
 
-![alt text][image4] ![alt text][image5] ![alt text][image6] 
-![alt text][image7] ![alt text][image8]
+![](/home/klie/Udacity/github/SDCE_nanodegree/Term1/Project2_Traffic_Sign_Classifier_Project/images/screenshot2.png) 
+See also  Step 3: "Test a model on New Images" in the Jupyter Notebook.
 
-The first image might be difficult to classify because ...
+These signs were predicted properly: 
+The "Yield" sign (twice in different scenarios), No Entry sign, Road Work sign.
+
+This sign was not successfully predicted:
+Priority road
+
+I think the "priority road" was not detected as it is seen under a high yaw angle. Enriching the data augmentation process by larger angles could help.
+
 
 #### 2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).
 
-Here are the results of the prediction:
-
-| Image			        |     Prediction	        					| 
-|:---------------------:|:---------------------------------------------:| 
-| Stop Sign      		| Stop sign   									| 
-| U-turn     			| U-turn 										|
-| Yield					| Yield											|
-| 100 km/h	      		| Bumpy Road					 				|
-| Slippery Road			| Slippery Road      							|
-
-
-The model was able to correctly guess 4 of the 5 traffic signs, which gives an accuracy of 80%. This compares favorably to the accuracy on the test set of ...
+The model was able to correctly guess 4 of the 5 traffic signs, which gives an accuracy of 80%. 
 
 #### 3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
+
+As this task was optional and I'm already behind the schedule, I will omit this. Maybe later I have some time and come back...
+
+
 
 The code for making predictions on my final model is located in the 11th cell of the Ipython notebook.
 

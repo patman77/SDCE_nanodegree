@@ -114,12 +114,17 @@ I experimented with different parameter combinations. First, I thought, that inc
 
 My final model results were:
 * training set accuracy of 100%
+* validation set accuracy of 93.2% (shortened augmentation a little to reduce runtime)
+* test set accuracy of 93.6%
+
+previous reesult
+* training set accuracy of 100%
 * validation set accuracy of 94.4% (sometimes went higher to over 95%, but 93% was postulated)
 * test set accuracy of 93.8% (comparingly higher when the above validation set accuracy was higher)
 
 Interestingly, after 60 EPOCHS, it seemed to converge to 94%, but then dropped immediately to 88.8% at EPOCH 97, and stabilized afterwards again to over 94%.
 
-Here is a plot of the validation accuracy over the epoch: 
+Here is a plot of the validation accuracy over the epoch (from previous experiment): 
 
 ![](./images/screenshot3.png) 
 
@@ -167,7 +172,7 @@ The model was able to correctly guess 3 of the 5 traffic signs, which gives an a
 
 #### 3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
 
-As this task was optional and I'm already behind the schedule, I will omit this. Maybe later I have some time and come back...
+EDIT: For the correctly predicted traffic signs (no entry, yield, road work), the first guess was pretty clear with 100%. For the sign "Priority road" there is a clear misdetection, and there are no candidates within the following guesses. It seems to be that the sign to much slanted (yaw angle) and therefore not recognized.
 
 
 

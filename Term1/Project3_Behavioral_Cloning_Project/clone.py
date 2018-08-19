@@ -4,8 +4,8 @@ import numpy as np
 #import keras
 
 lines = []
-#with open('./data/driving_log_stripped.csv') as csvfile:
-with open('./data/driving_log.csv') as csvfile:
+#with open('./data/driving_log.csv') as csvfile:
+with open('data/driving_log.csv') as csvfile:
     reader = csv.reader(csvfile)
     for line in reader:
         print(line)
@@ -16,7 +16,9 @@ measurements = []
 for line in lines:
     source_path = line[0]
     filename = source_path.split('/')[-1]
-    current_path = './data/IMG/' + filename
+    path = source_path.split('/')[0]
+    print('source_path ', source_path, ', path ', path)
+    current_path = '/home/klie/Bilder/SDC/IMG/' + filename
     #print("current_path ", filename)
     image =cv2.imread(current_path)
     images.append(image)

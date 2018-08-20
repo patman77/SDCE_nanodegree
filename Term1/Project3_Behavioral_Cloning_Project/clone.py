@@ -17,11 +17,12 @@ for line in lines:
     source_path = line[0]
     filename = source_path.split('/')[-1]
     path = source_path.split('/')[0]
-    print('source_path ', source_path, ', path ', path)
-    current_path = 'data/IMG/' + filename
+    #print('source_path ', source_path, ', path ', path)
+    current_path = './data/IMG/' + filename
     #print("current_path ", filename)
     image =cv2.imread(current_path)
     images.append(image)
+    #print('shape img ', image.shape)
     measurement = float(line[3])
     measurements.append(measurement)
 
@@ -29,6 +30,7 @@ imagesasarray = np.asarray(images)
 
 X_train = np.array(imagesasarray)
 print('shape X_train: ', X_train.shape)
+print('shape imagesasarray: ', imagesasarray.shape)
 y_train = np.array(measurements)
 print('shape y_train: ', y_train.shape)
 
@@ -41,6 +43,6 @@ model.add(Dense(1))
 
 model.compile(loss='mse', optimizer='adam')
 #model.fit(X_train, y_train, validation_split=0.2, shuffle=True, nb_epoch=7)
-model.fit(X_train, y_train, validation_split=0.2, shuffle=True, epochs=7)
+model.fit(X_train, y_train, validation_split=0.2, shuffle=True, epochs=20)
 
 model.save('model.h5')

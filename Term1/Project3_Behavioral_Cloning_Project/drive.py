@@ -16,6 +16,8 @@ from keras.models import load_model
 import h5py
 from keras import __version__ as keras_version
 
+import locale
+
 sio = socketio.Server()
 app = Flask(__name__)
 model = None
@@ -44,7 +46,8 @@ class SimplePIController:
 
 
 controller = SimplePIController(0.1, 0.002)
-set_speed = 9
+#set_speed = 9
+set_speed = 20
 controller.set_desired(set_speed)
 
 
@@ -62,8 +65,11 @@ def telemetry(sid, data):
         image = Image.open(BytesIO(base64.b64decode(imgString)))
         image_array = np.asarray(image)
         steering_angle = float(model.predict(image_array[None, :, :, :], batch_size=1))
+        print('speed ', speed)
+        print('steering_angle ', steering_angle)
 
-        throttle = controller.update(float(speed))
+        #throttle = controller.update(float(speed))
+        throttle = controller.update(float(speed.replace(',',''))) # works but not very pythonic
 
         print(steering_angle, throttle)
         send_control(steering_angle, throttle)
@@ -95,6 +101,9 @@ def send_control(steering_angle, throttle):
 
 
 if __name__ == '__main__':
+    loc = locale.getlocale(locale.LC_NUMERIC)
+    #locale.setlocale(locale.LC_NUMERIC, 'de_DE')
+    locale.setlocale(locale.LC_NUMERIC, '')
     parser = argparse.ArgumentParser(description='Remote Driving')
     parser.add_argument(
         'model',

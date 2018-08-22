@@ -7,7 +7,7 @@ from enum import Enum
 lines = []
 #with open('./data/driving_log.csv') as csvfile:
 #with open('data/driving_log.csv') as csvfile:
-with open('data2/driving_log.csv') as csvfile:
+with open('data3/driving_log.csv') as csvfile:
     reader = csv.reader(csvfile)
     for line in reader:
         print(line)
@@ -20,7 +20,7 @@ for line in lines:
     filename = source_path.split('/')[-1]
     path = source_path.split('/')[0]
     #print('source_path ', source_path, ', path ', path)
-    current_path = './data2/IMG/' + filename
+    current_path = './data3/IMG/' + filename
     #print("current_path ", filename)
     image =cv2.imread(current_path)
     images.append(image)

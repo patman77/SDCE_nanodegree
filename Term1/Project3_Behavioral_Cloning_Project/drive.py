@@ -68,8 +68,8 @@ def telemetry(sid, data):
         print('speed ', speed)
         print('steering_angle ', steering_angle)
 
-        #throttle = controller.update(float(speed))
-        throttle = controller.update(float(speed.replace(',',''))) # works but not very pythonic
+        throttle = controller.update(float(speed)) # this works with executing "export LANG=en_US.utf8" before starting the simulator
+        #throttle = controller.update(float(speed.replace(',',''))) # works but not very pythonic
 
         print(steering_angle, throttle)
         send_control(steering_angle, throttle)

@@ -89,12 +89,12 @@ At the end of the process, the vehicle is able to drive autonomously around the 
 
 To capture good driving behavior, I first recorded two laps on track one using center lane driving. Here is an example image of center lane driving:
 
-![alt text] (images/center_2018_08_23_17_47_39_634.jpg)
+![alt text] (./images/center_2018_08_23_17_47_39_634.jpg)
 
 I then recorded the vehicle recovering from the left side and right sides of the road back to center so that the vehicle would learn to get away from the lane boundaries to the center. These images show what a recovery looks like starting from left and right each:
 
-![alt text](images/center_2018_08_23_01_02_39_405.jpg)
-![alt text] (images/center_2018_08_23_01_02_31_508.jpg)
+![alt text] (./images/center_2018_08_23_01_02_39_405.jpg)
+![alt text] (./images/center_2018_08_23_01_02_31_508.jpg)
 
 Then I repeated this process on track two in order to get more data points, especially more curves, more slope/steepness, more shadows etc.
 

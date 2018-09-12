@@ -10,6 +10,7 @@ This git repository is currently organized as follows, according to the three te
  |---Project1_Finding_Lane_Lines_On_The_Road
  |---Project2_Traffic_Sign_Classifier_Project
  |---Project3_Behavioral_Cloning_Project
+ |---Project4_Advanced_Lane_Finding_Project
  |-Term2
  |-Term3
 </code></pre>

@@ -6,9 +6,6 @@ import pickle
 import math
 
 
-# Read in an image
-image = mpimg.imread('signs_vehicles_xygrad.png')
-
 # Define a function that applies Sobel x and y, 
 # then computes the magnitude of the gradient
 # and applies a threshold
@@ -36,7 +33,9 @@ def mag_thresh(img, sobel_kernel=3, mag_thresh=(0, 255)):
     #binary_output = np.copy(img) # Remove this line
     #return binary_output
     return sxbinary
-    
+
+# Read in an image
+image = mpimg.imread('signs_vehicles_xygrad.png')
 # Run the function
 mag_binary = mag_thresh(image, sobel_kernel=3, mag_thresh=(30, 100))
 # Plot the result

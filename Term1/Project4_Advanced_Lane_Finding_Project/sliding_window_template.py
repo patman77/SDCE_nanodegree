@@ -4,12 +4,7 @@ import matplotlib.image as mpimg
 import glob
 import cv2
 
-# Read in a thresholded image
-warped = mpimg.imread('warped_example.jpg')
-# window settings
-window_width = 50 
-window_height = 80 # Break image into 9 vertical layers since image height is 720
-margin = 10 # How much to slide left and right for searching
+
 
 def window_mask(width, height, img_ref, center,level):
     output = np.zeros_like(img_ref)
@@ -53,6 +48,12 @@ def find_window_centroids(image, window_width, window_height, margin):
 
     return window_centroids
 
+# Read in a thresholded image
+warped = mpimg.imread('warped_example.jpg')
+# window settings
+window_width = 50
+window_height = 80 # Break image into 9 vertical layers since image height is 720
+margin = 10 # How much to slide left and right for searching
 window_centroids = find_window_centroids(warped, window_width, window_height, margin)
 
 # If we found any window centers

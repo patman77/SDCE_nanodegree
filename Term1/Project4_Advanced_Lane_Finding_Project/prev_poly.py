@@ -3,8 +3,7 @@ import numpy as np
 import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
 
-# Load our image - this should be a new frame since last time!
-binary_warped = mpimg.imread('warped_example.jpg')
+
 
 # Polynomial fit values from the previous frame
 # Make sure to grab the actual values from the previous step in your project!
@@ -96,9 +95,11 @@ def search_around_poly(binary_warped):
     
     return result
 
-# Run image through the pipeline
-# Note that in your project, you'll also want to feed in the previous fits
-result = search_around_poly(binary_warped)
-
-# View your output
-plt.imshow(result)
+# # Load our image - this should be a new frame since last time!
+# binary_warped = mpimg.imread('warped_example.jpg')
+# # Run image through the pipeline
+# # Note that in your project, you'll also want to feed in the previous fits
+# result = search_around_poly(binary_warped)
+#
+# # View your output
+# plt.imshow(result)

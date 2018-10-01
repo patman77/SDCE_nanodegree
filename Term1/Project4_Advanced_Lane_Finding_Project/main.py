@@ -32,15 +32,15 @@ calibimgpath = './camera_cal/calibration*.jpg'
 calibfilename = 'calib.p'
 #some params for plots
 horiz_spacing = .2
-wspace = .05
+width_space = .05
 
 def process_image(image):
     pass
 
 
 #image_street = mpimg.imread('test_images/test1.jpg ')
-image = mpimg.imread('camera_cal/calibration2.jpg')
-gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+#image = mpimg.imread('camera_cal/calibration2.jpg')
+#gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
 # start the pipeline
 # step 1: Compute the camera calibration matrix and distortion coefficients given a set of chessboard images.
@@ -65,7 +65,7 @@ def calibrate_camera(img_path, xnum=nx, ynum=ny, recalc=False, calib_filename='c
     imgpoints = []
     image_list = glob.glob(calibimgpath)
     fig, axs = plt.subplots(4, 5, figsize=(15,10))
-    fig.subplots_adjust(hspace = .3, wspace = wspace)
+    fig.subplots_adjust(hspace = .3, wspace = width_space)
     axs = axs.ravel()
     for i, filename in enumerate(image_list):
         print("reading img", i, "from", len(image_list))
@@ -107,6 +107,30 @@ def calibrate_camera(img_path, xnum=nx, ynum=ny, recalc=False, calib_filename='c
     pickle.dump(dist_pickle, open(calib_filename, "wb"))
     return mtx, dist
 
+# From chapter 3. Tips and Tricks for the Project:
+# Define a class to receive the characteristics of each line detection
+class Line():
+    def __init__(self):
+        # was the line detected in the last iteration?
+        self.detected = False
+        # x values of the last n fits of the line
+        self.recent_xfitted = []
+        #average x values of the fitted line over the last n iterations
+        self.bestx = None
+        #polynomial coefficients averaged over the last n iterations
+        self.best_fit = None
+        #polynomial coefficients for the most recent fit
+        self.current_fit = [np.array([False])]
+        #radius of curvature of the line in some units
+        self.radius_of_curvature = None
+        #distance in meters of vehicle center from the line
+        self.line_base_pos = None
+        #difference in fit coefficients between last and new fits
+        self.diffs = np.array([0,0,0], dtype='float')
+        #x values for detected line pixels
+        self.allx = None
+        #y values for detected line pixels
+        self.ally = None
 
 # -----------------------------------------------------------------------------
 # ----------------------------------start of main -----------------------------
@@ -127,19 +151,23 @@ except:
     exit(1)
 
 # test undistortion
-testimg = cv2.imread('./camera_cal/calibration1.jpg')
+# step 2: Apply a distortion correction to raw images.
+testimg = mpimg.imread('./camera_cal/calibration1.jpg')
+#testimg = cv2.imread('./test_images/test2.jpg')
 dst = cv2.undistort(testimg, mtx, dist, None, mtx)
+#undistorted = cal_undistort(image, objpoints, imgpoints)
 
 # visualize undistortion
 f, (ax1, ax2) = plt.subplots(1, 2, figsize=(10,5))
-f.subplots_adjust(hspace = horiz_spacing, wspace=0.05 )
+f.subplots_adjust(hspace = horiz_spacing, wspace=width_space)
+ax1.set_title("original image")
+ax1.axis('off')
 ax1.imshow(testimg)
+ax2.set_title("undistorted image")
+ax2.axis('off')
 ax2.imshow(dst)
-cv2.waitKey(10000)
-
-#undistorted = cal_undistort(image, objpoints, imgpoints)
-
-# step 2: Apply a distortion correction to raw images.
+print(" ")
+#cv2.waitKey(10000000)
 
 # step 3: Use color transforms, gradients, etc., to create a thresholded binary image.
 

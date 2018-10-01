@@ -10,7 +10,7 @@ import pickle
 plt.interactive(True) # without this, plot won't become visible in pycharm
 
 # Import everything needed to edit/save/watch video clips
-#from moviepy.editor import VideoFileClip
+from moviepy.editor import VideoFileClip
 from IPython.display import HTML
 
 from apply_sobel import abs_sobel_thresh
@@ -206,8 +206,7 @@ def process_image(image):
     :param image: image to be processed, going through the entire pipeline: undistort, color/gradient thresholding, warp, lane detect, curvature calculation
     :return: processed imaged
     """
-
-    pass
+    return image
 
 # -----------------------------------------------------------------------------
 # ----------------------------------start of main -----------------------------
@@ -215,7 +214,7 @@ def process_image(image):
 
 try:
     if Path(calibfilename).is_file():
-        print("Found existing calibration file under the given name", calibfilename, "using that one")
+        print("Found existing calibration file under the given name", calibfilename, ", using that one")
         dist_pickle = pickle.load(open(calibfilename, "rb"))
         mtx  = dist_pickle["mtx"]
         dist = dist_pickle["dist"]
@@ -227,10 +226,22 @@ except:
     print('exception!!')
     exit(1)
 
-testsingleimage = True
+testsingleimage = False
 
 if testsingleimage == False:
     print('starting video pipeline')
+    video_input01 = 'project_video.mp4'
+    video_input02 = 'challenge_video.mp4'
+    video_input03 = 'harder_challenge_video.mp4'
+    video_output01 = 'project_video_output.mp4'
+    video_output02 = 'challenge_video_output.mp4'
+    video_output03 = 'harder_challenge_video_output.mp4'
+    videoclip01 = VideoFileClip(video_input01)
+    videoclip02 = VideoFileClip(video_input02)
+    videoclip03 = VideoFileClip(video_input03)
+
+    processed_video = videoclip01.fl_image(process_image)
+    processed_video.write_videofile(video_output01, audio=False)
     # TODO
     exit(0)
 

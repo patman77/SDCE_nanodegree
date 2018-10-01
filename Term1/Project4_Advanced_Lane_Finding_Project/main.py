@@ -1,7 +1,13 @@
 import matplotlib.image as mpimg
 import cv2
 import matplotlib.pyplot as plt
+#from PIL import ImageGrab # damn, no Linux support
 import glob # for reading files from path
+import numpy as np
+from pathlib import Path # for is_file
+import pickle
+
+plt.interactive(True) # without this, plot won't become visible in pycharm
 
 # Import everything needed to edit/save/watch video clips
 #from moviepy.editor import VideoFileClip
@@ -20,41 +26,119 @@ from sliding_window import find_lane_pixels, fit_polynomial
 from undistort import cal_undistort
 from warp import corners_unwarp
 #from findchessboardcorners import nx, ny
-nx = 8
+nx = 9
 ny = 6
-
-# termination criteria
-criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
+calibimgpath = './camera_cal/calibration*.jpg'
+calibfilename = 'calib.p'
+#some params for plots
+horiz_spacing = .2
+wspace = .05
 
 def process_image(image):
     pass
 
 
-image_street = mpimg.imread('test_images/test1.jpg')
+#image_street = mpimg.imread('test_images/test1.jpg ')
 image = mpimg.imread('camera_cal/calibration2.jpg')
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
 # start the pipeline
 # step 1: Compute the camera calibration matrix and distortion coefficients given a set of chessboard images.
 
-def calibrate_camera(img_path):
-    image_list = []
-    for filename in glob.glob(img_path):
-        image = mpimg.imread(filename)
-        if image != 0:
-            image_list.append(image)
-        ret, corners = cv2.findChessboardCorners(image, (nx, ny), None)
-    return image_list
+def calibrate_camera(img_path, xnum=nx, ynum=ny, recalc=False, calib_filename='calib.p'):
+    if recalc is False:
+        print("recalc false")
+        # check if there is a saved calib file
+        if Path(calib_filename).is_file():
+            print("Found existing calibration file under the given name", calib_filename, "returning")
+            return
+        else:
+            print("No existing calibration file under the given name", calib_filename, "continuing")
 
 
-ret, corners = cv2.findChessboardCorners(image, (nx, ny), None)
-if ret == True:
-    # Draw and display the corners
-    cv2.drawChessboardCorners(image, (nx, ny), corners, ret)
-    plt.imshow(image)
-#objpoints =
-#imgpoints =
+    objp = np.zeros((6 * 9, 3), np.float32)
+    objp[:, :2] = np.mgrid[0:xnum, 0:ynum].T.reshape(-1, 2)
+    # termination criteria
+    criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
+
+    objpoints = []
+    imgpoints = []
+    image_list = glob.glob(calibimgpath)
+    fig, axs = plt.subplots(4, 5, figsize=(15,10))
+    fig.subplots_adjust(hspace = .3, wspace = wspace)
+    axs = axs.ravel()
+    for i, filename in enumerate(image_list):
+        print("reading img", i, "from", len(image_list))
+        image = cv2.imread(filename)
+        if image is None:
+            continue
+        gray  = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        ret, corners = cv2.findChessboardCorners(gray, (nx, ny), None)
+        if ret == True:
+            objpoints.append(objp)
+            # refine img points, take from (C++) opencv documentation:
+            # https://docs.opencv.org/3.1.0/dc/dbb/tutorial_py_calibration.html
+            corners_refined = cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1), criteria)
+            imgpoints.append(corners)
+
+            # Draw and display the corners
+            cv2.drawChessboardCorners(image, (nx, ny), corners_refined, ret)
+            axs[i].axis('off')
+            axs[i].imshow(image)
+            plt.show(block=False)
+            cv2.waitKey(500)
+        else: # also display image when corners are not found, but mark
+            height, width, channels = image.shape
+            cv2.line(image, (0, 0), (width, height), (255, 0, 0), 25)
+            cv2.line(image, (width, 0), (0, height), (255, 0, 0), 25)
+            axs[i].axis('on')
+            axs[i].imshow(image)
+    print('waiting for key')
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+    # now calibrate
+    print('calibrating...')
+    ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints, gray.shape[::-1], None, None)
+    print('calibrated, saving...')
+    dist_pickle = {}
+    dist_pickle["mtx"]  = mtx
+    dist_pickle["dist"] = dist
+    pickle.dump(dist_pickle, open(calib_filename, "wb"))
+    return mtx, dist
+
+
+# -----------------------------------------------------------------------------
+# ----------------------------------start of main -----------------------------
+# -----------------------------------------------------------------------------
+
+try:
+    if Path(calibfilename).is_file():
+        print("Found existing calibration file under the given name", calibfilename, "using that one")
+        dist_pickle = pickle.load(open(calibfilename, "rb"))
+        mtx  = dist_pickle["mtx"]
+        dist = dist_pickle["dist"]
+
+    else:
+        print("No existing calibration file under the given name", calibfilename, "recalculating")
+        mtx, dist = calibrate_camera(calibimgpath)
+except:
+    print('exception!!')
+    exit(1)
+
+# test undistortion
+testimg = cv2.imread('./camera_cal/calibration1.jpg')
+dst = cv2.undistort(testimg, mtx, dist, None, mtx)
+
+# visualize undistortion
+f, (ax1, ax2) = plt.subplots(1, 2, figsize=(10,5))
+f.subplots_adjust(hspace = horiz_spacing, wspace=0.05 )
+ax1.imshow(testimg)
+ax2.imshow(dst)
+cv2.waitKey(10000)
+
 #undistorted = cal_undistort(image, objpoints, imgpoints)
+
 # step 2: Apply a distortion correction to raw images.
 
 # step 3: Use color transforms, gradients, etc., to create a thresholded binary image.

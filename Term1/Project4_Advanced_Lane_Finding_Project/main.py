@@ -22,7 +22,8 @@ from magnitude_gradient import mag_thresh
 from prev_poly import fit_poly, search_around_poly
 from radius_curve import measure_curvature_real
 from rgb_to_hls import hls_select
-from sliding_window import find_lane_pixels, fit_polynomial
+#from sliding_window import find_lane_pixels, fit_polynomial
+from sliding_window_template import window_mask,find_window_centroids
 from undistort import cal_undistort
 from warp import corners_unwarp_improved
 #from findchessboardcorners import nx, ny
@@ -36,9 +37,6 @@ width_space = .05
 
 
 
-#image_street = mpimg.imread('test_images/test1.jpg ')
-#image = mpimg.imread('camera_cal/calibration2.jpg')
-#gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
 # start the pipeline
 # step 1: Compute the camera calibration matrix and distortion coefficients given a set of chessboard images.
@@ -200,11 +198,46 @@ ax1.imshow(color_binary)
 ax2.set_title("warped image")
 ax2.axis('off')
 ax2.imshow(unwarped)
+mpimg.imsave("unwarped.png", unwarped)
 print(" ")
 cv2.waitKey(100000)
 
 # step 5: Detect lane pixels and fit to find the lane boundary.
+from sliding_window_template import window_width, window_height, margin
+warped_gray = cv2.cvtColor(unwarped, cv2.COLOR_RGB2GRAY)
+window_centroids = find_window_centroids(warped_gray, window_width, window_height, margin)
+# If we found any window centers
+if len(window_centroids) > 0:
 
+    # Points used to draw all the left and right windows
+    l_points = np.zeros_like(warped_gray)
+    r_points = np.zeros_like(warped_gray)
+
+    # Go through each level and draw the windows
+    for level in range(0, len(window_centroids)):
+        # Window_mask is a function to draw window areas
+        l_mask = window_mask(window_width, window_height, warped_gray, window_centroids[level][0], level)
+        r_mask = window_mask(window_width, window_height, warped_gray, window_centroids[level][1], level)
+        # Add graphic points from window mask here to total pixels found
+        l_points[(l_points == 255) | ((l_mask == 1))] = 255
+        r_points[(r_points == 255) | ((r_mask == 1))] = 255
+
+    # Draw the results
+    template = np.array(r_points + l_points, np.uint8)  # add both left and right window pixels together
+    zero_channel = np.zeros_like(template)  # create a zero color channel
+    template = np.array(cv2.merge((zero_channel, template, zero_channel)), np.uint8)  # make window pixels green
+    warpage = np.dstack((warped_gray, warped_gray, warped_gray)) * 255  # making the original road pixels 3 color channels
+    output = cv2.addWeighted(warpage, 1, template, 0.5, 0.0)  # overlay the orignal road image with window results
+
+# If no window centers found, just display orginal road image
+else:
+    output = np.array(cv2.merge((warped_gray, warped_gray, warped_gray)), np.uint8)
+
+# Display the final results
+plt.imshow(output)
+plt.title('window fitting results')
+plt.show()
+print(' ')
 # step 6: Determine the curvature of the lane and vehicle position with respect to center.
 
 # step 7: Warp the detected lane boundaries back onto the original image.

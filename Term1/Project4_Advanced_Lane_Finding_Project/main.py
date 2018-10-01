@@ -24,7 +24,7 @@ from radius_curve import measure_curvature_real
 from rgb_to_hls import hls_select
 from sliding_window import find_lane_pixels, fit_polynomial
 from undistort import cal_undistort
-from warp import corners_unwarp
+from warp import corners_unwarp_improved
 #from findchessboardcorners import nx, ny
 nx = 9
 ny = 6
@@ -34,8 +34,6 @@ calibfilename = 'calib.p'
 horiz_spacing = .2
 width_space = .05
 
-def process_image(image):
-    pass
 
 
 #image_street = mpimg.imread('test_images/test1.jpg ')
@@ -136,6 +134,14 @@ class Line():
 # ----------------------------------start of main -----------------------------
 # -----------------------------------------------------------------------------
 
+def process_image(image):
+    """
+
+    :param image: image to be processed, going through the entire pipeline: undistort, color/gradient thresholding, warp, lane detect, curvature calculation
+    :return: processed imaged
+    """
+    pass
+
 try:
     if Path(calibfilename).is_file():
         print("Found existing calibration file under the given name", calibfilename, "using that one")
@@ -152,8 +158,9 @@ except:
 
 # test undistortion
 # step 2: Apply a distortion correction to raw images.
-testimg = mpimg.imread('./camera_cal/calibration1.jpg')
-#testimg = cv2.imread('./test_images/test2.jpg')
+#testimg = mpimg.imread('./camera_cal/calibration1.jpg')
+#testimg = mpimg.imread('./test_images/test2.jpg')
+testimg = mpimg.imread('./test_images/straight_lines1.jpg') # for determining the trapezoid for unwarping
 dst = cv2.undistort(testimg, mtx, dist, None, mtx)
 #undistorted = cal_undistort(image, objpoints, imgpoints)
 
@@ -167,11 +174,34 @@ ax2.set_title("undistorted image")
 ax2.axis('off')
 ax2.imshow(dst)
 print(" ")
-#cv2.waitKey(10000000)
+mpimg.imsave("undistorted.png", dst)
+cv2.waitKey(100000)
 
 # step 3: Use color transforms, gradients, etc., to create a thresholded binary image.
+color_binary = pipeline(dst)
+f, (ax1, ax2) = plt.subplots(1, 2, figsize=(24,9))
+f.subplots_adjust(hspace = horiz_spacing, wspace=width_space)
+ax1.set_title("original image")
+ax1.axis('off')
+ax1.imshow(testimg)
+ax2.set_title("color/gradient thresholded image")
+ax2.axis('off')
+ax2.imshow(color_binary)
+print(" ")
+cv2.waitKey(100000)
 
 # step 4: Apply a perspective transform to rectify binary image ("birds-eye view").
+unwarped, M = corners_unwarp_improved(color_binary, nx, ny, mtx, dist)
+f, (ax1, ax2) = plt.subplots(1, 2, figsize=(12,5))
+f.subplots_adjust(hspace = horiz_spacing, wspace=width_space)
+ax1.set_title("original image")
+ax1.axis('off')
+ax1.imshow(color_binary)
+ax2.set_title("warped image")
+ax2.axis('off')
+ax2.imshow(unwarped)
+print(" ")
+cv2.waitKey(100000)
 
 # step 5: Detect lane pixels and fit to find the lane boundary.
 
@@ -186,8 +216,8 @@ def backproject_measurement(warped, ploty, left_fitx, right_fitx):
     """ projects measurements back down onto the road
     :param warped    : warped binary image
     :param ploty     : lane line pixels, y-range
-    :param left_fitx : x pixel values of the fitted lines
-    :param right_fitx: y pixel values of the fitted lines
+    :param left_fitx : x pixel values of the left fitted line
+    :param right_fitx: x pixel values of the right fitted line
     :return:
     """
     # Create an image to draw the lines on

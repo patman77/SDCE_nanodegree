@@ -50,7 +50,7 @@ def find_window_centroids(image, window_width, window_height, margin):
 
 # Read in a thresholded image
 #warped = mpimg.imread('warped_example.jpg')
-warped = mpimg.imread('warped_example_gray.jpg')
+# warped = mpimg.imread('warped_example_gray.jpg')
 # window settings
 window_width = 50
 window_height = 80 # Break image into 9 vertical layers since image height is 720

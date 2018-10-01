@@ -158,7 +158,47 @@ def backproject_measurement(warped, ploty, left_fitx, right_fitx, Minv, undist):
     result = cv2.addWeighted(undist, 1, newwarp, 0.3, 0)
     plt.imshow(result)
     mpimg.imsave("final_result.png", result)
-    #pass
+    return result
+
+def draw_curvature_and_position(img, curvature_radius, center_distance = 42.0):
+    copied_img = np.copy(img)
+    height = copied_img.shape[0]
+    font = cv2.FONT_HERSHEY_COMPLEX
+    topLeftCornerOfText  = (20, 40)
+    topLeftCornerOfText2 = (20, 70)
+    fontScale = 1
+    fontColorOutline = (255, 255, 255)
+    fontColor = (0, 0, 0)
+    lineType = cv2.LINE_8
+    lineType2 = cv2.LINE_4
+    text = "Curvature Radius = " + '{:05.2f}'.format(curvature_radius) + " m"
+    # outline fonts taken from https://stackoverflow.com/questions/48516211/how-to-show-white-text-on-an-image-with-black-border-using-opencv2
+    #size = cv2.getTextSize(text, cv2.FONT_HERSHEY_COMPLEX, 2, 4)[0]
+    cv2.putText(copied_img, text, topLeftCornerOfText,
+                font, fontScale,
+                fontColor, lineType)
+    cv2.putText(copied_img, text, topLeftCornerOfText,
+                font, fontScale,
+                fontColorOutline, lineType2)
+    abs_center_distance = abs(center_distance)
+    dir = ''
+    if center_distance > 0:
+        direction = 'right'
+
+    elif center_distance < 0:
+        direction = 'left'
+    else:
+        direction = "perfectly in the middle of "
+    text2 = 'Vehicle Position: ' + '{:05.2f}'.format(abs_center_distance) + 'm ' + direction + ' of center'
+    cv2.putText(copied_img, text2, topLeftCornerOfText2,
+                font, fontScale,
+                fontColor, lineType)
+    cv2.putText(copied_img, text2, topLeftCornerOfText2,
+                font, fontScale,
+                fontColorOutline, lineType2)
+    plt.imshow(copied_img)
+    mpimg.imsave("final_result2.png", copied_img)
+    return copied_img
 
 def process_image(image):
     """
@@ -295,7 +335,8 @@ print(left_curverad, 'm', right_curverad, 'm')
 # the default `generate_data` function with given seed number
 
 # step 7: Warp the detected lane boundaries back onto the original image.
-backproject_measurement(warped_gray, ploty, left_fitx, right_fitx, Minv, testimg)
+result = backproject_measurement(warped_gray, ploty, left_fitx, right_fitx, Minv, testimg)
+final_result = draw_curvature_and_position(result, left_curverad)
 print('end')
 
 # step 8: Output visual display of the lane boundaries and numerical estimation of lane curvature and vehicle position.

@@ -20,7 +20,7 @@ from direction_gradient import dir_threshold
 from lane_histogram import hist
 from magnitude_gradient import mag_thresh
 from prev_poly import fit_poly, search_around_poly
-from radius_curve import measure_curvature_real, generate_data
+from radius_curve import measure_curvature_real2
 from rgb_to_hls import hls_select
 from sliding_window import find_lane_pixels, fit_polynomial, fit_polynomial2
 from sliding_window_template import window_mask,find_window_centroids
@@ -288,7 +288,7 @@ print(' ')
 
 # step 6: Determine the/ curvature of the lane and vehicle position with respect to center.
 # Calculate the radius of curvature in meters for both lane lines
-left_curverad, right_curverad = measure_curvature_real()
+left_curverad, right_curverad = measure_curvature_real2(ploty, left_fitx, right_fitx)
 
 print(left_curverad, 'm', right_curverad, 'm')
 # Should see values of 533.75 and 648.16 here, if using

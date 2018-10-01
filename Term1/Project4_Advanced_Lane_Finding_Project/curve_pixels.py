@@ -51,8 +51,8 @@ def measure_curvature_pixels():
 
 
 # Calculate the radius of curvature in pixels for both lane lines
-left_curverad, right_curverad = measure_curvature_pixels()
+#left_curverad, right_curverad = measure_curvature_pixels()
 
-print(left_curverad, right_curverad)
+#print(left_curverad, right_curverad)
 # Should see values of 1625.06 and 1976.30 here, if using
 # the default `generate_data` function with given seed number

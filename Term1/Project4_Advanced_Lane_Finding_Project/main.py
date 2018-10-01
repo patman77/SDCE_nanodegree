@@ -130,12 +130,14 @@ class Line():
 
 
 
-def backproject_measurement(warped, ploty, left_fitx, right_fitx):
+def backproject_measurement(warped, ploty, left_fitx, right_fitx, Minv, undist):
     """ projects measurements back down onto the road
     :param warped    : warped binary image
     :param ploty     : lane line pixels, y-range
     :param left_fitx : x pixel values of the left fitted line
     :param right_fitx: x pixel values of the right fitted line
+    :param Minv      : inverse perspective transform
+    :param undist    : original image
     :return:
     """
     # Create an image to draw the lines on
@@ -151,10 +153,11 @@ def backproject_measurement(warped, ploty, left_fitx, right_fitx):
     cv2.fillPoly(color_warp, np.int_([pts]), (0, 255, 0))
 
     # Warp the blank back to original image space using inverse perspective matrix (Minv)
-    newwarp = cv2.warpPerspective(color_warp, Minv, (image.shape[1], image.shape[0]))
+    newwarp = cv2.warpPerspective(color_warp, Minv, (warped.shape[1], warped.shape[0]))
     # Combine the result with the original image
     result = cv2.addWeighted(undist, 1, newwarp, 0.3, 0)
     plt.imshow(result)
+    mpimg.imsave("final_result.png", result)
     #pass
 
 def process_image(image):
@@ -185,6 +188,12 @@ except:
     exit(1)
 
 testsingleimage = True
+
+if testsingleimage == False:
+    print('starting video pipeline')
+    # TODO
+    exit(0)
+
 
 # test undistortion
 # step 2: Apply a distortion correction to raw images.
@@ -221,7 +230,7 @@ print(" ")
 cv2.waitKey(100000)
 
 # step 4: Apply a perspective transform to rectify binary image ("birds-eye view").
-unwarped, M = corners_unwarp_improved(color_binary, nx, ny, mtx, dist)
+unwarped, M, Minv = corners_unwarp_improved(color_binary, nx, ny, mtx, dist)
 f, (ax1, ax2) = plt.subplots(1, 2, figsize=(12,5))
 f.subplots_adjust(hspace = horiz_spacing, wspace=width_space)
 ax1.set_title("original image")
@@ -286,7 +295,7 @@ print(left_curverad, 'm', right_curverad, 'm')
 # the default `generate_data` function with given seed number
 
 # step 7: Warp the detected lane boundaries back onto the original image.
-#backproject_measurement(testimg, ploty, left_fitx, right_fitx)
+backproject_measurement(warped_gray, ploty, left_fitx, right_fitx, Minv, testimg)
 print('end')
 
 # step 8: Output visual display of the lane boundaries and numerical estimation of lane curvature and vehicle position.

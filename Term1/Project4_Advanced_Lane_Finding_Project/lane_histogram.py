@@ -23,3 +23,5 @@ def hist(img):
 #
 # # Visualize the resulting histogram
 # plt.plot(histogram)
+# mpimg.imsave('histo.png', histogram)
+# print(' ')

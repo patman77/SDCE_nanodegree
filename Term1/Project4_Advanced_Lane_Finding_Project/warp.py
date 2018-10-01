@@ -31,8 +31,8 @@ def corners_unwarp(img, nx, ny, mtx, dist):
                  #We recommend using the automatic detection of corners in your code
             # c) define 4 destination points dst = np.float32([[,],[,],[,],[,]])
     dstpts = np.float32([[80.0, 81.666666666666666],
-                         [1200.0, 81.666666666666666],
-                         [1200.0, 878.33333333333333],
+                         [120.0, 81.666666666666666],
+                         [120.0, 878.33333333333333],
                          [80.0, 878.33333333333333]])
             # d) use cv2.getPerspectiveTransform() to get M, the transform matrix
     M = cv2.getPerspectiveTransform(srcpts, dstpts)
@@ -43,6 +43,28 @@ def corners_unwarp(img, nx, ny, mtx, dist):
     warped = cv2.warpPerspective(dst, M, (1280,960))
     return warped, M
 
+def corners_unwarp_improved(img, nx, ny, mtx, dist):
+
+    # b) define 4 source points src = np.float32([[,],[,],[,],[,]])
+    srcpts = np.float32([[600.0, 450.0],
+                         [686.0, 450.0],
+                         [1040.0, 680.0],
+                         [270.0, 680.0]])
+                 #Note: you could pick any four of the detected corners
+                 # as long as those four corners define a rectangle
+                 #One especially smart way to do this would be to use four well-chosen
+                 # corners that were automatically detected during the undistortion steps
+                 #We recommend using the automatic detection of corners in your code
+    # c) define 4 destination points dst = np.float32([[,],[,],[,],[,]])
+    dstpts = np.float32([[270.0, 0.0],
+                         [1040.0, 0.0],
+                         [1040.0, 960.0],
+                         [270.0, 960.0]])
+    # d) use cv2.getPerspectiveTransform() to get M, the transform matrix
+    M = cv2.getPerspectiveTransform(srcpts, dstpts)
+    # e) use cv2.warpPerspective() to warp your image to a top-down view
+    warped = cv2.warpPerspective(img, M, (1280,960))
+    return warped, M
 
 # # Read in the saved camera matrix and distortion coefficients
 # # These are the arrays you calculated using cv2.calibrateCamera()

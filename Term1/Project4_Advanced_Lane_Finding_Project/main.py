@@ -15,14 +15,14 @@ from IPython.display import HTML
 
 from apply_sobel import abs_sobel_thresh
 from color_and_gradient import pipeline
-from curve_pixels import measure_curvature_pixels
+#from curve_pixels import measure_curvature_pixels
 from direction_gradient import dir_threshold
 from lane_histogram import hist
 from magnitude_gradient import mag_thresh
 from prev_poly import fit_poly, search_around_poly
-from radius_curve import measure_curvature_real
+from radius_curve import measure_curvature_real, generate_data
 from rgb_to_hls import hls_select
-#from sliding_window import find_lane_pixels, fit_polynomial
+from sliding_window import find_lane_pixels, fit_polynomial, fit_polynomial2
 from sliding_window_template import window_mask,find_window_centroids
 from undistort import cal_undistort
 from warp import corners_unwarp_improved
@@ -128,9 +128,34 @@ class Line():
         #y values for detected line pixels
         self.ally = None
 
-# -----------------------------------------------------------------------------
-# ----------------------------------start of main -----------------------------
-# -----------------------------------------------------------------------------
+
+
+def backproject_measurement(warped, ploty, left_fitx, right_fitx):
+    """ projects measurements back down onto the road
+    :param warped    : warped binary image
+    :param ploty     : lane line pixels, y-range
+    :param left_fitx : x pixel values of the left fitted line
+    :param right_fitx: x pixel values of the right fitted line
+    :return:
+    """
+    # Create an image to draw the lines on
+    warp_zero = np.zeros_like(warped).astype(np.uint8)
+    color_warp = np.dstack((warp_zero, warp_zero, warp_zero))
+
+    # Recast the x and y points into usable format for cv2.fillPoly()
+    pts_left = np.array([np.transpose(np.vstack([left_fitx, ploty]))])
+    pts_right = np.array([np.flipud(np.transpose(np.vstack([right_fitx, ploty])))])
+    pts = np.hstack((pts_left, pts_right))
+
+    # Draw the lane onto the warped blank image
+    cv2.fillPoly(color_warp, np.int_([pts]), (0, 255, 0))
+
+    # Warp the blank back to original image space using inverse perspective matrix (Minv)
+    newwarp = cv2.warpPerspective(color_warp, Minv, (image.shape[1], image.shape[0]))
+    # Combine the result with the original image
+    result = cv2.addWeighted(undist, 1, newwarp, 0.3, 0)
+    plt.imshow(result)
+    #pass
 
 def process_image(image):
     """
@@ -138,7 +163,12 @@ def process_image(image):
     :param image: image to be processed, going through the entire pipeline: undistort, color/gradient thresholding, warp, lane detect, curvature calculation
     :return: processed imaged
     """
+
     pass
+
+# -----------------------------------------------------------------------------
+# ----------------------------------start of main -----------------------------
+# -----------------------------------------------------------------------------
 
 try:
     if Path(calibfilename).is_file():
@@ -153,6 +183,8 @@ try:
 except:
     print('exception!!')
     exit(1)
+
+testsingleimage = True
 
 # test undistortion
 # step 2: Apply a distortion correction to raw images.
@@ -205,69 +237,58 @@ cv2.waitKey(100000)
 # step 5: Detect lane pixels and fit to find the lane boundary.
 from sliding_window_template import window_width, window_height, margin
 warped_gray = cv2.cvtColor(unwarped, cv2.COLOR_RGB2GRAY)
-window_centroids = find_window_centroids(warped_gray, window_width, window_height, margin)
-# If we found any window centers
-if len(window_centroids) > 0:
+out_img, ploty, left_fitx, right_fitx = fit_polynomial2(warped_gray)
 
-    # Points used to draw all the left and right windows
-    l_points = np.zeros_like(warped_gray)
-    r_points = np.zeros_like(warped_gray)
-
-    # Go through each level and draw the windows
-    for level in range(0, len(window_centroids)):
-        # Window_mask is a function to draw window areas
-        l_mask = window_mask(window_width, window_height, warped_gray, window_centroids[level][0], level)
-        r_mask = window_mask(window_width, window_height, warped_gray, window_centroids[level][1], level)
-        # Add graphic points from window mask here to total pixels found
-        l_points[(l_points == 255) | ((l_mask == 1))] = 255
-        r_points[(r_points == 255) | ((r_mask == 1))] = 255
-
-    # Draw the results
-    template = np.array(r_points + l_points, np.uint8)  # add both left and right window pixels together
-    zero_channel = np.zeros_like(template)  # create a zero color channel
-    template = np.array(cv2.merge((zero_channel, template, zero_channel)), np.uint8)  # make window pixels green
-    warpage = np.dstack((warped_gray, warped_gray, warped_gray)) * 255  # making the original road pixels 3 color channels
-    output = cv2.addWeighted(warpage, 1, template, 0.5, 0.0)  # overlay the orignal road image with window results
-
-# If no window centers found, just display orginal road image
-else:
-    output = np.array(cv2.merge((warped_gray, warped_gray, warped_gray)), np.uint8)
-
-# Display the final results
-plt.imshow(output)
-plt.title('window fitting results')
-plt.show()
+plt.imshow(out_img)
+mpimg.imsave("test.png", out_img)
 print(' ')
-# step 6: Determine the curvature of the lane and vehicle position with respect to center.
+# window_centroids = find_window_centroids(warped_gray, window_width, window_height, margin)
+# # If we found any window centers
+# if len(window_centroids) > 0:
+#
+#     # Points used to draw all the left and right windows
+#     l_points = np.zeros_like(warped_gray)
+#     r_points = np.zeros_like(warped_gray)
+#
+#     # Go through each level and draw the windows
+#     for level in range(0, len(window_centroids)):
+#         # Window_mask is a function to draw window areas
+#         l_mask = window_mask(window_width, window_height, warped_gray, window_centroids[level][0], level)
+#         r_mask = window_mask(window_width, window_height, warped_gray, window_centroids[level][1], level)
+#         # Add graphic points from window mask here to total pixels found
+#         l_points[(l_points == 255) | ((l_mask == 1))] = 255
+#         r_points[(r_points == 255) | ((r_mask == 1))] = 255
+#
+#     # Draw the results
+#     template = np.array(r_points + l_points, np.uint8)  # add both left and right window pixels together
+#     zero_channel = np.zeros_like(template)  # create a zero color channel
+#     template = np.array(cv2.merge((zero_channel, template, zero_channel)), np.uint8)  # make window pixels green
+#     warpage = np.dstack((warped_gray, warped_gray, warped_gray)) * 255  # making the original road pixels 3 color channels
+#     output = cv2.addWeighted(warpage, 1, template, 0.5, 0.0)  # overlay the orignal road image with window results
+#
+# # If no window centers found, just display orginal road image
+# else:
+#     output = np.array(cv2.merge((warped_gray, warped_gray, warped_gray)), np.uint8)
+#
+# # Display the final results
+# plt.imshow(output)
+# plt.title('window fitting results')
+# plt.show()
+# print(' ')
+
+
+# step 6: Determine the/ curvature of the lane and vehicle position with respect to center.
+# Calculate the radius of curvature in meters for both lane lines
+left_curverad, right_curverad = measure_curvature_real()
+
+print(left_curverad, 'm', right_curverad, 'm')
+# Should see values of 533.75 and 648.16 here, if using
+# the default `generate_data` function with given seed number
 
 # step 7: Warp the detected lane boundaries back onto the original image.
+#backproject_measurement(testimg, ploty, left_fitx, right_fitx)
+print('end')
 
 # step 8: Output visual display of the lane boundaries and numerical estimation of lane curvature and vehicle position.
 
 
-def backproject_measurement(warped, ploty, left_fitx, right_fitx):
-    """ projects measurements back down onto the road
-    :param warped    : warped binary image
-    :param ploty     : lane line pixels, y-range
-    :param left_fitx : x pixel values of the left fitted line
-    :param right_fitx: x pixel values of the right fitted line
-    :return:
-    """
-    # Create an image to draw the lines on
-    warp_zero = np.zeros_like(warped).astype(np.uint8)
-    color_warp = np.dstack((warp_zero, warp_zero, warp_zero))
-
-    # Recast the x and y points into usable format for cv2.fillPoly()
-    pts_left = np.array([np.transpose(np.vstack([left_fitx, ploty]))])
-    pts_right = np.array([np.flipud(np.transpose(np.vstack([right_fitx, ploty])))])
-    pts = np.hstack((pts_left, pts_right))
-
-    # Draw the lane onto the warped blank image
-    cv2.fillPoly(color_warp, np.int_([pts]), (0, 255, 0))
-
-    # Warp the blank back to original image space using inverse perspective matrix (Minv)
-    newwarp = cv2.warpPerspective(color_warp, Minv, (image.shape[1], image.shape[0]))
-    # Combine the result with the original image
-    result = cv2.addWeighted(undist, 1, newwarp, 0.3, 0)
-    plt.imshow(result)
-    #pass

@@ -121,8 +121,10 @@ def fit_polynomial(binary_warped):
     return out_img
 
 # # Load our image
-# binary_warped = mpimg.imread('warped_example.jpg')
+# binary_warped = mpimg.imread('warped_example_gray.jpg')
 #
 # out_img = fit_polynomial(binary_warped)
 #
 # plt.imshow(out_img)
+# mpimg.imsave("test.png", out_img)
+# print(' ')

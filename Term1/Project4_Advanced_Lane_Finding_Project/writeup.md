@@ -127,6 +127,7 @@ I implemented this step in lines 361 through 362 in my code in `main.py`.  Here 
 All the above steps for processing single test images I collected and put into "process_image" (line 203 in main.py), without any intermediate plotting.
 
 Here's a [link to my video result](./output_videos/project_video_output.mp4)
+
 The curvature radius is below 1000m (except some outliers), which makes sense according to the section "Tips and Tricks for the Project, section "Do your curvature values make sense". 
 I also uploaded this video to youtube:
  [Youtube video](https://youtu.be/FyNnHMniWA0) 

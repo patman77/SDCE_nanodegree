@@ -244,12 +244,16 @@ if testsingleimage == False:
     video_output01 = 'project_video_output.mp4'
     video_output02 = 'challenge_video_output.mp4'
     video_output03 = 'harder_challenge_video_output.mp4'
-    videoclip01 = VideoFileClip(video_input01)
-    #videoclip02 = VideoFileClip(video_input02)
-    #videoclip03 = VideoFileClip(video_input03)
+    #videoclip01 = VideoFileClip(video_input01)
+    videoclip02 = VideoFileClip(video_input02)
+    videoclip03 = VideoFileClip(video_input03)
 
-    processed_video = videoclip01.fl_image(process_image)
-    processed_video.write_videofile(video_output01, audio=False)
+    # processed_video = videoclip01.fl_image(process_image)
+    # processed_video.write_videofile(video_output01, audio=False)
+    # processed_video = videoclip02.fl_image(process_image)
+    # processed_video.write_videofile(video_output02, audio=False)
+    processed_video = videoclip03.fl_image(process_image)
+    processed_video.write_videofile(video_output03, audio=False)
     # TODO
     exit(0)
 

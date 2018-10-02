@@ -131,7 +131,8 @@ Here's a [link to my video result](./output_videos/project_video_output.mp4)
 The curvature radius is below 1000m (except some outliers), which makes sense according to the section "Tips and Tricks for the Project, section "Do your curvature values make sense". 
 I also uploaded this video to youtube:
  [Youtube video](https://youtu.be/FyNnHMniWA0) 
-[]() 
+
+
 ---
 
 ### Discussion

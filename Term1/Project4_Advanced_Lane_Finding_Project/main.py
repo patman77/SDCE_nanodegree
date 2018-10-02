@@ -190,12 +190,12 @@ def draw_curvature_and_position(img, curvature_radius, center_distance = 42.0):
     else:
         direction = "perfectly in the middle of "
     text2 = 'Vehicle Position: ' + '{:05.2f}'.format(abs_center_distance) + 'm ' + direction + ' of center'
-    cv2.putText(copied_img, text2, topLeftCornerOfText2,
-                font, fontScale,
-                fontColor, lineType)
-    cv2.putText(copied_img, text2, topLeftCornerOfText2,
-                font, fontScale,
-                fontColorOutline, lineType2)
+    # cv2.putText(copied_img, text2, topLeftCornerOfText2,
+    #             font, fontScale,
+    #             fontColor, lineType)
+    # cv2.putText(copied_img, text2, topLeftCornerOfText2,
+    #             font, fontScale,
+    #             fontColorOutline, lineType2)
     plt.imshow(copied_img)
     #mpimg.imsave("final_result2.png", copied_img)
     return copied_img
@@ -254,7 +254,7 @@ if testsingleimage == False:
     # processed_video.write_videofile(video_output02, audio=False)
     # processed_video = videoclip03.fl_image(process_image)
     # processed_video.write_videofile(video_output03, audio=False)
-    # TODO
+
     exit(0)
 
 

@@ -127,7 +127,10 @@ I implemented this step in lines 361 through 362 in my code in `main.py`.  Here 
 All the above steps for processing single test images I collected and put into "process_image" (line 203 in main.py), without any intermediate plotting.
 
 Here's a [link to my video result](./output_videos/project_video_output.mp4)
-
+The curvature radius is below 1000m (except some outliers), which makes sense according to the section "Tips and Tricks for the Project, section "Do your curvature values make sense". 
+I also uploaded this video to youtube:
+ [Youtube video](https://youtu.be/FyNnHMniWA0) 
+[]() 
 ---
 
 ### Discussion
@@ -136,4 +139,4 @@ Here's a [link to my video result](./output_videos/project_video_output.mp4)
 
 Essentially, I used a gradient/color thresholding in the colorspace HLS and exploited the saturation channel to be robust against different colors of lane lines.
 The lane detection is inspired by the sliding window approach from the lectures, simple form, without any memory from past frames (final deadline in less than 2 weeks, and one project to go).
-For the potential future: What could be improved is the lane detetion itself. For extreme curves such as in the third video, it could be difficult to detect by this "vertical histogram-oriented" approach only, here the search range could be extended a little bit.
+For the potential future: What could be improved is the lane detetion itself. For extreme curves such as in the third video, it could be difficult to detect by this "vertical histogram-oriented" approach, here the search range could be extended a little bit. Also, some temporal filtering could make the results more stable, especially for difficult frames with shadows, reflections, occlusions etc.

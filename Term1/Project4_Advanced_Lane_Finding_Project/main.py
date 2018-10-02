@@ -157,7 +157,7 @@ def backproject_measurement(warped, ploty, left_fitx, right_fitx, Minv, undist):
     # Combine the result with the original image
     result = cv2.addWeighted(undist, 1, newwarp, 0.3, 0)
     plt.imshow(result)
-    mpimg.imsave("final_result.png", result)
+    #mpimg.imsave("final_result.png", result)
     return result
 
 def draw_curvature_and_position(img, curvature_radius, center_distance = 42.0):
@@ -197,7 +197,7 @@ def draw_curvature_and_position(img, curvature_radius, center_distance = 42.0):
                 font, fontScale,
                 fontColorOutline, lineType2)
     plt.imshow(copied_img)
-    mpimg.imsave("final_result2.png", copied_img)
+    #mpimg.imsave("final_result2.png", copied_img)
     return copied_img
 
 def process_image(image):
@@ -206,7 +206,15 @@ def process_image(image):
     :param image: image to be processed, going through the entire pipeline: undistort, color/gradient thresholding, warp, lane detect, curvature calculation
     :return: processed imaged
     """
-    return image
+    dst = cv2.undistort(image, mtx, dist, None, mtx)
+    color_binary = pipeline(dst)
+    unwarped, M, Minv = corners_unwarp_improved(color_binary, nx, ny, mtx, dist)
+    warped_gray = cv2.cvtColor(unwarped, cv2.COLOR_RGB2GRAY)
+    out_img, ploty, left_fitx, right_fitx = fit_polynomial2(warped_gray)
+    left_curverad, right_curverad = measure_curvature_real2(ploty, left_fitx, right_fitx)
+    result = backproject_measurement(warped_gray, ploty, left_fitx, right_fitx, Minv, image)
+    final_result = draw_curvature_and_position(result, left_curverad)
+    return final_result
 
 # -----------------------------------------------------------------------------
 # ----------------------------------start of main -----------------------------
@@ -237,8 +245,8 @@ if testsingleimage == False:
     video_output02 = 'challenge_video_output.mp4'
     video_output03 = 'harder_challenge_video_output.mp4'
     videoclip01 = VideoFileClip(video_input01)
-    videoclip02 = VideoFileClip(video_input02)
-    videoclip03 = VideoFileClip(video_input03)
+    #videoclip02 = VideoFileClip(video_input02)
+    #videoclip03 = VideoFileClip(video_input03)
 
     processed_video = videoclip01.fl_image(process_image)
     processed_video.write_videofile(video_output01, audio=False)

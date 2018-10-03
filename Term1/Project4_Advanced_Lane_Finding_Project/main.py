@@ -161,18 +161,19 @@ def backproject_measurement(warped, ploty, left_fitx, right_fitx, Minv, undist):
     #mpimg.imsave("final_result.png", result)
     return result
 
-def draw_curvature_and_position(img, curvature_radius, center_distance = 42.0):
+def draw_curvature_and_position(img, center_distance, left_curvature_radius, right_curvature_radius):
     copied_img = np.copy(img)
     height = copied_img.shape[0]
     font = cv2.FONT_HERSHEY_COMPLEX
-    topLeftCornerOfText  = (20, 40)
-    topLeftCornerOfText2 = (20, 70)
+    topLeftCornerOfText  = (20,  40)
+    topLeftCornerOfText2 = (20,  75)
+    topLeftCornerOfText3 = (20, 110)
     fontScale = 1
     fontColorOutline = (255, 255, 255)
     fontColor = (0, 0, 0)
     lineType = cv2.LINE_8
     lineType2 = cv2.LINE_4
-    text = "Curvature Radius = " + '{:05.2f}'.format(curvature_radius) + " m"
+    text = "Left Curvature Radius = " + '{:05.2f}'.format(left_curvature_radius) + " m"
     # outline fonts taken from https://stackoverflow.com/questions/48516211/how-to-show-white-text-on-an-image-with-black-border-using-opencv2
     #size = cv2.getTextSize(text, cv2.FONT_HERSHEY_COMPLEX, 2, 4)[0]
     cv2.putText(copied_img, text, topLeftCornerOfText,
@@ -181,6 +182,18 @@ def draw_curvature_and_position(img, curvature_radius, center_distance = 42.0):
     cv2.putText(copied_img, text, topLeftCornerOfText,
                 font, fontScale,
                 fontColorOutline, lineType2)
+
+    text2 = "Right Curvature Radius = " + '{:05.2f}'.format(right_curvature_radius) + " m"
+    # outline fonts taken from https://stackoverflow.com/questions/48516211/how-to-show-white-text-on-an-image-with-black-border-using-opencv2
+    #size = cv2.getTextSize(text, cv2.FONT_HERSHEY_COMPLEX, 2, 4)[0]
+    cv2.putText(copied_img, text2, topLeftCornerOfText2,
+                font, fontScale,
+                fontColor, lineType)
+    cv2.putText(copied_img, text2, topLeftCornerOfText2,
+                font, fontScale,
+                fontColorOutline, lineType2)
+
+    center_distance = center_distance - 3.7
     abs_center_distance = abs(center_distance)
     dir = ''
     if center_distance > 0:
@@ -190,15 +203,16 @@ def draw_curvature_and_position(img, curvature_radius, center_distance = 42.0):
         direction = 'left'
     else:
         direction = "perfectly in the middle of "
-    text2 = 'Vehicle Position: ' + '{:05.2f}'.format(abs_center_distance) + 'm ' + direction + ' of center'
-    # cv2.putText(copied_img, text2, topLeftCornerOfText2,
-    #             font, fontScale,
-    #             fontColor, lineType)
-    # cv2.putText(copied_img, text2, topLeftCornerOfText2,
-    #             font, fontScale,
-    #             fontColorOutline, lineType2)
+    text3 = 'Vehicle Position: ' + '{:01.2f}'.format(abs_center_distance) + 'm ' + direction + ' of center'
+    cv2.putText(copied_img, text3, topLeftCornerOfText3,
+                font, fontScale,
+                fontColor, lineType)
+    cv2.putText(copied_img, text3, topLeftCornerOfText3,
+                font, fontScale,
+                fontColorOutline, lineType2)
+
     plt.imshow(copied_img)
-    #mpimg.imsave("final_result2.png", copied_img)
+    mpimg.imsave("final_result2.png", copied_img)
     return copied_img
 
 def process_image(image):
@@ -212,10 +226,10 @@ def process_image(image):
     unwarped, M, Minv = corners_unwarp_improved(color_binary, nx, ny, mtx, dist)
     warped_gray = cv2.cvtColor(unwarped, cv2.COLOR_RGB2GRAY)
     out_img, ploty, left_fitx, right_fitx = fit_polynomial2(warped_gray)
-    left_curverad, right_curverad = measure_curvature_real2(ploty, left_fitx, right_fitx)
+    center, left_curverad, right_curverad = measure_curvature_real2(ploty, left_fitx, right_fitx)
     #result = backproject_measurement(warped_gray, ploty, left_fitx, right_fitx, Minv, image)
     result = backproject_measurement(warped_gray, ploty, left_fitx, right_fitx, Minv, dst) # review1: render to undistorted, not to distorted
-    final_result = draw_curvature_and_position(result, left_curverad)
+    final_result = draw_curvature_and_position(result, center, left_curverad, right_curverad)
     return final_result
 
 # -----------------------------------------------------------------------------
@@ -371,15 +385,15 @@ print(' ')
 
 # step 6: Determine the/ curvature of the lane and vehicle position with respect to center.
 # Calculate the radius of curvature in meters for both lane lines
-left_curverad, right_curverad = measure_curvature_real2(ploty, left_fitx, right_fitx)
+center, left_curverad, right_curverad = measure_curvature_real2(ploty, left_fitx, right_fitx)
 
-print(left_curverad, 'm', right_curverad, 'm')
+print('center=', center, 'left_curverad=', left_curverad, 'm', 'right_curverad=', right_curverad, 'm')
 # Should see values of 533.75 and 648.16 here, if using
 # the default `generate_data` function with given seed number
 
 # step 7: Warp the detected lane boundaries back onto the original image.
 result = backproject_measurement(warped_gray, ploty, left_fitx, right_fitx, Minv, testimg)
-final_result = draw_curvature_and_position(result, left_curverad)
+final_result = draw_curvature_and_position(result, center, left_curverad, right_curverad)
 print('end')
 
 # step 8: Output visual display of the lane boundaries and numerical estimation of lane curvature and vehicle position.

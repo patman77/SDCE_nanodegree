@@ -149,7 +149,7 @@ def backproject_measurement(warped, ploty, left_fitx, right_fitx, Minv, undist):
     pts_right = np.array([np.flipud(np.transpose(np.vstack([right_fitx, ploty])))])
     pts = np.hstack((pts_left, pts_right))
 
-    # Draw the lane onto the warped blank image
+    # Draw the lane onto the warped blank image\
     cv2.fillPoly(color_warp, np.int_([pts]), (0, 255, 0))
 
     # Warp the blank back to original image space using inverse perspective matrix (Minv)
@@ -212,7 +212,8 @@ def process_image(image):
     warped_gray = cv2.cvtColor(unwarped, cv2.COLOR_RGB2GRAY)
     out_img, ploty, left_fitx, right_fitx = fit_polynomial2(warped_gray)
     left_curverad, right_curverad = measure_curvature_real2(ploty, left_fitx, right_fitx)
-    result = backproject_measurement(warped_gray, ploty, left_fitx, right_fitx, Minv, image)
+    #result = backproject_measurement(warped_gray, ploty, left_fitx, right_fitx, Minv, image)
+    result = backproject_measurement(warped_gray, ploty, left_fitx, right_fitx, Minv, image) # review1: render to undistorted, not to distorted
     final_result = draw_curvature_and_position(result, left_curverad)
     return final_result
 
@@ -235,7 +236,11 @@ except:
     exit(1)
 
 testsingleimage = False
+#testsingleimage = True
 
+# -----------------------------------------------------------------------------
+# This is the block for video processing
+# -----------------------------------------------------------------------------
 if testsingleimage == False:
     print('starting video pipeline')
     video_input01 = 'project_video.mp4'
@@ -257,7 +262,9 @@ if testsingleimage == False:
 
     exit(0)
 
-
+# -----------------------------------------------------------------------------
+# This is the block for single image processing
+# -----------------------------------------------------------------------------
 # test undistortion
 # step 2: Apply a distortion correction to raw images.
 #testimg = mpimg.imread('./camera_cal/calibration1.jpg')

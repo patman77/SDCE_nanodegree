@@ -1,3 +1,4 @@
+import os # for basename
 import matplotlib.image as mpimg
 import cv2
 import matplotlib.pyplot as plt
@@ -235,8 +236,8 @@ except:
     print('exception!!')
     exit(1)
 
-testsingleimage = False
-#testsingleimage = True
+#testsingleimage = False
+testsingleimage = True
 
 # -----------------------------------------------------------------------------
 # This is the block for video processing
@@ -267,11 +268,23 @@ if testsingleimage == False:
 # -----------------------------------------------------------------------------
 # test undistortion
 # step 2: Apply a distortion correction to raw images.
-#testimg = mpimg.imread('./camera_cal/calibration1.jpg')
-#testimg = mpimg.imread('./test_images/test2.jpg')
-testimg = mpimg.imread('./test_images/straight_lines1.jpg') # for determining the trapezoid for unwarping
+#testimgname = 'camera_cal/calibration1.jpg'
+testimgpath = './test_images/'
+outimgpath = './output_images/'
+testimgname = 'straight_lines1.jpg'
+# testimgname = 'straight_lines2.jpg'
+# testimgname = 'test1.jpg'
+# testimgname = 'test2.jpg'
+# testimgname = 'test3.jpg'
+# testimgname = 'test4.jpg'
+# testimgname = 'test5.jpg'
+# testimgname = 'test6.jpg'
+testimgfullname = testimgpath + testimgname
+#testimg = mpimg.imread('./test_images/straight_lines1.jpg') # for determining the trapezoid for unwarping
+testimg = mpimg.imread(testimgfullname) # for determining the trapezoid for unwarping
+
 dst = cv2.undistort(testimg, mtx, dist, None, mtx)
-#undistorted = cal_undistort(image, objpoints, imgpoints)
+
 
 # visualize undistortion
 f, (ax1, ax2) = plt.subplots(1, 2, figsize=(10,5))
@@ -283,7 +296,7 @@ ax2.set_title("undistorted image")
 ax2.axis('off')
 ax2.imshow(dst)
 print(" ")
-mpimg.imsave("undistorted.png", dst)
+mpimg.imsave(outimgpath+"undistorted_"+os.path.splitext(os.path.basename(testimgname))[0]+".png", dst) # jpg write not possible, use png
 cv2.waitKey(100000)
 
 # step 3: Use color transforms, gradients, etc., to create a thresholded binary image.

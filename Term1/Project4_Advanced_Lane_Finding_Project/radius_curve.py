@@ -58,9 +58,15 @@ def measure_curvature_real2(ploty, left_fitx, right_fitx):
     '''
     Calculates the curvature of polynomial functions in meters.
     '''
+    center   = (left_fitx[-1] + right_fitx[-1]) / 2
+
+    lane_width = right_fitx[-1] - left_fitx[-1]
+    xm_per_pix = 3.7 / lane_width # more accurate
     # Define conversions in x and y from pixels space to meters
     ym_per_pix = 30 / 720  # meters per pixel in y dimension
-    xm_per_pix = 3.7 / 700  # meters per pixel in x dimension
+    #xm_per_pix = 3.7 / 700  # meters per pixel in x dimension
+
+    center_m = center * xm_per_pix
 
     # Start by generating our fake example data
     # Make sure to feed in your real data instead in your project!

@@ -118,6 +118,12 @@ I implemented this step in lines 361 through 362 in my code in `main.py`.  Here 
 
 ![](./report_images/figure09.png)
 
+The following images show it together with the measurements:
+![](./report_images/figure10.png)
+![](./report_images/figure11.png)
+
+Although I have no ground truth, it seems to be plausible: in left curves there is a slight tendency of the driver to the left, and vice versa to the right.
+
 ---
 
 ### Pipeline (video)
@@ -130,7 +136,7 @@ Here's a [link to my video result](./output_videos/project_video_output.mp4)
 
 The curvature radius is below 1000m (except some outliers), which makes sense according to the section "Tips and Tricks for the Project, section "Do your curvature values make sense". 
 I also uploaded this video to youtube:
- [Youtube video](https://youtu.be/FyNnHMniWA0) 
+ [Youtube video](https://youtu.be/OtmIisVNC-A) 
 
 
 ---

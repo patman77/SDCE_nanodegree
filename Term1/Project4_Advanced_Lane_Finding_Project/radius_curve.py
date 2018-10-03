@@ -54,7 +54,7 @@ def measure_curvature_real():
     return left_curverad, right_curverad
 
 
-def measure_curvature_real2(ploty, left_fitx, right_fitx):
+def measure_curvature_real2(ploty, left_fitx, right_fitx, cam_matrix):
     '''
     Calculates the curvature of polynomial functions in meters.
     '''
@@ -66,7 +66,7 @@ def measure_curvature_real2(ploty, left_fitx, right_fitx):
     ym_per_pix = 30 / 720  # meters per pixel in y dimension
     #xm_per_pix = 3.7 / 700  # meters per pixel in x dimension
 
-    center_m = center * xm_per_pix
+    #center_m = center * xm_per_pix
 
     # Start by generating our fake example data
     # Make sure to feed in your real data instead in your project!
@@ -84,6 +84,9 @@ def measure_curvature_real2(ploty, left_fitx, right_fitx):
     right_curverad = ((1 + ((2 * right_fit_cr[0] * y_eval * ym_per_pix + right_fit_cr[1]) ** 2)) ** 1.5) / np.abs(
         2 * right_fit_cr[0])  ## Implement the calculation of the right line here
 
+    # calc vehicle position
+    vehicle_pos = cam_matrix[0][2] # use the principal point xcoord rather than the pure midpoint of the image
+    center_m = (vehicle_pos - center) * xm_per_pix
     return center_m, left_curverad, right_curverad
 
 # Calculate the radius of curvature in meters for both lane lines

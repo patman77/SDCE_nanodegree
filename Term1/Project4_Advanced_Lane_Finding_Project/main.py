@@ -249,8 +249,8 @@ except:
     print('exception!!')
     exit(1)
 
-#testsingleimage = False
-testsingleimage = True
+testsingleimage = False
+#testsingleimage = True
 
 # -----------------------------------------------------------------------------
 # This is the block for video processing

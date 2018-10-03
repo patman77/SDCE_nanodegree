@@ -213,7 +213,7 @@ def process_image(image):
     out_img, ploty, left_fitx, right_fitx = fit_polynomial2(warped_gray)
     left_curverad, right_curverad = measure_curvature_real2(ploty, left_fitx, right_fitx)
     #result = backproject_measurement(warped_gray, ploty, left_fitx, right_fitx, Minv, image)
-    result = backproject_measurement(warped_gray, ploty, left_fitx, right_fitx, Minv, image) # review1: render to undistorted, not to distorted
+    result = backproject_measurement(warped_gray, ploty, left_fitx, right_fitx, Minv, dst) # review1: render to undistorted, not to distorted
     final_result = draw_curvature_and_position(result, left_curverad)
     return final_result
 

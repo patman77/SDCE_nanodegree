@@ -193,7 +193,6 @@ def draw_curvature_and_position(img, center_distance, left_curvature_radius, rig
                 font, fontScale,
                 fontColorOutline, lineType2)
 
-    center_distance = center_distance - 3.7
     abs_center_distance = abs(center_distance)
     dir = ''
     if center_distance > 0:
@@ -226,7 +225,7 @@ def process_image(image):
     unwarped, M, Minv = corners_unwarp_improved(color_binary, nx, ny, mtx, dist)
     warped_gray = cv2.cvtColor(unwarped, cv2.COLOR_RGB2GRAY)
     out_img, ploty, left_fitx, right_fitx = fit_polynomial2(warped_gray)
-    center, left_curverad, right_curverad = measure_curvature_real2(ploty, left_fitx, right_fitx)
+    center, left_curverad, right_curverad = measure_curvature_real2(ploty, left_fitx, right_fitx, mtx)
     #result = backproject_measurement(warped_gray, ploty, left_fitx, right_fitx, Minv, image)
     result = backproject_measurement(warped_gray, ploty, left_fitx, right_fitx, Minv, dst) # review1: render to undistorted, not to distorted
     final_result = draw_curvature_and_position(result, center, left_curverad, right_curverad)
@@ -385,7 +384,7 @@ print(' ')
 
 # step 6: Determine the/ curvature of the lane and vehicle position with respect to center.
 # Calculate the radius of curvature in meters for both lane lines
-center, left_curverad, right_curverad = measure_curvature_real2(ploty, left_fitx, right_fitx)
+center, left_curverad, right_curverad = measure_curvature_real2(ploty, left_fitx, right_fitx, mtx)
 
 print('center=', center, 'left_curverad=', left_curverad, 'm', 'right_curverad=', right_curverad, 'm')
 # Should see values of 533.75 and 648.16 here, if using

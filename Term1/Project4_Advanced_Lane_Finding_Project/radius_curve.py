@@ -84,7 +84,7 @@ def measure_curvature_real2(ploty, left_fitx, right_fitx):
     right_curverad = ((1 + ((2 * right_fit_cr[0] * y_eval * ym_per_pix + right_fit_cr[1]) ** 2)) ** 1.5) / np.abs(
         2 * right_fit_cr[0])  ## Implement the calculation of the right line here
 
-    return left_curverad, right_curverad
+    return center_m, left_curverad, right_curverad
 
 # Calculate the radius of curvature in meters for both lane lines
 #left_curverad, right_curverad = measure_curvature_real()

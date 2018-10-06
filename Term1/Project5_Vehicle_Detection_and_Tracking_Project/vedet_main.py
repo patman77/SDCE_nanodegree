@@ -16,7 +16,8 @@ from sklearn.cross_validation import train_test_split
 
 
 # import of vedet_main
-from Project4_Advanced_Lane_Finding_Project.main import process_image_lane_detect
+from ..Project4_Advanced_Lane_Finding_Project.main import calibrate_camera
+
 
 # Read in cars and notcars
 images = glob.glob('./*vehicles_smallset/**/*.jpeg', recursive=True)

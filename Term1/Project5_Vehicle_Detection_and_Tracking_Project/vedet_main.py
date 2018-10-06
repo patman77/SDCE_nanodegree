@@ -55,6 +55,7 @@ from Project4_Advanced_Lane_Finding_Project.main  import calibrate_camera
 #execfile("Project4_Advanced_Lane_Finding_Project.main.py") # bad idea
 from Project4_Advanced_Lane_Finding_Project.main  import backproject_measurement
 from Project4_Advanced_Lane_Finding_Project.main  import draw_curvature_and_position
+from Project4_Advanced_Lane_Finding_Project.main import process_image_lane_detect
 
 
 # import of lane finding imports
@@ -62,6 +63,23 @@ from Project4_Advanced_Lane_Finding_Project.undistort  import cal_undistort
 
 # change back
 os.chdir("../Project5_Vehicle_Detection_and_Tracking_Project")
+
+def process_image_vedet(image):
+    dst = process_image_lane_detect(image)
+    draw_image = np.copy(image)
+    windows = slide_window(dst, x_start_stop=[None, None], y_start_stop=y_start_stop,
+                           xy_window=(96, 96), xy_overlap=(0.5, 0.5))
+
+    hot_windows = search_windows(dst, windows, svc, X_scaler, color_space=color_space,
+                                 spatial_size=spatial_size, hist_bins=hist_bins,
+                                 orient=orient, pix_per_cell=pix_per_cell,
+                                 cell_per_block=cell_per_block,
+                                 hog_channel=hog_channel, spatial_feat=spatial_feat,
+                                 hist_feat=hist_feat, hog_feat=hog_feat)
+
+    window_img = draw_boxes(draw_image, hot_windows, color=(0, 0, 255), thick=6)
+    return window_img
+
 
 # Read in cars and notcars
 images = glob.glob('./*vehicles_smallset/**/*.jpeg', recursive=True)
@@ -137,29 +155,44 @@ print('Test Accuracy of SVC = ', round(svc.score(X_test, y_test), 4))
 # Check the prediction time for a single sample
 t = time.time()
 
-image = mpimg.imread('bbox-example-image.jpg')
-draw_image = np.copy(image)
+doitonthevideo = True
+#doitonthevideo = False
 
-# Uncomment the following line if you extracted training
-# data from .png images (scaled 0 to 1 by mpimg) and the
-# image you are searching is a .jpg (scaled 0 to 255)
-# image = image.astype(np.float32)/255
+if doitonthevideo == False:
+    image = mpimg.imread('bbox-example-image.jpg')
+    draw_image = np.copy(image)
 
-windows = slide_window(image, x_start_stop=[None, None], y_start_stop=y_start_stop,
-                       xy_window=(96, 96), xy_overlap=(0.5, 0.5))
+    # Uncomment the following line if you extracted training
+    # data from .png images (scaled 0 to 1 by mpimg) and the
+    # image you are searching is a .jpg (scaled 0 to 255)
+    # image = image.astype(np.float32)/255
 
-hot_windows = search_windows(image, windows, svc, X_scaler, color_space=color_space,
-                             spatial_size=spatial_size, hist_bins=hist_bins,
-                             orient=orient, pix_per_cell=pix_per_cell,
-                             cell_per_block=cell_per_block,
-                             hog_channel=hog_channel, spatial_feat=spatial_feat,
-                             hist_feat=hist_feat, hog_feat=hog_feat)
+    windows = slide_window(image, x_start_stop=[None, None], y_start_stop=y_start_stop,
+                           xy_window=(96, 96), xy_overlap=(0.5, 0.5))
 
-window_img = draw_boxes(draw_image, hot_windows, color=(0, 0, 255), thick=6)
+    hot_windows = search_windows(image, windows, svc, X_scaler, color_space=color_space,
+                                 spatial_size=spatial_size, hist_bins=hist_bins,
+                                 orient=orient, pix_per_cell=pix_per_cell,
+                                 cell_per_block=cell_per_block,
+                                 hog_channel=hog_channel, spatial_feat=spatial_feat,
+                                 hist_feat=hist_feat, hog_feat=hog_feat)
 
-plt.imshow(window_img)
-mpimg.imsave('candidates.png', window_img)
-print(' ')
+    window_img = draw_boxes(draw_image, hot_windows, color=(0, 0, 255), thick=6)
+
+    plt.imshow(window_img)
+    mpimg.imsave('candidates.png', window_img)
+    print(' ')
+
+else:
+    video_input00 = 'test_video.mp4'
+    video_input01 = 'project_video.mp4'
+    video_output00 = 'output_videos/test_video_output.mp4'
+    video_output01 = 'output_videos/project_video_output.mp4'
+    videoclip00 = VideoFileClip(video_input00)
+    #videoclip01 = VideoFileClip(video_input01)
+    processed_video = videoclip00.fl_image(process_image_vedet)
+    processed_video.write_videofile(video_output00, audio=False)
+
 
 
 

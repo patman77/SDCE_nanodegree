@@ -214,7 +214,7 @@ def draw_curvature_and_position(img, center_distance, left_curvature_radius, rig
     mpimg.imsave("final_result2.png", copied_img)
     return copied_img
 
-def process_image(image):
+def process_image_lane_detect(image):
     """
 
     :param image: image to be processed, going through the entire pipeline: undistort, color/gradient thresholding, warp, lane detect, curvature calculation
@@ -267,11 +267,11 @@ if testsingleimage == False:
     videoclip02 = VideoFileClip(video_input02)
     videoclip03 = VideoFileClip(video_input03)
 
-    processed_video = videoclip01.fl_image(process_image)
+    processed_video = videoclip01.fl_image(process_image_lane_detect)
     processed_video.write_videofile(video_output01, audio=False)
-    # processed_video = videoclip02.fl_image(process_image)
+    # processed_video = videoclip02.fl_image(process_image_lane_detect)
     # processed_video.write_videofile(video_output02, audio=False)
-    # processed_video = videoclip03.fl_image(process_image)
+    # processed_video = videoclip03.fl_image(process_image_lane_detect)
     # processed_video.write_videofile(video_output03, audio=False)
 
     exit(0)

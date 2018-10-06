@@ -13,11 +13,48 @@ from lesson_functions import *
 # for scikit-learn >= 0.18 use:
 # from sklearn.model_selection import train_test_split
 from sklearn.cross_validation import train_test_split
+import os, sys
+sys.path.insert(0, os.path.abspath("..")) # __init__.py seems to be not enough
+sys.path.insert(0, os.path.abspath("../Project4_Advanced_Lane_Finding_Project")) # __init__.py seems to be not enough
+print(os.path.abspath(".."))
+
+# import of lane finding imports
+import matplotlib.pyplot as plt
+#from PIL import ImageGrab # damn, no Linux support
+import glob # for reading files from path
+import numpy as np
+from pathlib import Path # for is_file
+import pickle
+
+plt.interactive(True) # without this, plot won't become visible in pycharm
+
+# Import everything needed to edit/save/watch video clips
+from moviepy.editor import VideoFileClip
+from IPython.display import HTML
+
+from Project4_Advanced_Lane_Finding_Project.apply_sobel import abs_sobel_thresh
+from Project4_Advanced_Lane_Finding_Project.color_and_gradient import pipeline
+#from curve_pixels import measure_curvature_pixels
+from Project4_Advanced_Lane_Finding_Project.direction_gradient import dir_threshold
+from Project4_Advanced_Lane_Finding_Project.lane_histogram import hist
+from Project4_Advanced_Lane_Finding_Project.magnitude_gradient import mag_thresh
+from Project4_Advanced_Lane_Finding_Project.prev_poly import fit_poly, search_around_poly
+from Project4_Advanced_Lane_Finding_Project.radius_curve import measure_curvature_real2
+from Project4_Advanced_Lane_Finding_Project.rgb_to_hls import hls_select
+from Project4_Advanced_Lane_Finding_Project.sliding_window import find_lane_pixels, fit_polynomial, fit_polynomial2
+from Project4_Advanced_Lane_Finding_Project.sliding_window_template import window_mask,find_window_centroids
+from Project4_Advanced_Lane_Finding_Project.undistort import cal_undistort
+from Project4_Advanced_Lane_Finding_Project.warp import corners_unwarp_improved
+
+# import of lane finding main
+from Project4_Advanced_Lane_Finding_Project.main  import calibrate_camera
+#execfile("Project4_Advanced_Lane_Finding_Project.main.py")
+#from Project4_Advanced_Lane_Finding_Project.main  import backproject_measurement
+#from Project4_Advanced_Lane_Finding_Project.main  import draw_curvature_and_position
 
 
-# import of vedet_main
-from ..Project4_Advanced_Lane_Finding_Project.main import calibrate_camera
-
+# import of lane finding imports
+from Project4_Advanced_Lane_Finding_Project.undistort  import cal_undistort
 
 # Read in cars and notcars
 images = glob.glob('./*vehicles_smallset/**/*.jpeg', recursive=True)

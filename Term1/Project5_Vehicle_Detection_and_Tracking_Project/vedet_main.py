@@ -18,6 +18,10 @@ sys.path.insert(0, os.path.abspath("..")) # __init__.py seems to be not enough
 sys.path.insert(0, os.path.abspath("../Project4_Advanced_Lane_Finding_Project")) # __init__.py seems to be not enough
 print(os.path.abspath(".."))
 
+print("Current working dir ", os.getcwd())
+os.chdir("../Project4_Advanced_Lane_Finding_Project")
+print("Current working dir ", os.getcwd())
+
 # import of lane finding imports
 import matplotlib.pyplot as plt
 #from PIL import ImageGrab # damn, no Linux support
@@ -48,13 +52,16 @@ from Project4_Advanced_Lane_Finding_Project.warp import corners_unwarp_improved
 
 # import of lane finding main
 from Project4_Advanced_Lane_Finding_Project.main  import calibrate_camera
-#execfile("Project4_Advanced_Lane_Finding_Project.main.py")
-#from Project4_Advanced_Lane_Finding_Project.main  import backproject_measurement
-#from Project4_Advanced_Lane_Finding_Project.main  import draw_curvature_and_position
+#execfile("Project4_Advanced_Lane_Finding_Project.main.py") # bad idea
+from Project4_Advanced_Lane_Finding_Project.main  import backproject_measurement
+from Project4_Advanced_Lane_Finding_Project.main  import draw_curvature_and_position
 
 
 # import of lane finding imports
 from Project4_Advanced_Lane_Finding_Project.undistort  import cal_undistort
+
+# change back
+os.chdir("../Project5_Vehicle_Detection_and_Tracking_Project")
 
 # Read in cars and notcars
 images = glob.glob('./*vehicles_smallset/**/*.jpeg', recursive=True)

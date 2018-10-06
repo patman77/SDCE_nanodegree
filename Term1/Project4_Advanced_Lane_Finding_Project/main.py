@@ -83,7 +83,7 @@ def calibrate_camera(img_path, xnum=nx, ynum=ny, recalc=False, calib_filename='c
             axs[i].axis('off')
             axs[i].imshow(image)
             plt.show(block=False)
-            cv2.waitKey(500)
+            cv2.waitKey(100)
         else: # also display image when corners are not found, but mark
             height, width, channels = image.shape
             cv2.line(image, (0, 0), (width, height), (255, 0, 0), 25)
@@ -249,8 +249,8 @@ except:
     print('exception!!')
     exit(1)
 
-testsingleimage = False
-#testsingleimage = True
+#testsingleimage = False
+testsingleimage = True
 
 # -----------------------------------------------------------------------------
 # This is the block for video processing
@@ -310,7 +310,7 @@ ax2.axis('off')
 ax2.imshow(dst)
 print(" ")
 mpimg.imsave(outimgpath+"undistorted_"+os.path.splitext(os.path.basename(testimgname))[0]+".png", dst) # jpg write not possible, use png
-cv2.waitKey(100000)
+cv2.waitKey(100)
 
 # step 3: Use color transforms, gradients, etc., to create a thresholded binary image.
 color_binary = pipeline(dst)
@@ -323,7 +323,7 @@ ax2.set_title("color/gradient thresholded image")
 ax2.axis('off')
 ax2.imshow(color_binary)
 print(" ")
-cv2.waitKey(100000)
+cv2.waitKey(100)
 
 # step 4: Apply a perspective transform to rectify binary image ("birds-eye view").
 unwarped, M, Minv = corners_unwarp_improved(color_binary, nx, ny, mtx, dist)
@@ -337,7 +337,7 @@ ax2.axis('off')
 ax2.imshow(unwarped)
 mpimg.imsave("unwarped.png", unwarped)
 print(" ")
-cv2.waitKey(100000)
+cv2.waitKey(100)
 
 # step 5: Detect lane pixels and fit to find the lane boundary.
 from sliding_window_template import window_width, window_height, margin

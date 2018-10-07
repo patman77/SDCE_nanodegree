@@ -73,6 +73,11 @@ os.chdir("../Project5_Vehicle_Detection_and_Tracking_Project")
 def process_image_vedet(image):
     dst = process_image_lane_detect(image)
     draw_image = np.copy(dst)
+    # Uncomment the following line if you extracted training
+    # data from .png images (scaled 0 to 1 by mpimg) and the
+    # image you are searching is a .jpg (scaled 0 to 255)
+    dst = dst.astype(np.float32)/255
+
     windows = slide_window(dst, x_start_stop=[None, None], y_start_stop=y_start_stop,
                            xy_window=(96, 96), xy_overlap=(0.5, 0.5))
 
@@ -86,14 +91,14 @@ def process_image_vedet(image):
     heat = np.zeros_like(dst[:, :, 0]).astype(np.float)
     heat = add_heat(heat, hot_windows)
     # Apply threshold to help remove false positives
-    heat = apply_threshold(heat, 5)
+    heat = apply_threshold(heat, 2)
     # Visualize the heatmap when displaying
     heatmap = np.clip(heat, 0, 255)
     # Find final boxes from heatmap using label function
     labels = label(heatmap)
-    draw_img = draw_labeled_bboxes(dst, labels)
-    #window_img = draw_boxes(draw_img, hot_windows, color=(0, 255, 255), thick=4)
-    return draw_img
+    draw_img = draw_labeled_bboxes(draw_image, labels)
+    window_img = draw_boxes(draw_img, hot_windows, color=(0, 255, 255), thick=4)
+    return window_img
 
 
 # Read in cars and notcars
@@ -118,7 +123,7 @@ for image in notcarimages:
 # Reduce the sample size because
 # The quiz evaluator times out after 13s of CPU time
 sample_size = min(len(cars), len(notcars))
-print('sample_size = ', sample_size)
+print('#cars = ', len(cars), '#notcars = ', len(notcars), 'sample_size = ', sample_size)
 cars = cars[0:sample_size]
 notcars = notcars[0:sample_size]
 

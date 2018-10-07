@@ -8,6 +8,12 @@ from sklearn.svm import LinearSVC
 from sklearn.preprocessing import StandardScaler
 from draw_boxes import draw_boxes
 from search_classify import search_windows
+from heatmap import add_heat
+from heatmap import apply_threshold
+from heatmap import draw_labeled_bboxes
+from scipy.ndimage.measurements import label
+
+
 from lesson_functions import *
 # NOTE: the next import is only valid for scikit-learn version <= 0.17
 # for scikit-learn >= 0.18 use:
@@ -66,7 +72,7 @@ os.chdir("../Project5_Vehicle_Detection_and_Tracking_Project")
 
 def process_image_vedet(image):
     dst = process_image_lane_detect(image)
-    draw_image = np.copy(image)
+    draw_image = np.copy(dst)
     windows = slide_window(dst, x_start_stop=[None, None], y_start_stop=y_start_stop,
                            xy_window=(96, 96), xy_overlap=(0.5, 0.5))
 
@@ -77,23 +83,42 @@ def process_image_vedet(image):
                                  hog_channel=hog_channel, spatial_feat=spatial_feat,
                                  hist_feat=hist_feat, hog_feat=hog_feat)
 
-    window_img = draw_boxes(draw_image, hot_windows, color=(0, 0, 255), thick=6)
-    return window_img
+    heat = np.zeros_like(dst[:, :, 0]).astype(np.float)
+    heat = add_heat(heat, hot_windows)
+    # Apply threshold to help remove false positives
+    heat = apply_threshold(heat, 5)
+    # Visualize the heatmap when displaying
+    heatmap = np.clip(heat, 0, 255)
+    # Find final boxes from heatmap using label function
+    labels = label(heatmap)
+    draw_img = draw_labeled_bboxes(dst, labels)
+    #window_img = draw_boxes(draw_img, hot_windows, color=(0, 255, 255), thick=4)
+    return draw_img
 
 
 # Read in cars and notcars
-images = glob.glob('./*vehicles_smallset/**/*.jpeg', recursive=True)
+#images = glob.glob('./*vehicles/**/*.jpeg', recursive=True) # for smallset
+# images = glob.glob('./*vehicles/**/*.png', recursive=True)
+# cars = []
+# notcars = []
+# for image in images:
+#     if 'image' in image or 'extra' in image:
+#         notcars.append(image)
+#     else:
+#         cars.append(image)
+carimages = glob.glob('./vehicles/**/*.png', recursive=True)
+notcarimages = glob.glob('./non-vehicles/**/*.png', recursive=True)
 cars = []
 notcars = []
-for image in images:
-    if 'image' in image or 'extra' in image:
-        notcars.append(image)
-    else:
-        cars.append(image)
+for image in carimages:
+    cars.append(image)
+for image in notcarimages:
+    notcars.append(image)
 
 # Reduce the sample size because
 # The quiz evaluator times out after 13s of CPU time
-sample_size = 500
+sample_size = min(len(cars), len(notcars))
+print('sample_size = ', sample_size)
 cars = cars[0:sample_size]
 notcars = notcars[0:sample_size]
 
@@ -165,9 +190,9 @@ if doitonthevideo == False:
     # Uncomment the following line if you extracted training
     # data from .png images (scaled 0 to 1 by mpimg) and the
     # image you are searching is a .jpg (scaled 0 to 255)
-    # image = image.astype(np.float32)/255
+    image = image.astype(np.float32)/255
 
-    windows = slide_window(image, x_start_stop=[None, None], y_start_stop=y_start_stop,
+    windows = slide_window(image, x_start_stop=y_start_stop, y_start_stop=y_start_stop,
                            xy_window=(96, 96), xy_overlap=(0.5, 0.5))
 
     hot_windows = search_windows(image, windows, svc, X_scaler, color_space=color_space,
@@ -189,9 +214,11 @@ else:
     video_output00 = 'output_videos/test_video_output.mp4'
     video_output01 = 'output_videos/project_video_output.mp4'
     videoclip00 = VideoFileClip(video_input00)
-    #videoclip01 = VideoFileClip(video_input01)
+    videoclip01 = VideoFileClip(video_input01)
     processed_video = videoclip00.fl_image(process_image_vedet)
+    #processed_video = videoclip01.fl_image(process_image_vedet)
     processed_video.write_videofile(video_output00, audio=False)
+    #processed_video.write_videofile(video_output01, audio=False)
 
 
 

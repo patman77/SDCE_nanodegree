@@ -41,7 +41,7 @@ def draw_labeled_bboxes(img, labels):
         # Define a bounding box based on min/max x and y
         bbox = ((np.min(nonzerox), np.min(nonzeroy)), (np.max(nonzerox), np.max(nonzeroy)))
         # Draw the box on the image
-        cv2.rectangle(img, bbox[0], bbox[1], (0,0,255), 6)
+        cv2.rectangle(img, bbox[0], bbox[1], (255,0,0), 6)
     # Return the image
     return img
 
@@ -49,7 +49,7 @@ def draw_labeled_bboxes(img, labels):
 heat = add_heat(heat,box_list)
     
 # Apply threshold to help remove false positives
-heat = apply_threshold(heat,1)
+heat = apply_threshold(heat,5)
 
 # Visualize the heatmap when displaying    
 heatmap = np.clip(heat, 0, 255)

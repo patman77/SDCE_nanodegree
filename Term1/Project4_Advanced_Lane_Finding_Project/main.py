@@ -251,150 +251,154 @@ except:
 
 #testsingleimage = False
 testsingleimage = True
+#skipforvedet = False
+skipforvedet = True
 
-# -----------------------------------------------------------------------------
-# This is the block for video processing
-# -----------------------------------------------------------------------------
-if testsingleimage == False:
-    print('starting video pipeline')
-    video_input01 = 'project_video.mp4'
-    video_input02 = 'challenge_video.mp4'
-    video_input03 = 'harder_challenge_video.mp4'
-    video_output01 = 'output_videos/project_video_output.mp4'
-    video_output02 = 'output_videos/challenge_video_output.mp4'
-    video_output03 = 'output_videos/harder_challenge_video_output.mp4'
-    videoclip01 = VideoFileClip(video_input01)
-    videoclip02 = VideoFileClip(video_input02)
-    videoclip03 = VideoFileClip(video_input03)
+if skipforvedet == False:
 
-    processed_video = videoclip01.fl_image(process_image_lane_detect)
-    processed_video.write_videofile(video_output01, audio=False)
-    # processed_video = videoclip02.fl_image(process_image_lane_detect)
-    # processed_video.write_videofile(video_output02, audio=False)
-    # processed_video = videoclip03.fl_image(process_image_lane_detect)
-    # processed_video.write_videofile(video_output03, audio=False)
+    # -----------------------------------------------------------------------------
+    # This is the block for video processing
+    # -----------------------------------------------------------------------------
+    if testsingleimage == False:
+        print('starting video pipeline')
+        video_input01 = 'project_video.mp4'
+        video_input02 = 'challenge_video.mp4'
+        video_input03 = 'harder_challenge_video.mp4'
+        video_output01 = 'output_videos/project_video_output.mp4'
+        video_output02 = 'output_videos/challenge_video_output.mp4'
+        video_output03 = 'output_videos/harder_challenge_video_output.mp4'
+        videoclip01 = VideoFileClip(video_input01)
+        videoclip02 = VideoFileClip(video_input02)
+        videoclip03 = VideoFileClip(video_input03)
 
-    exit(0)
+        processed_video = videoclip01.fl_image(process_image_lane_detect)
+        processed_video.write_videofile(video_output01, audio=False)
+        # processed_video = videoclip02.fl_image(process_image_lane_detect)
+        # processed_video.write_videofile(video_output02, audio=False)
+        # processed_video = videoclip03.fl_image(process_image_lane_detect)
+        # processed_video.write_videofile(video_output03, audio=False)
 
-# -----------------------------------------------------------------------------
-# This is the block for single image processing
-# -----------------------------------------------------------------------------
-# test undistortion
-# step 2: Apply a distortion correction to raw images.
-#testimgname = 'camera_cal/calibration1.jpg'
-testimgpath = './test_images/'
-outimgpath = './output_images/'
-testimgname = 'straight_lines1.jpg'
-# testimgname = 'straight_lines2.jpg'
-# testimgname = 'test1.jpg'
-# testimgname = 'test2.jpg'
-# testimgname = 'test3.jpg'
-# testimgname = 'test4.jpg'
-# testimgname = 'test5.jpg'
-# testimgname = 'test6.jpg'
-testimgfullname = testimgpath + testimgname
-#testimg = mpimg.imread('./test_images/straight_lines1.jpg') # for determining the trapezoid for unwarping
-testimg = mpimg.imread(testimgfullname) # for determining the trapezoid for unwarping
+        exit(0)
 
-dst = cv2.undistort(testimg, mtx, dist, None, mtx)
+    # -----------------------------------------------------------------------------
+    # This is the block for single image processing
+    # -----------------------------------------------------------------------------
+    # test undistortion
+    # step 2: Apply a distortion correction to raw images.
+    #testimgname = 'camera_cal/calibration1.jpg'
+    testimgpath = './test_images/'
+    outimgpath = './output_images/'
+    testimgname = 'straight_lines1.jpg'
+    # testimgname = 'straight_lines2.jpg'
+    # testimgname = 'test1.jpg'
+    # testimgname = 'test2.jpg'
+    # testimgname = 'test3.jpg'
+    # testimgname = 'test4.jpg'
+    # testimgname = 'test5.jpg'
+    # testimgname = 'test6.jpg'
+    testimgfullname = testimgpath + testimgname
+    #testimg = mpimg.imread('./test_images/straight_lines1.jpg') # for determining the trapezoid for unwarping
+    testimg = mpimg.imread(testimgfullname) # for determining the trapezoid for unwarping
 
-
-# visualize undistortion
-f, (ax1, ax2) = plt.subplots(1, 2, figsize=(10,5))
-f.subplots_adjust(hspace = horiz_spacing, wspace=width_space)
-ax1.set_title("original image")
-ax1.axis('off')
-ax1.imshow(testimg)
-ax2.set_title("undistorted image")
-ax2.axis('off')
-ax2.imshow(dst)
-print(" ")
-mpimg.imsave(outimgpath+"undistorted_"+os.path.splitext(os.path.basename(testimgname))[0]+".png", dst) # jpg write not possible, use png
-cv2.waitKey(100)
-
-# step 3: Use color transforms, gradients, etc., to create a thresholded binary image.
-color_binary = pipeline(dst)
-f, (ax1, ax2) = plt.subplots(1, 2, figsize=(24,9))
-f.subplots_adjust(hspace = horiz_spacing, wspace=width_space)
-ax1.set_title("original image")
-ax1.axis('off')
-ax1.imshow(testimg)
-ax2.set_title("color/gradient thresholded image")
-ax2.axis('off')
-ax2.imshow(color_binary)
-print(" ")
-cv2.waitKey(100)
-
-# step 4: Apply a perspective transform to rectify binary image ("birds-eye view").
-unwarped, M, Minv = corners_unwarp_improved(color_binary, nx, ny, mtx, dist)
-f, (ax1, ax2) = plt.subplots(1, 2, figsize=(12,5))
-f.subplots_adjust(hspace = horiz_spacing, wspace=width_space)
-ax1.set_title("original image")
-ax1.axis('off')
-ax1.imshow(color_binary)
-ax2.set_title("warped image")
-ax2.axis('off')
-ax2.imshow(unwarped)
-mpimg.imsave("unwarped.png", unwarped)
-print(" ")
-cv2.waitKey(100)
-
-# step 5: Detect lane pixels and fit to find the lane boundary.
-from sliding_window_template import window_width, window_height, margin
-warped_gray = cv2.cvtColor(unwarped, cv2.COLOR_RGB2GRAY)
-out_img, ploty, left_fitx, right_fitx = fit_polynomial2(warped_gray)
-
-plt.imshow(out_img)
-mpimg.imsave("test.png", out_img)
-print(' ')
-# window_centroids = find_window_centroids(warped_gray, window_width, window_height, margin)
-# # If we found any window centers
-# if len(window_centroids) > 0:
-#
-#     # Points used to draw all the left and right windows
-#     l_points = np.zeros_like(warped_gray)
-#     r_points = np.zeros_like(warped_gray)
-#
-#     # Go through each level and draw the windows
-#     for level in range(0, len(window_centroids)):
-#         # Window_mask is a function to draw window areas
-#         l_mask = window_mask(window_width, window_height, warped_gray, window_centroids[level][0], level)
-#         r_mask = window_mask(window_width, window_height, warped_gray, window_centroids[level][1], level)
-#         # Add graphic points from window mask here to total pixels found
-#         l_points[(l_points == 255) | ((l_mask == 1))] = 255
-#         r_points[(r_points == 255) | ((r_mask == 1))] = 255
-#
-#     # Draw the results
-#     template = np.array(r_points + l_points, np.uint8)  # add both left and right window pixels together
-#     zero_channel = np.zeros_like(template)  # create a zero color channel
-#     template = np.array(cv2.merge((zero_channel, template, zero_channel)), np.uint8)  # make window pixels green
-#     warpage = np.dstack((warped_gray, warped_gray, warped_gray)) * 255  # making the original road pixels 3 color channels
-#     output = cv2.addWeighted(warpage, 1, template, 0.5, 0.0)  # overlay the orignal road image with window results
-#
-# # If no window centers found, just display orginal road image
-# else:
-#     output = np.array(cv2.merge((warped_gray, warped_gray, warped_gray)), np.uint8)
-#
-# # Display the final results
-# plt.imshow(output)
-# plt.title('window fitting results')
-# plt.show()
-# print(' ')
+    dst = cv2.undistort(testimg, mtx, dist, None, mtx)
 
 
-# step 6: Determine the/ curvature of the lane and vehicle position with respect to center.
-# Calculate the radius of curvature in meters for both lane lines
-center, left_curverad, right_curverad = measure_curvature_real2(ploty, left_fitx, right_fitx, mtx)
+    # visualize undistortion
+    f, (ax1, ax2) = plt.subplots(1, 2, figsize=(10,5))
+    f.subplots_adjust(hspace = horiz_spacing, wspace=width_space)
+    ax1.set_title("original image")
+    ax1.axis('off')
+    ax1.imshow(testimg)
+    ax2.set_title("undistorted image")
+    ax2.axis('off')
+    ax2.imshow(dst)
+    print(" ")
+    mpimg.imsave(outimgpath+"undistorted_"+os.path.splitext(os.path.basename(testimgname))[0]+".png", dst) # jpg write not possible, use png
+    cv2.waitKey(100)
 
-print('center=', center, 'left_curverad=', left_curverad, 'm', 'right_curverad=', right_curverad, 'm')
-# Should see values of 533.75 and 648.16 here, if using
-# the default `generate_data` function with given seed number
+    # step 3: Use color transforms, gradients, etc., to create a thresholded binary image.
+    color_binary = pipeline(dst)
+    f, (ax1, ax2) = plt.subplots(1, 2, figsize=(24,9))
+    f.subplots_adjust(hspace = horiz_spacing, wspace=width_space)
+    ax1.set_title("original image")
+    ax1.axis('off')
+    ax1.imshow(testimg)
+    ax2.set_title("color/gradient thresholded image")
+    ax2.axis('off')
+    ax2.imshow(color_binary)
+    print(" ")
+    cv2.waitKey(100)
 
-# step 7: Warp the detected lane boundaries back onto the original image.
-result = backproject_measurement(warped_gray, ploty, left_fitx, right_fitx, Minv, testimg)
-final_result = draw_curvature_and_position(result, center, left_curverad, right_curverad)
-print('end')
+    # step 4: Apply a perspective transform to rectify binary image ("birds-eye view").
+    unwarped, M, Minv = corners_unwarp_improved(color_binary, nx, ny, mtx, dist)
+    f, (ax1, ax2) = plt.subplots(1, 2, figsize=(12,5))
+    f.subplots_adjust(hspace = horiz_spacing, wspace=width_space)
+    ax1.set_title("original image")
+    ax1.axis('off')
+    ax1.imshow(color_binary)
+    ax2.set_title("warped image")
+    ax2.axis('off')
+    ax2.imshow(unwarped)
+    mpimg.imsave("unwarped.png", unwarped)
+    print(" ")
+    cv2.waitKey(100)
 
-# step 8: Output visual display of the lane boundaries and numerical estimation of lane curvature and vehicle position.
+    # step 5: Detect lane pixels and fit to find the lane boundary.
+    from sliding_window_template import window_width, window_height, margin
+    warped_gray = cv2.cvtColor(unwarped, cv2.COLOR_RGB2GRAY)
+    out_img, ploty, left_fitx, right_fitx = fit_polynomial2(warped_gray)
+
+    plt.imshow(out_img)
+    mpimg.imsave("test.png", out_img)
+    print(' ')
+    # window_centroids = find_window_centroids(warped_gray, window_width, window_height, margin)
+    # # If we found any window centers
+    # if len(window_centroids) > 0:
+    #
+    #     # Points used to draw all the left and right windows
+    #     l_points = np.zeros_like(warped_gray)
+    #     r_points = np.zeros_like(warped_gray)
+    #
+    #     # Go through each level and draw the windows
+    #     for level in range(0, len(window_centroids)):
+    #         # Window_mask is a function to draw window areas
+    #         l_mask = window_mask(window_width, window_height, warped_gray, window_centroids[level][0], level)
+    #         r_mask = window_mask(window_width, window_height, warped_gray, window_centroids[level][1], level)
+    #         # Add graphic points from window mask here to total pixels found
+    #         l_points[(l_points == 255) | ((l_mask == 1))] = 255
+    #         r_points[(r_points == 255) | ((r_mask == 1))] = 255
+    #
+    #     # Draw the results
+    #     template = np.array(r_points + l_points, np.uint8)  # add both left and right window pixels together
+    #     zero_channel = np.zeros_like(template)  # create a zero color channel
+    #     template = np.array(cv2.merge((zero_channel, template, zero_channel)), np.uint8)  # make window pixels green
+    #     warpage = np.dstack((warped_gray, warped_gray, warped_gray)) * 255  # making the original road pixels 3 color channels
+    #     output = cv2.addWeighted(warpage, 1, template, 0.5, 0.0)  # overlay the orignal road image with window results
+    #
+    # # If no window centers found, just display orginal road image
+    # else:
+    #     output = np.array(cv2.merge((warped_gray, warped_gray, warped_gray)), np.uint8)
+    #
+    # # Display the final results
+    # plt.imshow(output)
+    # plt.title('window fitting results')
+    # plt.show()
+    # print(' ')
+
+
+    # step 6: Determine the/ curvature of the lane and vehicle position with respect to center.
+    # Calculate the radius of curvature in meters for both lane lines
+    center, left_curverad, right_curverad = measure_curvature_real2(ploty, left_fitx, right_fitx, mtx)
+
+    print('center=', center, 'left_curverad=', left_curverad, 'm', 'right_curverad=', right_curverad, 'm')
+    # Should see values of 533.75 and 648.16 here, if using
+    # the default `generate_data` function with given seed number
+
+    # step 7: Warp the detected lane boundaries back onto the original image.
+    result = backproject_measurement(warped_gray, ploty, left_fitx, right_fitx, Minv, testimg)
+    final_result = draw_curvature_and_position(result, center, left_curverad, right_curverad)
+    print('end')
+
+    # step 8: Output visual display of the lane boundaries and numerical estimation of lane curvature and vehicle position.
 
 

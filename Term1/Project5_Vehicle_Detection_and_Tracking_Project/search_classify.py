@@ -114,12 +114,12 @@ cars = cars[0:sample_size]
 notcars = notcars[0:sample_size]
 
 ### TODO: Tweak these parameters and see how the results change.
-color_space = 'HSV'  # Can be RGB, HSV, LUV, HLS, YUV, YCrCb
-orient = 18  # HOG orientations
+color_space = 'LUV'  # Can be RGB, HSV, LUV, HLS, YUV, YCrCb
+orient = 9  # HOG orientations
 pix_per_cell = 16  # HOG pixels per cell
 cell_per_block = 2  # HOG cells per block
-hog_channel = "ALL"  # Can be 0, 1, 2, or "ALL"
-spatial_size = (16, 16)  # Spatial binning dimensions
+hog_channel = 0  # Can be 0, 1, 2, or "ALL"
+spatial_size = (32, 32)  # Spatial binning dimensions
 hist_bins = 64  # Number of histogram bins
 spatial_feat = True  # Spatial features on or off
 hist_feat = True  # Histogram features on or off
@@ -192,6 +192,6 @@ hot_windows = search_windows(image, windows, svc, X_scaler, color_space=color_sp
 window_img = draw_boxes(draw_image, hot_windows, color=(0, 0, 255), thick=6)
 
 plt.imshow(window_img)
-mpimg.imsave('candidates.png', window_img)
+mpimg.imsave('candidates_simple.png', window_img)
 print(' ')
 

@@ -93,24 +93,16 @@ def process_image_vedet(image):
     # Apply threshold to help remove false positives
     heat = apply_threshold(heat, 2)
     # Visualize the heatmap when displaying
-    heatmap = np.clip(heat, 0, 255)
+    heatmap = np.clip(heat, 0, 1)
     # Find final boxes from heatmap using label function
     labels = label(heatmap)
     draw_img = draw_labeled_bboxes(draw_image, labels)
-    window_img = draw_boxes(draw_img, hot_windows, color=(0, 255, 255), thick=4)
-    return window_img
+    #window_img = draw_boxes(draw_img, hot_windows, color=(0, 255, 255), thick=4)
+    return draw_img
 
+modelfilename = "model.svc"
 
 # Read in cars and notcars
-#images = glob.glob('./*vehicles/**/*.jpeg', recursive=True) # for smallset
-# images = glob.glob('./*vehicles/**/*.png', recursive=True)
-# cars = []
-# notcars = []
-# for image in images:
-#     if 'image' in image or 'extra' in image:
-#         notcars.append(image)
-#     else:
-#         cars.append(image)
 carimages = glob.glob('./vehicles/**/*.png', recursive=True)
 notcarimages = glob.glob('./non-vehicles/**/*.png', recursive=True)
 cars = []
@@ -130,9 +122,9 @@ notcars = notcars[0:sample_size]
 ### TODO: Tweak these parameters and see how the results change.
 color_space = 'HSV'  # Can be RGB, HSV, LUV, HLS, YUV, YCrCb
 orient = 18  # HOG orientations
-pix_per_cell = 16  # HOG pixels per cell
+pix_per_cell = 8  # HOG pixels per cell
 cell_per_block = 2  # HOG cells per block
-hog_channel = "ALL"  # Can be 0, 1, 2, or "ALL"
+hog_channel = 0  # Can be 0, 1, 2, or "ALL"
 spatial_size = (16, 16)  # Spatial binning dimensions
 hist_bins = 64  # Number of histogram bins
 spatial_feat = True  # Spatial features on or off
@@ -184,34 +176,40 @@ print(round(t2 - t, 2), 'Seconds to train SVC...')
 print('Test Accuracy of SVC = ', round(svc.score(X_test, y_test), 4))
 # Check the prediction time for a single sample
 t = time.time()
+n_predict = 10
+print('My SVC predicts: ', svc.predict(X_test[0:n_predict]))
+print('For these', n_predict, 'labels: ', y_test[0:n_predict])
+t2 = time.time()
+print(round(t2 - t, 5), 'Seconds to predict', n_predict, 'labels with SVC')
 
-doitonthevideo = True
-#doitonthevideo = False
+#doitonthevideo = True
+doitonthevideo = False
 
 if doitonthevideo == False:
-    image = mpimg.imread('bbox-example-image.jpg')
-    draw_image = np.copy(image)
+    testimages = glob.glob('./test_images/*.jpg', recursive=True)
+    outimgpath = './output_images/'
 
-    # Uncomment the following line if you extracted training
-    # data from .png images (scaled 0 to 1 by mpimg) and the
-    # image you are searching is a .jpg (scaled 0 to 255)
-    image = image.astype(np.float32)/255
-
-    windows = slide_window(image, x_start_stop=y_start_stop, y_start_stop=y_start_stop,
-                           xy_window=(96, 96), xy_overlap=(0.5, 0.5))
-
-    hot_windows = search_windows(image, windows, svc, X_scaler, color_space=color_space,
-                                 spatial_size=spatial_size, hist_bins=hist_bins,
-                                 orient=orient, pix_per_cell=pix_per_cell,
-                                 cell_per_block=cell_per_block,
-                                 hog_channel=hog_channel, spatial_feat=spatial_feat,
-                                 hist_feat=hist_feat, hog_feat=hog_feat)
-
-    window_img = draw_boxes(draw_image, hot_windows, color=(0, 0, 255), thick=6)
-
-    plt.imshow(window_img)
-    mpimg.imsave('candidates.png', window_img)
-    print(' ')
+    for filename in testimages:
+        image = mpimg.imread(filename)
+        if image is None:
+            continue
+        draw_image = np.copy(image)
+        # Uncomment the following line if you extracted training
+        # data from .png images (scaled 0 to 1 by mpimg) and the
+        # image you are searching is a .jpg (scaled 0 to 255)
+        image = image.astype(np.float32)/255
+        windows = slide_window(image, x_start_stop=y_start_stop, y_start_stop=y_start_stop,
+                               xy_window=(96, 96), xy_overlap=(0.5, 0.5))
+        hot_windows = search_windows(image, windows, svc, X_scaler, color_space=color_space,
+                                     spatial_size=spatial_size, hist_bins=hist_bins,
+                                     orient=orient, pix_per_cell=pix_per_cell,
+                                     cell_per_block=cell_per_block,
+                                     hog_channel=hog_channel, spatial_feat=spatial_feat,
+                                     hist_feat=hist_feat, hog_feat=hog_feat)
+        window_img = draw_boxes(draw_image, hot_windows, color=(0, 0, 255), thick=6)
+        mpimg.imsave(outimgpath + "candidate_" + os.path.splitext(os.path.basename(filename))[0] + ".png", window_img)  # jpg write not possible, use png
+#        mpimg.imsave('candidates.png', window_img)
+        print(' ')
 
 else:
     video_input00 = 'test_video.mp4'
@@ -220,10 +218,10 @@ else:
     video_output01 = 'output_videos/project_video_output.mp4'
     videoclip00 = VideoFileClip(video_input00)
     videoclip01 = VideoFileClip(video_input01)
-    #processed_video = videoclip00.fl_image(process_image_vedet)
-    processed_video = videoclip01.fl_image(process_image_vedet)
-    #processed_video.write_videofile(video_output00, audio=False)
-    processed_video.write_videofile(video_output01, audio=False)
+    processed_video = videoclip00.fl_image(process_image_vedet)
+    #processed_video = videoclip01.fl_image(process_image_vedet)
+    processed_video.write_videofile(video_output00, audio=False)
+    #processed_video.write_videofile(video_output01, audio=False)
 
 
 

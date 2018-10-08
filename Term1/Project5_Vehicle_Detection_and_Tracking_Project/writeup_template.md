@@ -32,8 +32,12 @@ The goals / steps of this project are the following:
 
 #### 1. Provide a Writeup / README that includes all the rubric points and how you addressed each one.  You can submit your writeup as markdown or pdf.  [Here](https://github.com/udacity/CarND-Vehicle-Detection/blob/master/writeup_template.md) is a template writeup for this project you can use as a guide and a starting point.  
 
-You're reading it!
+Overall, as for the previous project, I extracted all of the source code from the lessons for later usage. It's contained in the files
+"HOG_classify", "car_notcar.py", "color_classify.py", "color_histogram.py", "draw_boxes.py", "get_hog.py", "heatmap.py",
+"hog_subsample.py", "lesson_functions.py", "lesson_functions2.py", "norm_shuffle.py", "search_classify.py",
+"sliding_window.py", "spatial_bin.py", "template_match.py", "template_matching.py", and finally "vedet_main.py".
 
+ 
 ### Histogram of Oriented Gradients (HOG)
 
 #### 1. Explain how (and identify where in your code) you extracted HOG features from the training images.

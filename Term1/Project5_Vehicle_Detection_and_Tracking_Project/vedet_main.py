@@ -102,8 +102,9 @@ def process_image_vedet(image):
 
 modelfilename = "model.svc"
 ### TODO: Tweak these parameters and see how the results change.
-color_space = 'HSV'  # Can be RGB, HSV, LUV, HLS, YUV, YCrCb
-orient = 18  # HOG orientations
+#color_space = 'HSV'  # Can be RGB, HSV, LUV, HLS, YUV, YCrCb
+color_space = 'YCrCb'  # Can be RGB, HSV, LUV, HLS, YUV, YCrCb
+orient = 10  # HOG orientations
 pix_per_cell = 8  # HOG pixels per cell
 cell_per_block = 2  # HOG cells per block
 hog_channel = 0  # Can be 0, 1, 2, or "ALL"

@@ -11,7 +11,8 @@ from search_classify import search_windows
 from heatmap import add_heat
 from heatmap import apply_threshold
 from heatmap import draw_labeled_bboxes
-from hog_subsample import find_cars
+#from hog_subsample import find_cars
+from hog_subsample import find_cars2
 from scipy.ndimage.measurements import label
 
 
@@ -280,7 +281,7 @@ if doitonthevideo == False:
         ystop = 656
         scale = 1.5
 
-        hot_windows = find_cars(image, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins)
+        hot_windows = find_cars2(image, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins)
 
         window_img = draw_boxes(draw_image, hot_windows, color=(0, 0, 255), thick=1)
         heat = np.zeros_like(dst[:, :, 0]).astype(np.fgloat)

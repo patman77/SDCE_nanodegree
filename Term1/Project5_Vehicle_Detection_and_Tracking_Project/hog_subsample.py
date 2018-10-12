@@ -83,17 +83,17 @@ def find_cars(img, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, ce
                 ytop_draw = np.int(ytop * scale)
                 win_draw = np.int(window * scale)
                 cv2.rectangle(draw_img, (xbox_left, ytop_draw + ystart),
-                              (xbox_left + win_draw, ytop_draw + win_draw + ystart), (0, 0, 255), 6)
+                              (xbox_left + win_draw, ytop_draw + win_draw + ystart), (0, 0, 255), 1)
 
     return draw_img
 
 
-ystart = 400
-ystop = 656
-scale = 1.5
-
-out_img = find_cars(img, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size,
-                    hist_bins)
-
-plt.imshow(out_img)
-print(' ')
+# ystart = 400
+# ystop = 656
+# scale = 1.5
+#
+# out_img = find_cars(img, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size,
+#                     hist_bins)
+#
+# plt.imshow(out_img)
+# print(' ')

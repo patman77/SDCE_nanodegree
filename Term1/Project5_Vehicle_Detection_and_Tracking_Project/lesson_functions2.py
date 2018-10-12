@@ -2,7 +2,7 @@ import numpy as np
 import cv2
 from skimage.feature import hog
 
-def convert_color(img, conv='RGB2YCrCb'):
+def convert_color2(img, conv='RGB2YCrCb'):
     if conv == 'RGB2YCrCb':
         return cv2.cvtColor(img, cv2.COLOR_RGB2YCrCb)
     if conv == 'BGR2YCrCb':
@@ -10,7 +10,7 @@ def convert_color(img, conv='RGB2YCrCb'):
     if conv == 'RGB2LUV':
         return cv2.cvtColor(img, cv2.COLOR_RGB2LUV)
 
-def get_hog_features(img, orient, pix_per_cell, cell_per_block, 
+def get_hog_features2(img, orient, pix_per_cell, cell_per_block,
                         vis=False, feature_vec=True):
     # Call with two outputs if vis==True
     if vis == True:
@@ -31,13 +31,13 @@ def get_hog_features(img, orient, pix_per_cell, cell_per_block,
                        visualise=vis, feature_vector=feature_vec)
         return features
 
-def bin_spatial(img, size=(32, 32)):
+def bin_spatial2(img, size=(32, 32)):
     color1 = cv2.resize(img[:,:,0], size).ravel()
     color2 = cv2.resize(img[:,:,1], size).ravel()
     color3 = cv2.resize(img[:,:,2], size).ravel()
     return np.hstack((color1, color2, color3))
                         
-def color_hist(img, nbins=32):    #bins_range=(0, 256)
+def color_hist2(img, nbins=32):    #bins_range=(0, 256)
     # Compute the histogram of the color channels separately
     channel1_hist = np.histogram(img[:,:,0], bins=nbins)
     channel2_hist = np.histogram(img[:,:,1], bins=nbins)

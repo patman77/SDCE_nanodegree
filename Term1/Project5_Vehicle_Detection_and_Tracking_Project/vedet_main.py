@@ -134,12 +134,20 @@ if os.path.isfile(modelfilename):
         spatial_feat = data["spatial_feat"]
         hist_feat = data["hist_feat"]
         hog_feat = data["hog_feat"]
+
+        # Create an array stack of feature vectors
+        X = np.vstack((car_features, notcar_features)).astype(np.float64)
+        # Define the labels vector
+        y = np.hstack((np.ones(len(car_features)), np.zeros(len(notcar_features))))
+        X_scaler = StandardScaler().fit(X)
+
     else:
         svc = None
         print("Loaded linear SVC classifier:")
 
     print("Loaded model!")
 else:
+    svc = None
     # Read in cars and notcars
     carimages = glob.glob('./vehicles/**/*.png', recursive=True)
     notcarimages = glob.glob('./non-vehicles/**/*.png', recursive=True)
@@ -157,49 +165,55 @@ else:
     cars = cars[0:sample_size]
     notcars = notcars[0:sample_size]
 
-    car_features = extract_features(cars, color_space=color_space,
-                                    spatial_size=spatial_size, hist_bins=hist_bins,
-                                    orient=orient, pix_per_cell=pix_per_cell,
-                                    cell_per_block=cell_per_block,
-                                    hog_channel=hog_channel, spatial_feat=spatial_feat,
-                                    hist_feat=hist_feat, hog_feat=hog_feat)
-    notcar_features = extract_features(notcars, color_space=color_space,
-                                       spatial_size=spatial_size, hist_bins=hist_bins,
-                                       orient=orient, pix_per_cell=pix_per_cell,
-                                       cell_per_block=cell_per_block,
-                                       hog_channel=hog_channel, spatial_feat=spatial_feat,
-                                       hist_feat=hist_feat, hog_feat=hog_feat)
+# load or train from scratch
+    if svc is None: # train
+        car_features = extract_features(cars, color_space=color_space,
+                                        spatial_size=spatial_size, hist_bins=hist_bins,
+                                        orient=orient, pix_per_cell=pix_per_cell,
+                                        cell_per_block=cell_per_block,
+                                        hog_channel=hog_channel, spatial_feat=spatial_feat,
+                                        hist_feat=hist_feat, hog_feat=hog_feat)
+        notcar_features = extract_features(notcars, color_space=color_space,
+                                           spatial_size=spatial_size, hist_bins=hist_bins,
+                                           orient=orient, pix_per_cell=pix_per_cell,
+                                           cell_per_block=cell_per_block,
+                                           hog_channel=hog_channel, spatial_feat=spatial_feat,
+                                           hist_feat=hist_feat, hog_feat=hog_feat)
 
-    # Use a linear SVC
-    svc = LinearSVC()
+        # Use a linear SVC
+        svc = LinearSVC()
 
-    # Create an array stack of feature vectors
-    X = np.vstack((car_features, notcar_features)).astype(np.float64)
+        # Create an array stack of feature vectors
+        X = np.vstack((car_features, notcar_features)).astype(np.float64)
 
-    # Define the labels vector
-    y = np.hstack((np.ones(len(car_features)), np.zeros(len(notcar_features))))
+        # Define the labels vector
+        y = np.hstack((np.ones(len(car_features)), np.zeros(len(notcar_features))))
 
-    # Split up data into randomized training and test sets
-    rand_state = np.random.randint(0, 100)
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=rand_state)
+        # Split up data into randomized training and test sets
+        rand_state = np.random.randint(0, 100)
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, test_size=0.2, random_state=rand_state)
 
-    # Fit a per-column scaler
-    X_scaler = StandardScaler().fit(X_train)
-    # Apply the scaler to X
-    X_train = X_scaler.transform(X_train)
-    X_test = X_scaler.transform(X_test)
+        # Fit a per-column scaler
+        X_scaler = StandardScaler().fit(X_train)
+        # Apply the scaler to X
+        X_train = X_scaler.transform(X_train)
+        X_test = X_scaler.transform(X_test)
 
-    print('Using:', orient, 'orientations', pix_per_cell,
-          'pixels per cell and', cell_per_block, 'cells per block')
-    print('Feature vector length:', len(X_train[0]))
+        print('Using:', orient, 'orientations', pix_per_cell,
+              'pixels per cell and', cell_per_block, 'cells per block')
+        print('Feature vector length:', len(X_train[0]))
 
 
-    # Check the training time for the SVC
-    t = time.time()
-    svc.fit(X_train, y_train)
-    t2 = time.time()
-    print(round(t2 - t, 2), 'Seconds to train SVC...')
+        # Check the training time for the SVC
+        t = time.time()
+        svc.fit(X_train, y_train)
+        t2 = time.time()
+        print(round(t2 - t, 2), 'Seconds to train SVC...')
+    else: # load the last training result
+        print("use the loaded svc together with training")
+
+
     # Check the score of the SVC
     print('Test Accuracy of SVC = ', round(svc.score(X_test, y_test), 4))
     # Check the prediction time for a single sample
@@ -210,6 +224,7 @@ else:
     t2 = time.time()
     print(round(t2 - t, 5), 'Seconds to predict', n_predict, 'labels with SVC')
     data = {
+        "svc": svc,
         "cars_features": car_features,
         "notcars_features": notcar_features,
         "colorspace": color_space,
@@ -227,26 +242,7 @@ else:
     with open(modelfilename, mode="wb") as f:
         pickle.dump(data, f)
 
-    data = {
-        "cars_features": car_features,
-        "notcars_features": notcar_features,
-        "colorspace": color_space,
-        "orient": orient,
-        "pix_per_cell": pix_per_cell,
-        "cell_per_block": cell_per_block,
-        "hog_channel": hog_channel,
-        "spatial_size": spatial_size,
-        "hist_bins": hist_bins,
-        "spatial_feat": spatial_feat,
-        "hist_feat": hist_feat,
-        "hog_feat": hog_feat
-    }
 
-# Create an array stack of feature vectors
-X = np.vstack((car_features, notcar_features)).astype(np.float64)
-# Define the labels vector
-y = np.hstack((np.ones(len(car_features)), np.zeros(len(notcar_features))))
-X_scaler = StandardScaler().fit(X)
 
 #doitonthevideo = True
 doitonthevideo = False
@@ -259,12 +255,14 @@ if doitonthevideo == False:
         image = mpimg.imread(filename)
         if image is None:
             continue
-        draw_image = np.copy(image)
+        #dst = process_image_lane_detect(image)
+        dst = image
+        draw_image = np.copy(dst)
         # Uncomment the following line if you extracted training
         # data from .png images (scaled 0 to 1 by mpimg) and the
         # image you are searching is a .jpg (scaled 0 to 255)
         image = image.astype(np.float32)/255
-        windows = slide_window(image, x_start_stop=y_start_stop, y_start_stop=y_start_stop,
+        windows = slide_window(image, x_start_stop=[None, None], y_start_stop=y_start_stop,
                                xy_window=(96, 96), xy_overlap=(0.5, 0.5))
         hot_windows = search_windows(image, windows, svc, X_scaler, color_space=color_space,
                                      spatial_size=spatial_size, hist_bins=hist_bins,
@@ -273,9 +271,18 @@ if doitonthevideo == False:
                                      hog_channel=hog_channel, spatial_feat=spatial_feat,
                                      hist_feat=hist_feat, hog_feat=hog_feat)
         window_img = draw_boxes(draw_image, hot_windows, color=(0, 0, 255), thick=6)
-        mpimg.imsave(outimgpath + "candidate_" + os.path.splitext(os.path.basename(filename))[0] + ".png", window_img)  # jpg write not possible, use png
+        heat = np.zeros_like(dst[:, :, 0]).astype(np.float)
+        heat = add_heat(heat, hot_windows)
+        # Apply threshold to help remove false positives
+        heat = apply_threshold(heat, 2)
+        # Visualize the heatmap when displaying
+        heatmap = np.clip(heat, 0, 1)
+        # Find final boxes from heatmap using label function
+        labels = label(heatmap)
+        draw_img = draw_labeled_bboxes(window_img, labels)
+        mpimg.imsave(outimgpath + "candidate_" + os.path.splitext(os.path.basename(filename))[0] + ".png", draw_img)  # jpg write not possible, use png
 #        mpimg.imsave('candidates.png', window_img)
-        print(' ')
+        print('processed example img ', filename)
 
 else:
     video_input00 = 'test_video.mp4'

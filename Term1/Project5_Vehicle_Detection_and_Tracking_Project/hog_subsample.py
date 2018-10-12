@@ -124,11 +124,12 @@ def find_cars2(img, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, c
     hog3 = get_hog_features2(ch3, orient, pix_per_cell, cell_per_block, feature_vec=False)
 
     window_list = []
-    features = []
+    #features = []
 
     for xb in range(nxsteps):
         for yb in range(nysteps):
             file_features = []
+            hog_features = []
             ypos = yb * cells_per_step
             xpos = xb * cells_per_step
             # Extract HOG for this patch

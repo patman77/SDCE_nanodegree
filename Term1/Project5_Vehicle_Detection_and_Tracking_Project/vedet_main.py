@@ -284,7 +284,7 @@ if doitonthevideo == False:
         hot_windows = find_cars2(image, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins)
 
         window_img = draw_boxes(draw_image, hot_windows, color=(0, 0, 255), thick=1)
-        heat = np.zeros_like(dst[:, :, 0]).astype(np.fgloat)
+        heat = np.zeros_like(dst[:, :, 0]).astype(np.float)
         heat = add_heat(heat, hot_windows)
         # Apply threshold to help remove false positives
         heat = apply_threshold(heat, 1)

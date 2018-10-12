@@ -244,8 +244,8 @@ else:
 
 
 
-doitonthevideo = True
-#doitonthevideo = False
+#doitonthevideo = True
+doitonthevideo = False
 
 if doitonthevideo == False:
     testimages = glob.glob('./test_images/*.jpg', recursive=True)
@@ -263,18 +263,18 @@ if doitonthevideo == False:
         # image you are searching is a .jpg (scaled 0 to 255)
         image = image.astype(np.float32)/255
         windows = slide_window(image, x_start_stop=[None, None], y_start_stop=y_start_stop,
-                               xy_window=(96, 96), xy_overlap=(0.5, 0.5))
+                               xy_window=(96, 96), xy_overlap=(0.8, 0.8))
         hot_windows = search_windows(image, windows, svc, X_scaler, color_space=color_space,
                                      spatial_size=spatial_size, hist_bins=hist_bins,
                                      orient=orient, pix_per_cell=pix_per_cell,
                                      cell_per_block=cell_per_block,
                                      hog_channel=hog_channel, spatial_feat=spatial_feat,
                                      hist_feat=hist_feat, hog_feat=hog_feat)
-        window_img = draw_boxes(draw_image, hot_windows, color=(0, 0, 255), thick=6)
+        window_img = draw_boxes(draw_image, hot_windows, color=(0, 0, 255), thick=1)
         heat = np.zeros_like(dst[:, :, 0]).astype(np.float)
         heat = add_heat(heat, hot_windows)
         # Apply threshold to help remove false positives
-        heat = apply_threshold(heat, 2)
+        heat = apply_threshold(heat, 1)
         # Visualize the heatmap when displaying
         heatmap = np.clip(heat, 0, 1)
         # Find final boxes from heatmap using label function

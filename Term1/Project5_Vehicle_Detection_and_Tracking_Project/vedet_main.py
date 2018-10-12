@@ -11,6 +11,7 @@ from search_classify import search_windows
 from heatmap import add_heat
 from heatmap import apply_threshold
 from heatmap import draw_labeled_bboxes
+from hog_subsample import find_cars
 from scipy.ndimage.measurements import label
 
 
@@ -107,7 +108,7 @@ color_space = 'YCrCb'  # Can be RGB, HSV, LUV, HLS, YUV, YCrCb
 orient = 10  # HOG orientations
 pix_per_cell = 8  # HOG pixels per cell
 cell_per_block = 2  # HOG cells per block
-hog_channel = 0  # Can be 0, 1, 2, or "ALL"
+hog_channel = "ALL"  # Can be 0, 1, 2, or "ALL"
 spatial_size = (16, 16)  # Spatial binning dimensions
 hist_bins = 64  # Number of histogram bins
 spatial_feat = True  # Spatial features on or off
@@ -121,10 +122,11 @@ if os.path.isfile(modelfilename):
         data = pickle.load(f)
     if "svc" in data:
         svc = data["svc"]
+        X_scaler = data["scaler"]
         print("Loaded linear SVC classifier:")
         car_features = data["cars_features"]
         notcar_features = data["notcars_features"]
-        colorspace = data["colorspace"]
+        color_space = data["colorspace"]
         orient = data["orient"]
         pix_per_cell = data["pix_per_cell"]
         cell_per_block = data["cell_per_block"]
@@ -135,11 +137,11 @@ if os.path.isfile(modelfilename):
         hist_feat = data["hist_feat"]
         hog_feat = data["hog_feat"]
 
-        # Create an array stack of feature vectors
-        X = np.vstack((car_features, notcar_features)).astype(np.float64)
-        # Define the labels vector
-        y = np.hstack((np.ones(len(car_features)), np.zeros(len(notcar_features))))
-        X_scaler = StandardScaler().fit(X)
+        # # Create an array stack of feature vectors
+        # X = np.vstack((car_features, notcar_features)).astype(np.float64)
+        # # Define the labels vector
+        # y = np.hstack((np.ones(len(car_features)), np.zeros(len(notcar_features))))
+        # X_scaler = StandardScaler().fit(X)
 
     else:
         svc = None
@@ -161,7 +163,7 @@ else:
     # Reduce the sample size because
     # The quiz evaluator times out after 13s of CPU time
     sample_size = min(len(cars), len(notcars))
-    print('#cars = ', len(cars), '#notcars = ', len(notcars), 'sample_size = ', sample_size)
+    print('#cars = ', len(cars), ' #notcars = ', len(notcars), 'sample_size = ', sample_size)
     cars = cars[0:sample_size]
     notcars = notcars[0:sample_size]
 
@@ -225,6 +227,7 @@ else:
     print(round(t2 - t, 5), 'Seconds to predict', n_predict, 'labels with SVC')
     data = {
         "svc": svc,
+        "scaler": X_scaler,
         "cars_features": car_features,
         "notcars_features": notcar_features,
         "colorspace": color_space,
@@ -262,16 +265,25 @@ if doitonthevideo == False:
         # data from .png images (scaled 0 to 1 by mpimg) and the
         # image you are searching is a .jpg (scaled 0 to 255)
         image = image.astype(np.float32)/255
-        windows = slide_window(image, x_start_stop=[None, None], y_start_stop=y_start_stop,
-                               xy_window=(96, 96), xy_overlap=(0.8, 0.8))
-        hot_windows = search_windows(image, windows, svc, X_scaler, color_space=color_space,
-                                     spatial_size=spatial_size, hist_bins=hist_bins,
-                                     orient=orient, pix_per_cell=pix_per_cell,
-                                     cell_per_block=cell_per_block,
-                                     hog_channel=hog_channel, spatial_feat=spatial_feat,
-                                     hist_feat=hist_feat, hog_feat=hog_feat)
+        # windows = slide_window(image, x_start_stop=[None, None], y_start_stop=y_start_stop,
+        #                        xy_window=(96, 96), xy_overlap=(0.8, 0.8))
+        # hot_windows = search_windows(image, windows, svc, X_scaler, color_space=color_space,
+        #                              spatial_size=spatial_size, hist_bins=hist_bins,
+        #                              orient=orient, pix_per_cell=pix_per_cell,
+        #                              cell_per_block=cell_per_block,
+        #                              hog_channel=hog_channel, spatial_feat=spatial_feat,
+        #                              hist_feat=hist_feat, hog_feat=hog_feat)
+
+        #ystart = y_start_stop[0]
+        ystart = 400
+        #ystop = y_start_stop[1]
+        ystop = 656
+        scale = 1.5
+
+        hot_windows = find_cars(image, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins)
+
         window_img = draw_boxes(draw_image, hot_windows, color=(0, 0, 255), thick=1)
-        heat = np.zeros_like(dst[:, :, 0]).astype(np.float)
+        heat = np.zeros_like(dst[:, :, 0]).astype(np.fgloat)
         heat = add_heat(heat, hot_windows)
         # Apply threshold to help remove false positives
         heat = apply_threshold(heat, 1)

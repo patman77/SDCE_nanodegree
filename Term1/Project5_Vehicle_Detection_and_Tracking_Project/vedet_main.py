@@ -276,7 +276,7 @@ if doitonthevideo == False:
         # Apply threshold to help remove false positives
         heat = apply_threshold(heat, 1)
         # Visualize the heatmap when displaying
-        heatmap = np.clip(heat, 0, 1)
+        heatmap = np.clip(heat, 0, 255)
         # Find final boxes from heatmap using label function
         labels = label(heatmap)
         draw_img = draw_labeled_bboxes(window_img, labels)

@@ -81,7 +81,7 @@ def process_image_vedet(image):
     dst = dst.astype(np.float32)/255
 
     windows = slide_window(dst, x_start_stop=[None, None], y_start_stop=y_start_stop,
-                           xy_window=(96, 96), xy_overlap=(0.5, 0.5))
+                           xy_window=(96, 96), xy_overlap=(0.8, 0.8))
 
     hot_windows = search_windows(dst, windows, svc, X_scaler, color_space=color_space,
                                  spatial_size=spatial_size, hist_bins=hist_bins,
@@ -93,9 +93,9 @@ def process_image_vedet(image):
     heat = np.zeros_like(dst[:, :, 0]).astype(np.float)
     heat = add_heat(heat, hot_windows)
     # Apply threshold to help remove false positives
-    heat = apply_threshold(heat, 2)
+    heat = apply_threshold(heat, 1)
     # Visualize the heatmap when displaying
-    heatmap = np.clip(heat, 0, 1)
+    heatmap = np.clip(heat, 0, 255)
     # Find final boxes from heatmap using label function
     labels = label(heatmap)
     draw_img = draw_labeled_bboxes(draw_image, labels)

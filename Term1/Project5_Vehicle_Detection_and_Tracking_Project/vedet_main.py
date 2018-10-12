@@ -11,7 +11,7 @@ from search_classify import search_windows
 from heatmap import add_heat
 from heatmap import apply_threshold
 from heatmap import draw_labeled_bboxes
-#from hog_subsample import find_cars
+from hog_subsample import find_cars
 from hog_subsample import find_cars2
 from scipy.ndimage.measurements import label
 
@@ -266,22 +266,27 @@ if doitonthevideo == False:
         # data from .png images (scaled 0 to 1 by mpimg) and the
         # image you are searching is a .jpg (scaled 0 to 255)
         image = image.astype(np.float32)/255
-        # windows = slide_window(image, x_start_stop=[None, None], y_start_stop=y_start_stop,
-        #                        xy_window=(96, 96), xy_overlap=(0.8, 0.8))
-        # hot_windows = search_windows(image, windows, svc, X_scaler, color_space=color_space,
-        #                              spatial_size=spatial_size, hist_bins=hist_bins,
-        #                              orient=orient, pix_per_cell=pix_per_cell,
-        #                              cell_per_block=cell_per_block,
-        #                              hog_channel=hog_channel, spatial_feat=spatial_feat,
-        #                              hist_feat=hist_feat, hog_feat=hog_feat)
+        windows = slide_window(image, x_start_stop=[None, None], y_start_stop=y_start_stop,
+                               xy_window=(96, 96), xy_overlap=(0.8, 0.8))
+        hot_windows = search_windows(image, windows, svc, X_scaler, color_space=color_space,
+                                     spatial_size=spatial_size, hist_bins=hist_bins,
+                                     orient=orient, pix_per_cell=pix_per_cell,
+                                     cell_per_block=cell_per_block,
+                                     hog_channel=hog_channel, spatial_feat=spatial_feat,
+                                     hist_feat=hist_feat, hog_feat=hog_feat)
 
-        #ystart = y_start_stop[0]
-        ystart = 400
-        #ystop = y_start_stop[1]
-        ystop = 656
-        scale = 1.5
-
-        hot_windows = find_cars2(image, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins)
+        # #ystart = y_start_stop[0]
+        # ystart = 400
+        # #ystop = y_start_stop[1]
+        # ystop = 656
+        # scale = 1.5
+        # hot_windows = find_cars(image, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins)
+        # scale = 1.1
+        # hot_windows+= find_cars(image, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins)
+        # scale = 1.9
+        # hot_windows+= find_cars(image, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins)
+        # scale = 0.4
+        # hot_windows+= find_cars(image, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins)
 
         window_img = draw_boxes(draw_image, hot_windows, color=(0, 0, 255), thick=1)
         heat = np.zeros_like(dst[:, :, 0]).astype(np.float)
@@ -292,6 +297,9 @@ if doitonthevideo == False:
         heatmap = np.clip(heat, 0, 255)
         # Find final boxes from heatmap using label function
         labels = label(heatmap)
+        print(labels[1], 'cars found')
+        mpimg.imsave(outimgpath + "heatmap_" + os.path.splitext(os.path.basename(filename))[0] + ".png", labels[0])  # jpg write not possible, use png
+
         draw_img = draw_labeled_bboxes(window_img, labels)
         mpimg.imsave(outimgpath + "candidate_" + os.path.splitext(os.path.basename(filename))[0] + ".png", draw_img)  # jpg write not possible, use png
 #        mpimg.imsave('candidates.png', window_img)

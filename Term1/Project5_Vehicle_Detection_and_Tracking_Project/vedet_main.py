@@ -294,7 +294,8 @@ else:
 doitonthevideo = False
 
 if doitonthevideo == False:
-    testimages = glob.glob('./test_images/*.jpg', recursive=True)
+    #testimages = glob.glob('./test_images/*.jpg', recursive=True)
+    testimages = glob.glob('./video_single_images/0000*.jpg', recursive=True)
     outimgpath = './output_images/'
 
     for filename in testimages:

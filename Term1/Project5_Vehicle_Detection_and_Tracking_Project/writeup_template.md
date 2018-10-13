@@ -15,6 +15,29 @@ The goals / steps of this project are the following:
 * Estimate a bounding box for vehicles detected.
 
 [//]: # (Image References)
+[reportimage01]: ./report_images/figure01.png
+
+[test01]: ./test_images/test1.jpg
+[reportcandtest01]: ./report_images/candidate_test1.png
+[reportheattest01]: ./report_images/heatmap_test1.png
+[test02]: ./test_images/test2.jpg
+[reportcandtest02]: ./report_images/candidate_test2.png
+[reportheattest02]: ./report_images/heatmap_test2.png
+[test03]: ./test_images/test3.jpg
+[reportcandtest03]: ./report_images/candidate_test3.png
+[reportheattest03]: ./report_images/heatmap_test3.png
+[test04]: ./test_images/test4.jpg
+[reportcandtest04]: ./report_images/candidate_test4.png
+[reportheattest04]: ./report_images/heatmap_test4.png
+[test05]: ./test_images/test5.jpg
+[reportcandtest05]: ./report_images/candidate_test5.png
+[reportheattest05]: ./report_images/heatmap_test5.png
+[test06]: ./test_images/test6.jpg
+[reportcandtest06]: ./report_images/candidate_test6.png
+[reportheattest06]: ./report_images/heatmap_test6.png
+
+
+
 [image1]: ./examples/car_not_car.png
 [image2]: ./examples/HOG_example.jpg
 [image3]: ./examples/sliding_windows.jpg
@@ -42,11 +65,13 @@ Overall, as for the previous project, I extracted all of the source code from th
 
 #### 1. Explain how (and identify where in your code) you extracted HOG features from the training images.
 
-The code for this step is contained in the first code cell of the IPython notebook (or in lines # through # of the file called `some_file.py`).  
+The code for this step is contained in the file "vedet_main.py", around lines 173. I extract the HOG features for the car and the non-car images.  
 
-I started by reading in all the `vehicle` and `non-vehicle` images.  Here is an example of one of each of the `vehicle` and `non-vehicle` classes:
+I started by reading in all the `vehicle` and `non-vehicle` images.  Here are some examples of each of the `vehicle` and `non-vehicle` classes:
 
-![alt text][image1]
+
+
+![alt text][reportimage01]
 
 I then explored different color spaces and different `skimage.hog()` parameters (`orientations`, `pixels_per_cell`, and `cells_per_block`).  I grabbed random images from each of the two classes and displayed them to get a feel for what the `skimage.hog()` output looks like.
 
@@ -57,7 +82,32 @@ Here is an example using the `YCrCb` color space and HOG parameters of `orientat
 
 #### 2. Explain how you settled on your final choice of HOG parameters.
 
-I tried various combinations of parameters and...
+I tried various combinations of parameters manually. Finally, I got an accuracy of 99.09 % with the following parameters:
+
+```
+color_space = 'YCrCb'  # Can be RGB, HSV, LUV, HLS, YUV, YCrCb
+orient = 10  # HOG orientations
+pix_per_cell = 8  # HOG pixels per cell
+cell_per_block = 2  # HOG cells per block
+hog_channel = "ALL"  # Can be 0, 1, 2, or "ALL"
+spatial_size = (16, 16)  # Spatial binning dimensions
+hist_bins = 64  # Number of histogram bins
+spatial_feat = True  # Spatial features on or off
+hist_feat = True  # Histogram features on or off
+hog_feat = True  # HOG features on or off
+y_start_stop = [400, 707]  # Min and max in y to search in slide_window()
+
+
+Using: 10 orientations 8 pixels per cell and 2 cells per block
+Feature vector length: 6840
+6.71 Seconds to train SVC...
+Test Accuracy of SVC =  0.9909
+My SVC predicts:  [ 1.  1.  0.  1.  1.  1.  1.  0.  1.  0.]
+For these 10 labels:  [ 1.  1.  0.  1.  1.  1.  1.  0.  1.  0.]
+0.06847 Seconds to predict 10 labels with SVC
+```
+
+See also README.txt for some other combinations.
 
 #### 3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
@@ -90,12 +140,28 @@ I recorded the positions of positive detections in each frame of the video.  Fro
 
 Here's an example result showing the heatmap from a series of frames of video, the result of `scipy.ndimage.measurements.label()` and the bounding boxes then overlaid on the last frame of video:
 
-### Here are six frames and their corresponding heatmaps:
+### Here are six frames and their corresponding detections as bounding boxes and the heatmaps (even the cars on the other side are detected):
 
-![alt text][image5]
+![alt_text][test01]
+![alt_text][reportcandtest01]
+![alt_text][reportheattest01]
+![alt_text][test02]
+![alt_text][reportcandtest02]
+![alt_text][reportheattest02]
+![alt_text][test03]
+![alt_text][reportcandtest03]
+![alt_text][reportheattest03]
+![alt_text][test04]
+![alt_text][reportcandtest04]
+![alt_text][reportheattest04]
+![alt_text][test05]
+![alt_text][reportcandtest05]
+![alt_text][reportheattest05]
+![alt_text][test06]
+![alt_text][reportcandtest06]
+![alt_text][reportheattest06]
 
-### Here is the output of `scipy.ndimage.measurements.label()` on the integrated heatmap from all six frames:
-![alt text][image6]
+
 
 ### Here the resulting bounding boxes are drawn onto the last frame in the series:
 ![alt text][image7]

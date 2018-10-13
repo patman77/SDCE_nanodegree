@@ -16,6 +16,7 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 [reportimage01]: ./report_images/figure01.png
+[reportimage02]: ./report_images/figure02.png
 
 [test01]: ./test_images/test1.jpg
 [reportcandtest01]: ./report_images/candidate_test1.png
@@ -75,14 +76,14 @@ I started by reading in all the `vehicle` and `non-vehicle` images.  Here are so
 
 I then explored different color spaces and different `skimage.hog()` parameters (`orientations`, `pixels_per_cell`, and `cells_per_block`).  I grabbed random images from each of the two classes and displayed them to get a feel for what the `skimage.hog()` output looks like.
 
-Here is an example using the `YCrCb` color space and HOG parameters of `orientations=8`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)`:
+Here is an example using the `YCrCb` color space and HOG parameters of `orientations=8`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)` (only channel 0):
 
-
-![alt text][image2]
+![alt text][reportimage02]
 
 #### 2. Explain how you settled on your final choice of HOG parameters.
 
-I tried various combinations of parameters manually. Finally, I got an accuracy of 99.09 % with the following parameters:
+I tried various combinations of parameters manually and followed the advice by my last reviewer to choose the color space YCrCb.
+Finally, I got a test accuracy of 99.09 % with the following parameters:
 
 ```
 color_space = 'YCrCb'  # Can be RGB, HSV, LUV, HLS, YUV, YCrCb
@@ -111,15 +112,14 @@ See also README.txt for some other combinations.
 
 #### 3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
-I trained a linear SVM using...
+I trained a linear SVM using the source code from the lecture. I took this from the lecture source code search_classify.py.
 
 ### Sliding Window Search
 
 #### 1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
 
-I decided to search random window positions at random scales all over the image and came up with this (ok just kidding I didn't actually ;):
-
-![alt text][image3]
+#I decided to search random window positions at random scales all over the image and came up with this (ok just kidding I didn't actually ;):
+I took the functions slide_window" and "search_window" from the lecture code.
 
 #### 2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
 
@@ -131,7 +131,12 @@ Ultimately I searched on two scales using YCrCb 3-channel HOG features plus spat
 ### Video Implementation
 
 #### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (somewhat wobbly or unstable bounding boxes are ok as long as you are identifying the vehicles most of the time with minimal false positives.)
-Here's a [link to my video result](./project_video.mp4)
+For the  [first video](./test_video.mp4), here's a [link to my video result](./output_videos/test_video_output.mp4).
+For the  [second video](./project_video.mp4), here's a [link to my video result](./output_videos/project_video_output.mp4)
+
+I also uploaded the result videos to Youtube:
+- [Youtube video 1](https://youtu.be/llx6qXGSfsM) 
+- [Youtube video 2](https://youtu.be/llx6qXGSfsM) 
 
 
 #### 2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
@@ -163,16 +168,16 @@ Here's an example result showing the heatmap from a series of frames of video, t
 
 
 
-### Here the resulting bounding boxes are drawn onto the last frame in the series:
-![alt text][image7]
-
-
-
 ---
 
 ### Discussion
 
 #### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
+Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further:
+
+I think the pipeline roughly works to detect vehicles. There are some false positives for cars on the other side.
+This could be restricted by the result from the previous project "Lane Finding".
+
+Also, there were some (seldom) false positives on the street, which could be avoided by "negative mining": take this regions from the video and add it to the noncar images.
 

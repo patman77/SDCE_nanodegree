@@ -188,6 +188,27 @@ else:
    # mpimg.imsave('report_images/figure01.png', img)
     print(" ")
 
+    # Plot some HOG images
+    car_img = mpimg.imread(carimages[0])
+    hog_channel = 0
+    _, car_HOG = get_hog_features(car_img[:, :, hog_channel], orient, pix_per_cell, cell_per_block, vis=True, feature_vec=True)
+    noncar_img = mpimg.imread(notcarimages[0])
+    _, notcar_HOG = get_hog_features(noncar_img[:, :, hog_channel], orient, pix_per_cell, cell_per_block, vis=True, feature_vec=True)
+
+    # Visualize
+    fig2, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(7, 7))
+    axs.ravel()
+    fig2.subplots_adjust(hspace=.4, wspace=.2)
+    ax1.imshow(car_img)
+    ax1.set_title('Car Image', fontsize=16)
+    ax2.imshow(car_HOG, cmap='gray')
+    ax2.set_title('Car HOG', fontsize=16)
+    ax3.imshow(noncar_img)
+    ax3.set_title('Not-Car Image', fontsize=16)
+    ax4.imshow(notcar_HOG, cmap='gray')
+    ax4.set_title('Not-Car HOG', fontsize=16)
+    print('...')
+
 
 # load or train from scratch
     if svc is None: # train

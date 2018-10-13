@@ -121,6 +121,7 @@ I trained a linear SVM using the source code from the lecture. I took this from 
 I took the functions slide_window" and "search_window" from the lecture code.
 
 The overlap I took from the lecture as 0.5, in the beginning. But then I noticed that I missed a lot of potental car detections. So I increased to 0.8 which gave much better results.
+For the scaling, it's still on one scaling. I added and used the HOG_subsample.py from the lecture, but didn't find the optimal parameters yet.
 
 #### 2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
 
@@ -136,7 +137,8 @@ For the  [second video](./project_video.mp4), here's a [link to my video result]
 
 I also uploaded the result videos to Youtube:
 - [Youtube video 1](https://youtu.be/llx6qXGSfsM) 
-- [Youtube video 2](https://youtu.be/llx6qXGSfsM) 
+
+In the second larger video there are a lot of issues, still. I think I have to extend to search on different scales.
 
 
 #### 2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.

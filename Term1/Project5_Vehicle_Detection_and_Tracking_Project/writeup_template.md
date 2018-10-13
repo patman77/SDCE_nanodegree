@@ -118,21 +118,21 @@ I trained a linear SVM using the source code from the lecture. I took this from 
 
 #### 1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
 
-#I decided to search random window positions at random scales all over the image and came up with this (ok just kidding I didn't actually ;):
 I took the functions slide_window" and "search_window" from the lecture code.
+
+The overlap I took from the lecture as 0.5, in the beginning. But then I noticed that I missed a lot of potental car detections. So I increased to 0.8 which gave much better results.
 
 #### 2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
 
-Ultimately I searched on two scales using YCrCb 3-channel HOG features plus spatially binned color and histograms of color in the feature vector, which provided a nice result.  Here are some example images:
+See section below with the heatmaps.
 
-![alt text][image4]
 ---
 
 ### Video Implementation
 
 #### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (somewhat wobbly or unstable bounding boxes are ok as long as you are identifying the vehicles most of the time with minimal false positives.)
 For the  [first video](./test_video.mp4), here's a [link to my video result](./output_videos/test_video_output.mp4).
-For the  [second video](./project_video.mp4), here's a [link to my video result](./output_videos/project_video_output.mp4)
+For the  [second video](./project_video.mp4), here's a [link to my video result](./output_videos/project_video_output.mp4).
 
 I also uploaded the result videos to Youtube:
 - [Youtube video 1](https://youtu.be/llx6qXGSfsM) 

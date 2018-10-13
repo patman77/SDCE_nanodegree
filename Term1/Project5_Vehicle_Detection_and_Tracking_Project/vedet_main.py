@@ -168,6 +168,27 @@ else:
     cars = cars[0:sample_size]
     notcars = notcars[0:sample_size]
 
+    fig, axs = plt.subplots(8, 8, figsize=(8, 8))
+    fig.subplots_adjust(hspace=.1, wspace=.05)
+    axs = axs.ravel()
+
+    # Plot some car and non-car images
+    for i in np.arange(32):
+        img = cv2.imread(carimages[np.random.randint(0, len(carimages))])
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        axs[i].axis('off')
+        axs[i].set_title('car', fontsize=10)
+        axs[i].imshow(img)
+    for i in np.arange(32, 64):
+        img = cv2.imread(notcarimages[np.random.randint(0, len(notcarimages))])
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        axs[i].axis('off')
+        axs[i].set_title('no car', fontsize=10)
+        axs[i].imshow(img)
+   # mpimg.imsave('report_images/figure01.png', img)
+    print(" ")
+
+
 # load or train from scratch
     if svc is None: # train
         car_features = extract_features(cars, color_space=color_space,
@@ -312,10 +333,10 @@ else:
     video_output01 = 'output_videos/project_video_output.mp4'
     videoclip00 = VideoFileClip(video_input00)
     videoclip01 = VideoFileClip(video_input01).cutout(0,1)
-    #processed_video = videoclip00.fl_image(process_image_vedet)
-    processed_video = videoclip01.fl_image(process_image_vedet)
-    #processed_video.write_videofile(video_output00, audio=False)
-    processed_video.write_videofile(video_output01, audio=False)
+    processed_video = videoclip00.fl_image(process_image_vedet)
+    #processed_video = videoclip01.fl_image(process_image_vedet)
+    processed_video.write_videofile(video_output00, audio=False)
+    #processed_video.write_videofile(video_output01, audio=False)
 
 
 

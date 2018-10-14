@@ -114,7 +114,7 @@ def process_image_vedet(image):
     for rect in memory.previous_rects:
         heat = add_heat(heat, rect)
     # Apply threshold to help remove false positives
-    heat = apply_threshold(heat, 1 + len(memory.previous_rects)//2)
+    heat = apply_threshold(heat, len(memory.previous_rects))
     # Visualize the heatmap when displaying
     heatmap = np.clip(heat, 0, 255)
     # Find final boxes from heatmap using label function
@@ -387,11 +387,12 @@ else:
     video_output00 = 'output_videos/test_video_output.mp4'
     video_output01 = 'output_videos/project_video_output.mp4'
     videoclip00 = VideoFileClip(video_input00)
-    videoclip01 = VideoFileClip(video_input01)#.subclip(10,10.1)
-    processed_video = videoclip00.fl_image(process_image_vedet)
-    processed_video = videoclip01.fl_image(process_image_vedet)
-    processed_video.write_videofile(video_output00, audio=False)
-    processed_video.write_videofile(video_output01, audio=False)
+    #videoclip01 = VideoFileClip(video_input01).subclip(40,51)
+    videoclip01 = VideoFileClip(video_input01)#.subclip(0,10)
+    processed_video00 = videoclip00.fl_image(process_image_vedet)
+    processed_video01 = videoclip01.fl_image(process_image_vedet)
+    processed_video00.write_videofile(video_output00, audio=False)
+    processed_video01.write_videofile(video_output01, audio=False)
 
 
 

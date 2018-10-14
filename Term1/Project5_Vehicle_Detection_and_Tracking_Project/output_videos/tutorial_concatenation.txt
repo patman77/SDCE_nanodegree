@@ -1,0 +1,4 @@
+Concatenation of subclips was done on Mac OSX (should also work on Linux) with:
+
+mencoder -ovc copy `ls project_video_output_subclip*mp4` -o full_movie.mp4
+

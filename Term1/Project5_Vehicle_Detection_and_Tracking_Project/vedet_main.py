@@ -72,6 +72,21 @@ from Project4_Advanced_Lane_Finding_Project.undistort  import cal_undistort
 # change back
 os.chdir("../Project5_Vehicle_Detection_and_Tracking_Project")
 
+# Class to have a heatmap memory
+
+class Rectangle_Memory:
+    def __init__(self, historysize=15):
+        # history of rectangles
+        self.previous_rects = []
+        self.historysize = historysize
+
+    def add_rect(self, rectangles):
+        self.previous_rects.append(rectangles)
+        if len(self.previous_rects)>self.historysize:
+            # delete oldest rectangles
+            self.previous_rects = self.previous_rects[len(self.previous_rects)-self.historysize:]
+
+
 def process_image_vedet(image):
     dst = process_image_lane_detect(image)
     draw_image = np.copy(dst)
@@ -90,11 +105,16 @@ def process_image_vedet(image):
                                  hog_channel=hog_channel, spatial_feat=spatial_feat,
                                  hist_feat=hist_feat, hog_feat=hog_feat)
 
+    #hot_windows = [item for sublist in hot_windows for item in sublist]
+    # add hot windows to history
+    if len(hot_windows)>0:
+        memory.add_rect(hot_windows)
     window_img = draw_boxes(draw_image, hot_windows, color=(0, 255, 255), thick=1)
     heat = np.zeros_like(image[:, :, 0]).astype(np.float)
-    heat = add_heat(heat, hot_windows)
+    for rect in memory.previous_rects:
+        heat = add_heat(heat, rect)
     # Apply threshold to help remove false positives
-    heat = apply_threshold(heat, 1)
+    heat = apply_threshold(heat, 1 + len(memory.previous_rects)//2)
     # Visualize the heatmap when displaying
     heatmap = np.clip(heat, 0, 255)
     # Find final boxes from heatmap using label function
@@ -110,12 +130,15 @@ orient = 10  # HOG orientations
 pix_per_cell = 8  # HOG pixels per cell
 cell_per_block = 2  # HOG cells per block
 hog_channel = "ALL"  # Can be 0, 1, 2, or "ALL"
-spatial_size = (16, 16)  # Spatial binning dimensions
-hist_bins = 64  # Number of histogram bins
+spatial_size = (32, 32)  # Spatial binning dimensions
+hist_bins = 32
+# Number of histogram bins
 spatial_feat = True  # Spatial features on or off
 hist_feat = True  # Histogram features on or off
 hog_feat = True  # HOG features on or off
 y_start_stop = [400, 707]  # Min and max in y to search in slide_window()
+y_start_stop_single1_of_2 = [y_start_stop[0]  , int((y_start_stop[0]+y_start_stop[1])/2) ]
+y_start_stop_single2_of_2 = [int((y_start_stop[0]+y_start_stop[1])/2)+1, y_start_stop[1] ]
 
 # check if previously saved model exists, then use it
 if os.path.isfile(modelfilename):
@@ -292,10 +315,12 @@ else:
 
 doitonthevideo = True
 #doitonthevideo = False
+historysize = 15
+memory = Rectangle_Memory(historysize)
 
 if doitonthevideo == False:
-    #testimages = glob.glob('./test_images/*.jpg', recursive=True)
-    testimages = glob.glob('./video_single_images/0000*.jpg', recursive=True)
+    testimages = glob.glob('./test_images/*.jpg', recursive=True)
+    #testimages = glob.glob('./video_single_images/0000*.jpg', recursive=True)
     outimgpath = './output_images/'
 
     for filename in testimages:
@@ -309,8 +334,12 @@ if doitonthevideo == False:
         # data from .png images (scaled 0 to 1 by mpimg) and the
         # image you are searching is a .jpg (scaled 0 to 255)
         image = image.astype(np.float32)/255
-        windows = slide_window(image, x_start_stop=[None, None], y_start_stop=y_start_stop,
+        windows = slide_window(image, x_start_stop=[None, None], y_start_stop=y_start_stop_single1_of_2,
+                               xy_window=(80, 80), xy_overlap=(0.85, 0.85))
+        windows += slide_window(image, x_start_stop=[None, None], y_start_stop=y_start_stop_single2_of_2,
                                xy_window=(96, 96), xy_overlap=(0.8, 0.8))
+        windows += slide_window(image, x_start_stop=[None, None], y_start_stop=y_start_stop,
+                                xy_window=(96, 96), xy_overlap=(0.85, 0.85))
         hot_windows = search_windows(image, windows, svc, X_scaler, color_space=color_space,
                                      spatial_size=spatial_size, hist_bins=hist_bins,
                                      orient=orient, pix_per_cell=pix_per_cell,
@@ -319,11 +348,15 @@ if doitonthevideo == False:
                                      hist_feat=hist_feat, hog_feat=hog_feat)
 
         # #ystart = y_start_stop[0]
-        # ystart = 400
+        ystart = 400
         # #ystop = y_start_stop[1]
-        # ystop = 656
-        # scale = 1.5
-        # hot_windows = find_cars(image, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins)
+        ystop = 656
+        #scales = [0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5]
+        scales = [1.5]
+        #scale = 1.5
+        windows = []
+        # for scale in scales:
+        #     windows += find_cars2(image, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins)
         # scale = 1.1
         # hot_windows+= find_cars(image, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins)
         # scale = 1.9
@@ -335,7 +368,7 @@ if doitonthevideo == False:
         heat = np.zeros_like(image[:, :, 0]).astype(np.float)
         heat = add_heat(heat, hot_windows)
         # Apply threshold to help remove false positives
-        heat = apply_threshold(heat, 1)
+        heat = apply_threshold(heat, 3)
         # Visualize the heatmap when displaying
         heatmap = np.clip(heat, 0, 255)
         # Find final boxes from heatmap using label function
@@ -354,7 +387,7 @@ else:
     video_output00 = 'output_videos/test_video_output.mp4'
     video_output01 = 'output_videos/project_video_output.mp4'
     videoclip00 = VideoFileClip(video_input00)
-    videoclip01 = VideoFileClip(video_input01)#.subclip(10,10.4)
+    videoclip01 = VideoFileClip(video_input01).subclip(10,10.1)
     processed_video = videoclip00.fl_image(process_image_vedet)
     processed_video = videoclip01.fl_image(process_image_vedet)
     processed_video.write_videofile(video_output00, audio=False)

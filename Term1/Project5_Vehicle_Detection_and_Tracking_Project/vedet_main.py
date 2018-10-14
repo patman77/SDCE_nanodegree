@@ -78,19 +78,20 @@ def process_image_vedet(image):
     # Uncomment the following line if you extracted training
     # data from .png images (scaled 0 to 1 by mpimg) and the
     # image you are searching is a .jpg (scaled 0 to 255)
-    dst = dst.astype(np.float32)/255
+    image = image.astype(np.float32)/255
 
-    windows = slide_window(dst, x_start_stop=[None, None], y_start_stop=y_start_stop,
+    windows = slide_window(image, x_start_stop=[None, None], y_start_stop=y_start_stop,
                            xy_window=(96, 96), xy_overlap=(0.8, 0.8))
 
-    hot_windows = search_windows(dst, windows, svc, X_scaler, color_space=color_space,
+    hot_windows = search_windows(image, windows, svc, X_scaler, color_space=color_space,
                                  spatial_size=spatial_size, hist_bins=hist_bins,
                                  orient=orient, pix_per_cell=pix_per_cell,
                                  cell_per_block=cell_per_block,
                                  hog_channel=hog_channel, spatial_feat=spatial_feat,
                                  hist_feat=hist_feat, hog_feat=hog_feat)
 
-    heat = np.zeros_like(dst[:, :, 0]).astype(np.float)
+    window_img = draw_boxes(draw_image, hot_windows, color=(0, 255, 255), thick=1)
+    heat = np.zeros_like(image[:, :, 0]).astype(np.float)
     heat = add_heat(heat, hot_windows)
     # Apply threshold to help remove false positives
     heat = apply_threshold(heat, 1)
@@ -98,8 +99,7 @@ def process_image_vedet(image):
     heatmap = np.clip(heat, 0, 255)
     # Find final boxes from heatmap using label function
     labels = label(heatmap)
-    draw_img = draw_labeled_bboxes(draw_image, labels)
-    #window_img = draw_boxes(draw_img, hot_windows, color=(0, 255, 255), thick=4)
+    draw_img = draw_labeled_bboxes(window_img, labels)
     return draw_img
 
 modelfilename = "model.svc"
@@ -290,8 +290,8 @@ else:
 
 
 
-#doitonthevideo = True
-doitonthevideo = False
+doitonthevideo = True
+#doitonthevideo = False
 
 if doitonthevideo == False:
     #testimages = glob.glob('./test_images/*.jpg', recursive=True)
@@ -304,7 +304,7 @@ if doitonthevideo == False:
             continue
         #dst = process_image_lane_detect(image)
         dst = image
-        draw_image = np.copy(dst)
+        draw_image = np.copy(image)
         # Uncomment the following line if you extracted training
         # data from .png images (scaled 0 to 1 by mpimg) and the
         # image you are searching is a .jpg (scaled 0 to 255)
@@ -332,7 +332,7 @@ if doitonthevideo == False:
         # hot_windows+= find_cars(image, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins)
 
         window_img = draw_boxes(draw_image, hot_windows, color=(0, 0, 255), thick=1)
-        heat = np.zeros_like(dst[:, :, 0]).astype(np.float)
+        heat = np.zeros_like(image[:, :, 0]).astype(np.float)
         heat = add_heat(heat, hot_windows)
         # Apply threshold to help remove false positives
         heat = apply_threshold(heat, 1)
@@ -354,11 +354,11 @@ else:
     video_output00 = 'output_videos/test_video_output.mp4'
     video_output01 = 'output_videos/project_video_output.mp4'
     videoclip00 = VideoFileClip(video_input00)
-    videoclip01 = VideoFileClip(video_input01).cutout(0,1)
+    videoclip01 = VideoFileClip(video_input01)#.subclip(10,10.4)
     processed_video = videoclip00.fl_image(process_image_vedet)
-    #processed_video = videoclip01.fl_image(process_image_vedet)
+    processed_video = videoclip01.fl_image(process_image_vedet)
     processed_video.write_videofile(video_output00, audio=False)
-    #processed_video.write_videofile(video_output01, audio=False)
+    processed_video.write_videofile(video_output01, audio=False)
 
 
 

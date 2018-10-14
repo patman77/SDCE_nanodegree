@@ -387,7 +387,7 @@ else:
     video_output00 = 'output_videos/test_video_output.mp4'
     video_output01 = 'output_videos/project_video_output.mp4'
     videoclip00 = VideoFileClip(video_input00)
-    videoclip01 = VideoFileClip(video_input01).subclip(10,10.1)
+    videoclip01 = VideoFileClip(video_input01)#.subclip(10,10.1)
     processed_video = videoclip00.fl_image(process_image_vedet)
     processed_video = videoclip01.fl_image(process_image_vedet)
     processed_video.write_videofile(video_output00, audio=False)

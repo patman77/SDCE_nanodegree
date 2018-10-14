@@ -17,8 +17,8 @@ from lesson_functions2 import *
 # cell_per_block = dist_pickle["cell_per_block"]
 # spatial_size = dist_pickle["spatial_size"]
 # hist_bins = dist_pickle["hist_bins"]
-
-#img = mpimg.imread('test_image.jpg')
+#
+# img = mpimg.imread('test_image.jpg')
 
 
 # Define a single function that can extract features using hog sub-sampling and make predictions
@@ -85,9 +85,9 @@ def find_cars(img, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, ce
                 xbox_left = np.int(xleft * scale)
                 ytop_draw = np.int(ytop * scale)
                 win_draw = np.int(window * scale)
-                # cv2.rectangle(draw_img, (xbox_left, ytop_draw + ystart),
-                #               (xbox_left + win_draw, ytop_draw + win_draw + ystart), (0, 0, 255), 1)
-                # instead of drawing, return bbox in the style of slide_window and search_windows
+                cv2.rectangle(draw_img, (xbox_left, ytop_draw + ystart),
+                              (xbox_left + win_draw, ytop_draw + win_draw + ystart), (0, 0, 255), 4)
+                #instead of drawing, return bbox in the style of slide_window and search_windows
                 window_list.append(((xbox_left, ytop_draw + ystart), (xbox_left + win_draw, ytop_draw + win_draw + ystart)))
     #return draw_img
     return window_list
@@ -107,16 +107,22 @@ def find_cars2(img, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, c
     ch3 = ctrans_tosearch[:, :, 2]
 
     # Define blocks and steps as above
-    nxblocks = (ch1.shape[1] // pix_per_cell) - cell_per_block + 1
-    nyblocks = (ch1.shape[0] // pix_per_cell) - cell_per_block + 1
+    # is this correct?
+#    nxblocks = (ch1.shape[1] // pix_per_cell) - cell_per_block + 1
+#    nyblocks = (ch1.shape[0] // pix_per_cell) - cell_per_block + 1
+    nxblocks = (ch1.shape[1] // pix_per_cell)+1
+    nyblocks = (ch1.shape[0] // pix_per_cell)+1
     nfeat_per_block = orient * cell_per_block ** 2
 
     # 64 was the orginal sampling rate, with 8 cells and 8 pix per cell
     window = 64
-    nblocks_per_window = (window // pix_per_cell) - cell_per_block + 1
+    #nblocks_per_window = (window // pix_per_cell) - cell_per_block + 1
+    nblocks_per_window = (window // pix_per_cell) - 1
     cells_per_step = 2  # Instead of overlap, define how many cells to step
-    nxsteps = (nxblocks - nblocks_per_window) // cells_per_step + 1
-    nysteps = (nyblocks - nblocks_per_window) // cells_per_step + 1
+    #nxsteps = (nxblocks - nblocks_per_window) // cells_per_step + 1
+    #nysteps = (nyblocks - nblocks_per_window) // cells_per_step + 1
+    nxsteps = (nxblocks - nblocks_per_window) // cells_per_step
+    nysteps = (nyblocks - nblocks_per_window) // cells_per_step
 
     # Compute individual channel HOG features for the entire image
     hog1 = get_hog_features2(ch1, orient, pix_per_cell, cell_per_block, feature_vec=False)
@@ -136,11 +142,11 @@ def find_cars2(img, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, c
             hog_feat1 = hog1[ypos:ypos + nblocks_per_window, xpos:xpos + nblocks_per_window].ravel()
             hog_feat2 = hog2[ypos:ypos + nblocks_per_window, xpos:xpos + nblocks_per_window].ravel()
             hog_feat3 = hog3[ypos:ypos + nblocks_per_window, xpos:xpos + nblocks_per_window].ravel()
-            #hog_features = np.hstack((hog_feat1, hog_feat2, hog_feat3)) # doesnt work
-            hog_features.append(hog_feat1)
-            hog_features.append(hog_feat2)
-            hog_features.append(hog_feat3)
-            hog_features = np.ravel(hog_features)
+            hog_features = np.hstack((hog_feat1, hog_feat2, hog_feat3)) # doesnt work
+            # hog_features.append(hog_feat1)
+            # hog_features.append(hog_feat2)
+            # hog_features.append(hog_feat3)
+            #hog_features = np.ravel(hog_features)
 
             xleft = xpos * pix_per_cell
             ytop = ypos * pix_per_cell
@@ -156,30 +162,36 @@ def find_cars2(img, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, c
             file_features.append(hist_features)
             file_features.append(hog_features)
             file_features = np.concatenate(file_features)
-            test_features = X_scaler.transform(np.array(file_features).reshape(1, -1))
+            #test_features = X_scaler.transform(np.array(file_features).reshape(1, -1))
             # Scale features and make a prediction
             # this doesn't work
-            # test_features = X_scaler.transform(
-            #     np.hstack((spatial_features, hist_features, hog_features)).reshape(1, -1))
+            test_features = X_scaler.transform(
+               np.hstack((spatial_features, hist_features, hog_features)).reshape(1, -1))
             # test_features = X_scaler.transform(np.hstack((shape_feat, hist_feat)).reshape(1, -1))
             test_prediction = svc.predict(test_features)
-
+            print("test_prediction: ", test_prediction)
             if test_prediction == 1:
                 xbox_left = np.int(xleft * scale)
                 ytop_draw = np.int(ytop * scale)
                 win_draw = np.int(window * scale)
-                # cv2.rectangle(draw_img, (xbox_left, ytop_draw + ystart),
-                #               (xbox_left + win_draw, ytop_draw + win_draw + ystart), (0, 0, 255), 1)
-                # instead of drawing, return bbox in the style of slide_window and search_windows
+                cv2.rectangle(draw_img, (xbox_left, ytop_draw + ystart),
+                              (xbox_left + win_draw, ytop_draw + win_draw + ystart), (0, 0, 255), 2)
+            else:
+                xbox_left = np.int(xleft * scale)
+                ytop_draw = np.int(ytop * scale)
+                win_draw = np.int(window * scale)
+                cv2.rectangle(draw_img, (xbox_left, ytop_draw + ystart),
+                              (xbox_left + win_draw, ytop_draw + win_draw + ystart), (0, 255, 0), 3)
+                #instead of drawing, return bbox in the style of slide_window and search_windows
                 window_list.append(((xbox_left, ytop_draw + ystart), (xbox_left + win_draw, ytop_draw + win_draw + ystart)))
-    #return draw_img
-    return window_list
+    return draw_img
+    #return window_list
 
 # ystart = 400
 # ystop = 656
 # scale = 1.5
 #
-# out_img = find_cars(img, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size,
+# out_img = find_cars2(img, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size,
 #                     hist_bins)
 #
 # plt.imshow(out_img)

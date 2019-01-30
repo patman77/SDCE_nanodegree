@@ -13,6 +13,7 @@ This git repository is currently organized as follows, according to the three te
  |---Project4_Advanced_Lane_Finding_Project
  |---Project5_Vehicle_Detection_and_Tracking_Project
  |-Term2
+ |---Project1_Extended_Kalman_Filter_Project
  |-Term3
 </code></pre>
 

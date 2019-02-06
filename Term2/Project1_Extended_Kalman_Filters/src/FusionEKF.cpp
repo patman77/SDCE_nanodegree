@@ -32,11 +32,24 @@ FusionEKF::FusionEKF() {
               0, 0.0009, 0,
               0, 0, 0.09;
 
+  // state covariance matrix P from lesson 5, chapter 14
+  ekf_.P_ = MatrixXd(4, 4);
+  ekf_.P_ << 1, 0, 0, 0,
+             0, 1, 0, 0,
+             0, 0, 1000, 0,
+             0, 0, 0, 1000;
   /**
    * DONE: Finish initializing the FusionEKF.
    */
   H_laser_ << 1.0, 0.0, 0.0, 0.0,
               0.0, 1.0, 0.0, 0.0;
+    // the initial transition matrix F_ from lesson 5, chapter 14
+  ekf_.F_ = MatrixXd(4, 4);
+  ekf_.F_ << 1, 0, 1, 0,
+             0, 1, 0, 1,
+             0, 0, 1, 0,
+             0, 0, 0, 1;
+
    /**
    * DONE: Set the process and measurement noises
    */
@@ -68,12 +81,20 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
       // TODO: Convert radar from polar to cartesian coordinates 
       //         and initialize state.
-
+        float rho     = measurement_pack.raw_measurements_[0];
+        float phi     = measurement_pack.raw_measurements_[1];
+        float rho_dot = measurement_pack.raw_measurements_[2];
+        ekf_.x_ << rho * cos(phi),
+                   rho * sin(phi),
+                   rho_dot * sin(phi),
+                   rho_dot * cos(phi);
     }
     else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {
-      // TODO: Initialize state.
+      // DONE: Initialize state.
       ekf_.x_ << measurement_pack.raw_measurements_[0],
-                 measurement_pack.raw_measurements_[1], 0.0, 0.0;
+                 measurement_pack.raw_measurements_[1],
+                 0.0,
+                 0.0;
 
     }
 
@@ -105,10 +126,10 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
   float dt2 = dt*dt;
   float dt3 = dt*dt2;
   float dt4 = dt2*dt2;
-  ekf_.Q_ << dt4/4.0 * noise_ax, 0 , dt3/2.0 * noise_ax , 0,
-            0, dt4/4.0*noise_ay, 0, dt3/2*noise_ay,
-            dt3/2*noise_ax, 0, dt2*noise_ax, 0,
-            0, dt3/2.0*noise_ay, 0, dt2*noise_ay;
+  ekf_.Q_ << dt4/4.0 * noise_ax,              0.0,  dt3/2.0 * noise_ax,                0.0,
+                            0.0, dt4/4.0*noise_ay,                 0.0, dt3/2.0 * noise_ay,
+             dt3/2.0 * noise_ax,              0.0,      dt2 * noise_ax,                0.0,
+                              0, dt3/2.0*noise_ay,                   0,     dt2 * noise_ay;
   // 3. Call the Kalman Filter predict() function
   ekf_.Predict();
 
@@ -137,6 +158,6 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
   }
 
   // print the output
-  cout << "x_ = " << ekf_.x_ << endl;
-  cout << "P_ = " << ekf_.P_ << endl;
+  //cout << "x_ = " << ekf_.x_ << endl;
+  //cout << "P_ = " << ekf_.P_ << endl;
 }

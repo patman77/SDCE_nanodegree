@@ -33,10 +33,14 @@ FusionEKF::FusionEKF() {
               0, 0, 0.09;
 
   /**
-   * TODO: Finish initializing the FusionEKF.
-   * TODO: Set the process and measurement noises
+   * DONE: Finish initializing the FusionEKF.
    */
-
+  H_laser_ << 1.0, 0.0, 0.0, 0.0,
+              0.0, 1.0, 0.0, 0.0;
+   /**
+   * DONE: Set the process and measurement noises
+   */
+   noise_ax = noise_ay = 9.0;
 
 }
 
@@ -68,6 +72,8 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     }
     else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {
       // TODO: Initialize state.
+      ekf_.x_ << measurement_pack.raw_measurements_[0],
+                 measurement_pack.raw_measurements_[1], 0.0, 0.0;
 
     }
 
@@ -81,12 +87,29 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
    */
 
   /**
-   * TODO: Update the state transition matrix F according to the new elapsed time.
+   * DONE: Update the state transition matrix F according to the new elapsed time.
    * Time is measured in seconds.
-   * TODO: Update the process noise covariance matrix.
+   * DONE: Update the process noise covariance matrix.
    * Use noise_ax = 9 and noise_ay = 9 for your Q matrix.
    */
-
+  // compute the time elapsed between the current and previous measurements
+  // dt - expressed in seconds
+  float dt = (measurement_pack.timestamp_ - previous_timestamp_) / 1000000.0;
+  previous_timestamp_ = measurement_pack.timestamp_;
+  // 1. Modify the F matrix so that the time is integrated
+  ekf_.F_ << 1, 0, dt, 0,
+             0, 1, 0, dt,
+             0, 0, 1, 0,
+             0, 0, 0, 1;
+  // 2. Set the process covariance matrix Q
+  float dt2 = dt*dt;
+  float dt3 = dt*dt2;
+  float dt4 = dt2*dt2;
+  ekf_.Q_ << dt4/4.0 * noise_ax, 0 , dt3/2.0 * noise_ax , 0,
+            0, dt4/4.0*noise_ay, 0, dt3/2*noise_ay,
+            dt3/2*noise_ax, 0, dt2*noise_ax, 0,
+            0, dt3/2.0*noise_ay, 0, dt2*noise_ay;
+  // 3. Call the Kalman Filter predict() function
   ekf_.Predict();
 
   /**
@@ -100,11 +123,17 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
    */
 
   if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
-    // TODO: Radar updates
+    // DONE: Radar updates
+    ekf_.R_ = R_radar_;
+    Hj_ = tools.CalculateJacobian(ekf_.x_);
+    ekf_.H_ = Hj_;
+    ekf_.UpdateEKF(measurement_pack.raw_measurements_); // use extended for radar
 
   } else {
-    // TODO: Laser updates
-
+    // DONE: Laser updates
+    ekf_.R_ = R_laser_;
+    ekf_.H_ = H_laser_;
+    ekf_.Update(measurement_pack.raw_measurements_); // use standard for lidar
   }
 
   // print the output

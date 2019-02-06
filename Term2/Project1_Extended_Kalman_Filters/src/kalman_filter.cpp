@@ -4,11 +4,18 @@ using Eigen::MatrixXd;
 using Eigen::VectorXd;
 
 /* 
- * Please note that the Eigen library does not initialize 
+ * Please note that the Eigen library does not initialize
  *   VectorXd or MatrixXd objects with zeros upon creation.
  */
 
-KalmanFilter::KalmanFilter() {}
+KalmanFilter::KalmanFilter() {
+  F_ = MatrixXd(4,4);
+  // set the process covariance matrix Q
+  Q_ = MatrixXd(4, 4);
+  // set the initial state covariance matrix P
+  P_ = MatrixXd(4, 4);
+  
+}
 
 KalmanFilter::~KalmanFilter() {}
 
@@ -24,7 +31,7 @@ void KalmanFilter::Init(VectorXd &x_in, MatrixXd &P_in, MatrixXd &F_in,
 
 void KalmanFilter::Predict() {
   /**
-   * TODO: predict the state
+   * DONE: predict the state
    */
   x_ = F_ * x_;
   MatrixXd Ft = F_.transpose();
@@ -33,7 +40,7 @@ void KalmanFilter::Predict() {
 
 void KalmanFilter::Update(const VectorXd &z) {
   /**
-   * TODO: update the state by using Kalman Filter equations
+   * DONE: update the state by using Kalman Filter equations
    */
   VectorXd z_pred = H_ * x_;
   VectorXd y = z - z_pred;

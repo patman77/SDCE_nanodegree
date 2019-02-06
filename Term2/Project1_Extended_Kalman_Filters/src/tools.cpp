@@ -12,12 +12,12 @@ Tools::~Tools() {}
 VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
                               const vector<VectorXd> &ground_truth) {
   /**
-   * TODO: Calculate the RMSE here.
+   * DONE: Calculate the RMSE here.
    */
   VectorXd rmse(4);
   rmse << 0,0,0,0;
 
-  // TODO: YOUR CODE HERE
+  // DONE: YOUR CODE HERE
   // check the validity of the following inputs:
   //  * the estimation vector size should not be zero
   if(0 == estimations.size())
@@ -26,7 +26,7 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
   if(estimations.size() != ground_truth.size())
       return rmse;
 
-  // TODO: accumulate squared residuals
+  // DONE: accumulate squared residuals
   for (int i=0; i < estimations.size(); ++i) {
     // ... your code here
     VectorXd tmpvec = estimations[i] - ground_truth[i];
@@ -34,9 +34,9 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
     rmse = rmse + tmpvec2;
   }
 
-  // TODO: calculate the mean
+  // DONE: calculate the mean
   rmse = rmse / estimations.size();
-  // TODO: calculate the squared root
+  // DONE: calculate the squared root
   rmse = rmse.array().sqrt();
 
   // return the result
@@ -45,7 +45,7 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
 
 MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
   /**
-   * TODO:
+   * DONE:
    * Calculate a Jacobian here.
    */
   MatrixXd Hj(3,4);
@@ -55,7 +55,7 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
   float vx = x_state(2);
   float vy = x_state(3);
 
-  // TODO: YOUR CODE HERE 
+  // DONE: YOUR CODE HERE
 
   // check division by zero
   static float eps = 0.0000001;

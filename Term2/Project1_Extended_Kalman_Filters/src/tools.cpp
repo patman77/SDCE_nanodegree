@@ -60,7 +60,10 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
   // check division by zero
   static float eps = 0.0000001;
   if( fabs(px)<eps && fabs(py)<eps )
+  {
+    Hj.setZero();
     return Hj;
+  }
   
   // compute the Jacobian matrix
   float px2 = px*px;

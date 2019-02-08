@@ -45,11 +45,8 @@ FusionEKF::FusionEKF() {
               0.0, 1.0, 0.0, 0.0;
     // the initial transition matrix F_ from lesson 5, chapter 14
   ekf_.F_ = MatrixXd(4, 4);
-  ekf_.F_ << 1, 0, 1, 0,
-             0, 1, 0, 1,
-             0, 0, 1, 0,
-             0, 0, 0, 1;
-
+  ekf_.F_ = MatrixXd::Identity(4,4);
+  
    /**
    * DONE: Set the process and measurement noises
    */

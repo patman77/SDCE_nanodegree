@@ -57,18 +57,17 @@ void KalmanFilter::Update(const VectorXd &z) {
   P_ = (I - K * H_) * P_;
 }
 
-double SNormalizeAngle(double phi)
+double NormalizeAngle(double phi)
 {
-  const double Max = M_PI;
+  const double Max =  M_PI;
   const double Min = -M_PI;
-  return phi < Min
-  ? Max + std::fmod(phi - Min, Max - Min)
-  : std::fmod(phi - Min, Max - Min) + Min;
+  return phi < Min  ? Max + std::fmod(phi - Min, Max - Min)
+                    : std::fmod(phi - Min, Max - Min) + Min;
 }
 
 void KalmanFilter::UpdateEKF(const VectorXd &z) {
   /**
-   * TODO: update the state by using Extended Kalman Filter equations
+   * DONE: update the state by using Extended Kalman Filter equations
    */
   double rho = sqrt(x_[0]*x_[0] + x_[1]*x_[1]);
   double phi = atan(x_[1]/x_[0]);
@@ -82,8 +81,8 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   VectorXd z_pred(3);
   z_pred << rho, phi, rho_dot;
   VectorXd y = z - z_pred;
-  // now normalize angle of difference vector y to [-pi,pi]
-  y[1] = SNormalizeAngle(y[1]);
+  // now normalize angle of difference vector y to [-pi,pi] (because atan assumes this range)
+  y[1] = NormalizeAngle(y[1]);
   
   MatrixXd Ht = H_.transpose();
   MatrixXd S = H_ * P_ * Ht + R_;

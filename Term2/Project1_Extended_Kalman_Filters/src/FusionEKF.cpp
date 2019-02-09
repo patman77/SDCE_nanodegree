@@ -135,7 +135,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
    */
 
   /**
-   * TODO:
+   * DONE:
    * - Use the sensor type to perform the update step.
    * - Update the state and covariance matrices.
    */

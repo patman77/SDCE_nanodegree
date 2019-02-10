@@ -81,9 +81,9 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
       // TODO: Convert radar from polar to cartesian coordinates 
       //         and initialize state.
-        float rho     = measurement_pack.raw_measurements_[0];
-        float phi     = measurement_pack.raw_measurements_[1];
-        float rho_dot = measurement_pack.raw_measurements_[2];
+        double rho     = measurement_pack.raw_measurements_[0];
+        double phi     = measurement_pack.raw_measurements_[1];
+        double rho_dot = measurement_pack.raw_measurements_[2];
         ekf_.x_ << rho * cos(phi),
                    rho * sin(phi),
                    rho_dot * sin(phi),
@@ -117,7 +117,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
    */
   // compute the time elapsed between the current and previous measurements
   // dt - expressed in seconds
-  float dt = (measurement_pack.timestamp_ - previous_timestamp_) / 1000000.0;
+  double dt = (measurement_pack.timestamp_ - previous_timestamp_) / 1000000.0;
   previous_timestamp_ = measurement_pack.timestamp_;
   // 1. Modify the F matrix so that the time is integrated
   ekf_.F_ << 1, 0, dt,  0,
@@ -125,9 +125,9 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
              0, 0,  1,  0,
              0, 0,  0,  1;
   // 2. Set the process covariance matrix Q
-  float dt2 = dt*dt;
-  float dt3 = dt*dt2;
-  float dt4 = dt2*dt2;
+  double dt2 = dt*dt;
+  double dt3 = dt*dt2;
+  double dt4 = dt2*dt2;
   ekf_.Q_ << dt4/4.0 * noise_ax,              0.0,  dt3/2.0 * noise_ax,                0.0,
                             0.0, dt4/4.0*noise_ay,                 0.0, dt3/2.0 * noise_ay,
              dt3/2.0 * noise_ax,              0.0,      dt2 * noise_ax,                0.0,

@@ -64,8 +64,8 @@ double NormalizeAngle(double phi)
   //  return phi < Min  ? Max + std::fmod(phi - Min, Max - Min)
   //                    : std::fmod(phi - Min, Max - Min) + Min;
   // Normalize the angle
-  while (phi > M_PI)  { phi -= M_PI; }
-  while (phi < -M_PI) { phi += M_PI; }
+  while (phi > M_PI)  { phi -= 2.0*M_PI; }
+  while (phi < -M_PI) { phi += 2.0*M_PI; }
   return phi;
 }
 

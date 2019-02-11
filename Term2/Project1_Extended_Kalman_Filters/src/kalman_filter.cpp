@@ -57,15 +57,16 @@ void KalmanFilter::Update(const VectorXd &z) {
   P_ = (I - K * H_) * P_;
 }
 
-double NormalizeAngle(double& phi)
+double NormalizeAngle(double phi)
 {
-//  const double Max =  M_PI;
-//  const double Min = -M_PI;
-//  return phi < Min  ? Max + std::fmod(phi - Min, Max - Min)
-//                    : std::fmod(phi - Min, Max - Min) + Min;
-// Normalize the angle
-while (phi > M_PI)  { phi -= M_PI; }
-while (phi < -M_PI) { phi += M_PI; }
+  //  const double Max =  M_PI;
+  //  const double Min = -M_PI;
+  //  return phi < Min  ? Max + std::fmod(phi - Min, Max - Min)
+  //                    : std::fmod(phi - Min, Max - Min) + Min;
+  // Normalize the angle
+  while (phi > M_PI)  { phi -= M_PI; }
+  while (phi < -M_PI) { phi += M_PI; }
+  return phi;
 }
 
 void KalmanFilter::UpdateEKF(const VectorXd &z) {

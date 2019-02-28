@@ -21,10 +21,10 @@ UKF::UKF() {
   P_ = MatrixXd(5, 5);
 
   // Process noise standard deviation longitudinal acceleration in m/s^2
-  std_a_ = 30;
+  std_a_ = 30; // TODO hint from the video: change this
 
   // Process noise standard deviation yaw acceleration in rad/s^2
-  std_yawdd_ = 30;
+  std_yawdd_ = 30; // TODO hint from the video: change this
   
   /**
    * DO NOT MODIFY measurement noise values below.
@@ -58,11 +58,23 @@ UKF::UKF() {
 
 UKF::~UKF() {}
 
-void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
+void UKF::ProcessMeasurement(MeasurementPackage measurement_pack) {
   /**
    * TODO: Complete this function! Make sure you switch between lidar and radar
    * measurements.
    */
+  /**
+   * Initialization
+   */
+  if (!is_initialized_) {
+    if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
+    }
+    else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {
+    }
+    // done initializing, no need to predict or update
+    is_initialized_ = true;
+    //previous_t_ = measurement_pack.timestamp_; // get current timestamp
+  }
 }
 
 void UKF::Prediction(double delta_t) {

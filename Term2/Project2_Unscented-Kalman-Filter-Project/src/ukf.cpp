@@ -25,10 +25,10 @@ UKF::UKF() {
   P_ = MatrixXd(5, 5);
 
   // Process noise standard deviation longitudinal acceleration in m/s^2
-  std_a_ = 30; // TODO hint from the video: change this
+  std_a_ = 0.2; // DONE hint from the video: change this
 
   // Process noise standard deviation yaw acceleration in rad/s^2
-  std_yawdd_ = 30; // TODO hint from the video: change this
+  std_yawdd_ = 0.2; // DONE hint from the video: change this
   
   /**
    * DO NOT MODIFY measurement noise values below.
@@ -58,6 +58,12 @@ UKF::UKF() {
    * TODO: Complete the initialization. See ukf.h for other member properties.
    * Hint: one or more values initialized above might be wildly off...
    */
+  // set state dimension
+  int n_x_ = 5;
+
+  // set augmented dimension
+  int n_aug_ = 7;
+
 }
 
 UKF::~UKF() {}

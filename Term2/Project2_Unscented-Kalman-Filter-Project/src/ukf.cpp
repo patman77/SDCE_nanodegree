@@ -4,6 +4,7 @@
 
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
+using Eigen::RowVectorXd;
 using std::cout;
 using std::endl;
 
@@ -76,7 +77,7 @@ void UKF::ProcessMeasurement(MeasurementPackage measurement_pack) {
      * Convert radar from polar to cartesian coordinates.
      */
     // first measurement
-    cout << "EKF: " << endl;
+    cout << "UKF: " << endl;
     x_ << 1, 1, 1, 1, 1;
 
     if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
@@ -213,7 +214,38 @@ void UKF::Prediction(double delta_t) {
 
   // Predict mean and covariance
   // Lesson 7, section 24: Predicted Mean and Covariance Assignment 2
-  
+
+  // create vector for weights
+  weights_ = VectorXd(2*n_aug_+1);
+
+  // set weights
+  weights_(0) = lambda_ / (lambda_ + n_aug_);
+  for(int i = 1; i<2*n_aug_+1; ++i)
+  {
+    weights_(i) = 1.0 / (2.0 * (lambda_+n_aug_));
+  }
+
+  // predict state mean
+  x_.fill(0.0);
+  for(int i=0; i<n_x_; ++i)
+  {
+    double rowsum = 0;
+    for(int j=0; j<2*n_aug_+1; ++j)
+    {
+      rowsum += weights_(j)*Xsig_pred_(i,j);
+    }
+    x_(i) = rowsum;
+  }
+
+  // predict state covariance matrix
+  P_.fill(0.0);
+  for(int i=0; i<2*n_aug_+1; ++i)
+  {
+    VectorXd diffvec      = Xsig_pred_.col(i) - x_;
+    RowVectorXd diffvectrans = diffvec.transpose();
+    //Matrix<double, Dynamic, 1> diffvectrans = diffvec.transpose();
+    P_ = P_ + weights_(i) * diffvec * diffvectrans;
+  }
 }
 
 void UKF::UpdateLidar(MeasurementPackage meas_package) {

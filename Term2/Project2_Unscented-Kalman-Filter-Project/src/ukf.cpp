@@ -72,7 +72,7 @@ void UKF::ProcessMeasurement(MeasurementPackage measurement_pack) {
    */
   if (!is_initialized_) {
     /**
-     * DONE: Initialize the state ekf_.x_ with the first measurement.
+     * DONE: Initialize the state x_ with the first measurement.
      * DONE: Create the covariance matrix.
      * Convert radar from polar to cartesian coordinates.
      */
@@ -91,14 +91,15 @@ void UKF::ProcessMeasurement(MeasurementPackage measurement_pack) {
       x_ << rho * cos(phi),
             rho * sin(phi),
             rho_dot * sin(phi),
-            rho_dot * cos(phi);
-      //0.0,
+            rho_dot * cos(phi),
+      0.0;
       //0.0;
 
     }
     else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {
       x_ << measurement_pack.raw_measurements_[0],
             measurement_pack.raw_measurements_[1],
+            0.0,
             0.0,
             0.0;
     }

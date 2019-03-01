@@ -59,10 +59,10 @@ UKF::UKF() {
    * Hint: one or more values initialized above might be wildly off...
    */
   // set state dimension
-  int n_x_ = 5;
+  n_x_ = 5;
 
   // set augmented dimension
-  int n_aug_ = 7;
+  n_aug_ = 7;
 
 }
 

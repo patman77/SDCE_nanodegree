@@ -98,6 +98,9 @@ class UKF {
 
   // Sigma point spreading parameter
   double lambda_;
+
+ private:
+  void normalizeAngle(double& f_angle);
 };
 
 #endif  // UKF_H

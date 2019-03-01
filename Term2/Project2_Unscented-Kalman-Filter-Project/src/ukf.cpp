@@ -323,4 +323,12 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
   0, 0,std_radrd_*std_radrd_;
   S += R;
 
+  // update radar
+
+}
+
+void UKF::normalizeAngle(double& f_angle)
+{
+  while(f_angle >  M_PI) f_angle -= 2.0*M_PI;
+  while(f_angle < -M_PI) f_angle += 2.0*M_PI;
 }

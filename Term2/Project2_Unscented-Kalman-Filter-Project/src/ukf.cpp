@@ -324,8 +324,43 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
   S += R;
 
   // update radar
+  // Lesson 7, section 30
 
+  // create matrix for cross correlation Tc
+  MatrixXd Tc = MatrixXd(n_x_, n_z);
+
+  // calculate cross correlation matrix
+  // fill with zeros
+  Tc.fill(0.0);
+  for(int i=0; i < 2 * n_aug_ + 1; i++)
+  {
+    // state difference
+    VectorXd x_diff = Xsig_pred_.col(i) - x_;
+    // normalize angle
+    normalizeAngle(x_diff(3));
+
+    // residual
+    VectorXd z_diff = Zsig.col(i) - z_pred;
+    // also normalize angle here
+    normalizeAngle(z_diff(1)); // phi
+
+    // accumulate
+    Tc += weights_(i) * x_diff * z_diff.transpose();
+  }
+
+  // calculate Kalman gain K;
+  // is product of cross corr matrix Tc times the inverse of the predicted measurement covariance S
+  MatrixXd K;
+  K = Tc * S.inverse();
+  // residual between real measurement z_{k+1} (==z) and mean predicted z_pred
+  VectorXd z_diff = x_ - z_pred;
+  // normalize phi angle of z_diff
+  normalizeAngle(z_diff(1));
+  // update state mean and covariance matrix
+  x_ += K * z_diff;
+  P_ -= K * S * K.transpose();
 }
+
 
 void UKF::normalizeAngle(double& f_angle)
 {

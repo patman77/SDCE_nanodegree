@@ -1,8 +1,11 @@
 #include "ukf.h"
+#include <iostream>
 #include "Eigen/Dense"
 
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
+using std::cout;
+using std::endl;
 
 /**
  * Initializes Unscented Kalman filter
@@ -67,11 +70,36 @@ void UKF::ProcessMeasurement(MeasurementPackage measurement_pack) {
    * Initialization
    */
   if (!is_initialized_) {
+    /**
+     * DONE: Initialize the state ekf_.x_ with the first measurement.
+     * DONE: Create the covariance matrix.
+     * Convert radar from polar to cartesian coordinates.
+     */
+    // first measurement
+    cout << "EKF: " << endl;
+    x_ << 1, 1, 1, 1, 1;
+
     if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
-    //TODO
+      // DONE: Convert radar from polar to cartesian coordinates
+      //         and initialize state.
+      previous_t = measurement_pack.timestamp_; // get current timestamp
+
+      double rho     = measurement_pack.raw_measurements_[0];
+      double phi     = measurement_pack.raw_measurements_[1];
+      double rho_dot = measurement_pack.raw_measurements_[2];
+      x_ << rho * cos(phi),
+            rho * sin(phi),
+            rho_dot * sin(phi),
+            rho_dot * cos(phi);
+      //0.0,
+      //0.0;
+
     }
     else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {
-    //TODO
+      x_ << measurement_pack.raw_measurements_[0],
+            measurement_pack.raw_measurements_[1],
+            0.0,
+            0.0;
     }
     // done initializing, no need to predict or update
     is_initialized_ = true;
@@ -134,6 +162,58 @@ void UKF::Prediction(double delta_t) {
     Xsig_aug.col(i+1+n_aug_) = x_aug - sqrt(lambda_+n_aug_) * L.col(i);
   }
 
+  // Predict Sigma Points
+  // Lesson 7, section 21: Sigma Point Prediction Assignment 2
+
+  // init matrix with predicted sigma points as columns
+  Xsig_pred_ = MatrixXd(n_x_, 2 * n_aug_ + 1);
+
+  // predict sigma points
+  for (int i = 0; i< 2 * n_aug_ + 1; i++) {
+    // extract for better visibility
+    double p_x      = Xsig_aug(0,i);
+    double p_y      = Xsig_aug(1,i);
+    double v        = Xsig_aug(2,i);
+    double yaw      = Xsig_aug(3,i);
+    double yawd     = Xsig_aug(4,i);
+    double nu_a     = Xsig_aug(5,i);
+    double nu_yawdd = Xsig_aug(6,i);
+
+    // predicted state values
+    double px_p, py_p;
+
+    // avoid division by zero
+    if (fabs(yawd) > 0.001) {
+      px_p = p_x + v/yawd * ( sin (yaw + yawd*delta_t) - sin(yaw) );
+      py_p = p_y + v/yawd * ( cos (yaw) - cos(yaw + yawd*delta_t) );
+    } else {
+      px_p = p_x + v * delta_t * cos(yaw);
+      py_p = p_y + v * delta_t * sin(yaw);
+    }
+
+    double v_p    = v;
+    double yaw_p  = yaw + yawd * delta_t;
+    double yawd_p = yawd;
+
+    // add noise
+    px_p   += 0.5 * nu_a * delta_t*delta_t * cos(yaw);
+    py_p   += 0.5 * nu_a * delta_t*delta_t * sin(yaw);
+    v_p    +=       nu_a * delta_t;
+
+    yaw_p  += 0.5 * nu_yawdd * delta_t * delta_t;
+    yawd_p += nu_yawdd * delta_t;
+
+    // write predicted sigma point into right column
+    Xsig_pred_(0,i) = px_p;
+    Xsig_pred_(1,i) = py_p;
+    Xsig_pred_(2,i) = v_p;
+    Xsig_pred_(3,i) = yaw_p;
+    Xsig_pred_(4,i) = yawd_p;
+  }
+
+  // Predict mean and covariance
+  // Lesson 7, section 24: Predicted Mean and Covariance Assignment 2
+  
 }
 
 void UKF::UpdateLidar(MeasurementPackage meas_package) {

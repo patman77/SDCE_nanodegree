@@ -105,13 +105,11 @@ void UKF::ProcessMeasurement(MeasurementPackage measurement_pack) {
       double rho     = measurement_pack.raw_measurements_[0];
       double phi     = measurement_pack.raw_measurements_[1];
       double rho_dot = measurement_pack.raw_measurements_[2];
-      x_ << rho * cos(phi),
-            rho * sin(phi),
-            rho_dot * sin(phi),
-            rho_dot * cos(phi),
-      0.0;
-      //0.0;
-
+      x_ << 0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0;
     }
     else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {
       x_ << measurement_pack.raw_measurements_[0],

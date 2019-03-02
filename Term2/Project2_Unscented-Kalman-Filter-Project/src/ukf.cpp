@@ -332,9 +332,10 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
     const double v2  = sin(yaw)*v;
 
     //measurement model
-    Zsig(0, i) = sqrt(p_x*p_x + p_y*p_y);         // rho
+    const double l_rho = Zsig(0, i) = sqrt(p_x*p_x + p_y*p_y);         // rho
+    const double l_eps = 0.0000001;
     Zsig(1, i) = atan2(p_y, p_x);                 // phi
-    Zsig(2, i) = (p_x*v1 + p_y*v2) / Zsig(0, i);  // rho_dot
+    Zsig(2, i) = (p_x*v1 + p_y*v2) / std::max(l_eps, l_rho);  // rho_dot
   }
 
   // calculate mean predicted measurement

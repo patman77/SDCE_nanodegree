@@ -121,22 +121,22 @@ void UKF::ProcessMeasurement(MeasurementPackage measurement_pack) {
     // done initializing, no need to predict or update
     is_initialized_ = true;
     previous_t = measurement_pack.timestamp_; // get current timestamp
-
-    /**
-     * control structure similar to EKF project
-     */
-    double delta_t = (measurement_pack.timestamp_ - previous_t) / 1000000.0;
-    Prediction(delta_t);
-
-    if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {
-      UpdateLidar(measurement_pack);
-    }
-    else if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
-      UpdateRadar(measurement_pack);
-    }
-    previous_t = measurement_pack.timestamp_;
-
+    return; // don't do anything else in case of initialization
   }
+
+  /**
+   * control structure similar to EKF project
+   */
+  double delta_t = (measurement_pack.timestamp_ - previous_t) / 1000000.0;
+  Prediction(delta_t);
+
+  if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {
+    UpdateLidar(measurement_pack);
+  }
+  else if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
+    UpdateRadar(measurement_pack);
+  }
+  previous_t = measurement_pack.timestamp_;
 }
 
 void UKF::Prediction(double delta_t) {

@@ -75,6 +75,21 @@ UKF::UKF() {
   // set augmented dimension
   n_aug_ = 7;
 
+  // init labmda
+  lambda_ = 3 - n_aug_;
+
+  // create vector for weights
+  weights_ = VectorXd(2*n_aug_+1);
+
+  // set weights
+  weights_(0) = lambda_ / (lambda_ + n_aug_);
+  for(int i = 1; i<2*n_aug_+1; ++i)
+  {
+    weights_(i) = 1.0 / (2.0 * (lambda_+n_aug_));
+  }
+
+
+
 }
 
 UKF::~UKF() {}
@@ -230,16 +245,6 @@ void UKF::Prediction(double delta_t) {
 
   // Predict mean and covariance
   // Lesson 7, section 24: Predicted Mean and Covariance Assignment 2
-
-  // create vector for weights
-  weights_ = VectorXd(2*n_aug_+1);
-
-  // set weights
-  weights_(0) = lambda_ / (lambda_ + n_aug_);
-  for(int i = 1; i<2*n_aug_+1; ++i)
-  {
-    weights_(i) = 1.0 / (2.0 * (lambda_+n_aug_));
-  }
 
   // predict state mean
   x_.fill(0.0);

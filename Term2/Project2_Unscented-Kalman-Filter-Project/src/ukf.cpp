@@ -324,12 +324,12 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
   // transform sigma points into measurement space
   for(int i=0; i<2*n_aug_+1; ++i)  //2n+1 sigma points
   {
-    double p_x = Xsig_pred_(0, i);
-    double p_y = Xsig_pred_(1, i);
-    double v   = Xsig_pred_(2, i);
-    double yaw = Xsig_pred_(3, i);
-    double v1  = cos(yaw)*v;
-    double v2  = sin(yaw)*v;
+    const double p_x = Xsig_pred_(0, i);
+    const double p_y = Xsig_pred_(1, i);
+    const double v   = Xsig_pred_(2, i);
+    const double yaw = Xsig_pred_(3, i);
+    const double v1  = cos(yaw)*v;
+    const double v2  = sin(yaw)*v;
 
     //measurement model
     Zsig(0, i) = sqrt(p_x*p_x + p_y*p_y);         // rho

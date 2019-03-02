@@ -266,9 +266,10 @@ void UKF::Prediction(double delta_t) {
   for(int i=0; i<2*n_aug_+1; ++i)
   {
     VectorXd diffvec      = Xsig_pred_.col(i) - x_;
+    normalizeAngle(diffvec(3));
     RowVectorXd diffvectrans = diffvec.transpose();
     //Matrix<double, Dynamic, 1> diffvectrans = diffvec.transpose();
-    P_ = P_ + weights_(i) * diffvec * diffvectrans;
+    P_ += weights_(i) * diffvec * diffvectrans;
   }
 }
 
@@ -357,10 +358,8 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
   for (int i = 0; i < 2*n_aug_ + 1; ++i) {  // 2n+1 simga points
     // residual
     VectorXd z_diff          = Zsig.col(i) - z_pred;
+    normalizeAngle(z_diff(1));
     RowVectorXd z_diff_trans = z_diff.transpose();
-    // angle normalization
-    //while (z_diff(1)> M_PI) z_diff(1)-=2.*M_PI;
-    //while (z_diff(1)<-M_PI) z_diff(1)+=2.*M_PI;
 
     S += weights_(i) * z_diff * z_diff_trans;
   }

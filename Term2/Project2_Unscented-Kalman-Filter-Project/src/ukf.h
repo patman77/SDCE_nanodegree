@@ -106,7 +106,7 @@ class UKF {
   double lambda_;
 
  private:
-  void normalizeAngle(double& f_angle);
+  inline void normalizeAngle(double& f_angle);
 };
 
 #endif  // UKF_H

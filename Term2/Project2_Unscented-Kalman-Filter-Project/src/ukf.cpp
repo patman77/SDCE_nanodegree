@@ -21,8 +21,19 @@ UKF::UKF() {
   // initial state vector
   x_ = VectorXd(5);
 
+  // initializing matrices
+  R_laser_ = MatrixXd(2, 2);
+  //measurement covariance matrix - laser
+  R_laser_ << 0.0225, 0,
+              0     , 0.0225;
+
   // initial covariance matrix
   P_ = MatrixXd(5, 5);
+
+  H_laser_ = MatrixXd(2, 5);
+  H_laser_ << 1.0, 0.0, 0.0, 0.0, 0.0,
+              0.0, 1.0, 0.0, 0.0, 0.0;
+
 
   // Process noise standard deviation longitudinal acceleration in m/s^2
   std_a_ = 0.2; // DONE hint from the video: change this
@@ -262,6 +273,26 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
    * covariance, P_.
    * You can also calculate the lidar NIS, if desired.
    */
+  /**
+   * DONE: update the state by using Kalman Filter equations, reused from EKF
+   */
+  int n_z = 2;
+  VectorXd z(n_z);
+  z << meas_package.raw_measurements_[0],
+       meas_package.raw_measurements_[1];
+  VectorXd z_pred_ = H_laser_ * x_;
+  VectorXd y = z - z_pred_;
+  MatrixXd Ht = H_laser_.transpose();
+  MatrixXd PHt = P_ * Ht;
+  MatrixXd S = H_laser_ * PHt + R_laser_;
+  MatrixXd Si = S.inverse();
+  MatrixXd K = PHt * Si;
+
+  //new estimate
+  x_ = x_ + (K * y);
+  long x_size = x_.size();
+  MatrixXd I = MatrixXd::Identity(x_size, x_size);
+  P_ = (I - K * H_laser_) * P_;
 }
 
 void UKF::UpdateRadar(MeasurementPackage meas_package) {

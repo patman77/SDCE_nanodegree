@@ -123,8 +123,8 @@ void UKF::ProcessMeasurement(MeasurementPackage measurement_pack) {
       double rho     = measurement_pack.raw_measurements_[0];
       double phi     = measurement_pack.raw_measurements_[1];
       double rho_dot = measurement_pack.raw_measurements_[2];
-      x_ << 0.0,
-            0.0,
+      x_ << rho * cos(phi),
+            rho * sin(phi),
             0.0,
             0.0,
             0.0;
@@ -314,6 +314,10 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 
   // set measurement dimension, radar can measure r, phi, and r_dot
   int n_z = 3;
+  VectorXd z(n_z);
+  z << meas_package.raw_measurements_[0], // rho
+       meas_package.raw_measurements_[1], // phi
+       meas_package.raw_measurements_[2]; // dot
 
   // create matrix for sigma points in measurement space
   MatrixXd Zsig = MatrixXd(n_z, 2 * n_aug_ + 1);
@@ -345,14 +349,14 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
   z_pred.fill(0.0);
   for(int i=0; i< 2*n_aug_ + 1; ++i)
   {
-    z_pred += weights_(i)*Zsig.col(i);
+    z_pred += weights_(i) * Zsig.col(i);
   }
 
   // calculate innovation covariance matrix S
   S.fill(0.0);
   for (int i = 0; i < 2*n_aug_ + 1; ++i) {  // 2n+1 simga points
     // residual
-    VectorXd z_diff = Zsig.col(i) - z_pred;
+    VectorXd z_diff          = Zsig.col(i) - z_pred;
     RowVectorXd z_diff_trans = z_diff.transpose();
     // angle normalization
     //while (z_diff(1)> M_PI) z_diff(1)-=2.*M_PI;
@@ -394,7 +398,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
   MatrixXd K;
   K = Tc * S.inverse();
   // residual between real measurement z_{k+1} (==z) and mean predicted z_pred
-  VectorXd z_diff = x_ - z_pred;
+  VectorXd z_diff = z - z_pred;
   // normalize phi angle of z_diff
   normalizeAngle(z_diff(1));
   // update state mean and covariance matrix

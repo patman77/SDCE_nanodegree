@@ -61,6 +61,7 @@ class UKF {
   Eigen::MatrixXd P_;
 
   Eigen::MatrixXd R_laser_;
+  Eigen::MatrixXd R_radar_;
 
   // measurement matrix
   Eigen::MatrixXd H_laser_;

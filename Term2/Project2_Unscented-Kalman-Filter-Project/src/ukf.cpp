@@ -88,8 +88,11 @@ UKF::UKF() {
     weights_(i) = 1.0 / (2.0 * (lambda_+n_aug_));
   }
 
-
-
+  int l_n_z_radar = 3;
+  R_radar_ = MatrixXd(l_n_z_radar, l_n_z_radar);
+  R_radar_ << std_radr_*std_radr_,                       0,                     0,
+                                0, std_radphi_*std_radphi_,                     0,
+                                0,                       0, std_radrd_*std_radrd_;
 }
 
 UKF::~UKF() {}
@@ -359,11 +362,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
   }
 
   // adding of measurement noise covariance matrix
-  MatrixXd R = MatrixXd(n_z,n_z);
-  R <<  std_radr_*std_radr_, 0, 0,
-  0, std_radphi_*std_radphi_, 0,
-  0, 0,std_radrd_*std_radrd_;
-  S += R;
+  S += R_radar_;
 
   // update radar
   // Lesson 7, section 30

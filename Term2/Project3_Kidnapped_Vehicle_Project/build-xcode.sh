@@ -13,7 +13,7 @@
 cd `dirname $0`
 
 # Compile code.
-mkdir -p build
-cd build
-cmake ..
-make $*
+mkdir -p build_xcode
+cd build_xcode
+cmake .. -G Xcode
+#make $*

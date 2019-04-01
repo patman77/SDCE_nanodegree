@@ -23,7 +23,7 @@ using std::vector;
 
 void ParticleFilter::init(double x, double y, double theta, double std[]) {
   /**
-   * TODO: Set the number of particles. Initialize all particles to 
+   * DONE: Set the number of particles. Initialize all particles to
    *   first position (based on estimates of x, y, theta and their uncertainties
    *   from GPS) and all weights to 1. 
    * TODO: Add random Gaussian noise to each particle.
@@ -31,6 +31,36 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
    *   (and others in this file).
    */
   num_particles = 1000;  // DONE: Set the number of particles
+  // From lesson 14, chapter 5:
+  std::default_random_engine gen;
+  // This line creates a normal (Gaussian) distribution for x
+  std::normal_distribution<double> dist_x(x, std[0]);
+  // Create normal distributions for y and theta
+  std::normal_distribution<double> dist_y(y, std[1]);
+  std::normal_distribution<double> dist_theta(theta, std[2]);
+
+  weights.reserve(num_particles);
+  weights.resize(num_particles);
+  weights.assign(num_particles, 1.0);
+
+  particles.reserve(num_particles);
+  particles.resize(num_particles);
+
+
+  for(int i=0; i<num_particles; ++i)
+  {
+    double sample_x, sample_y, sample_theta;
+    // Sample from these normal distributions like this:
+    // sample_x = dist_x(gen);
+    // where "gen" is the random engine initialized earlier.
+    sample_x            = dist_x(gen);
+    sample_y            = dist_y(gen);
+    sample_theta        = dist_theta(gen);
+    particles[i].x      = sample_x;
+    particles[i].y      = sample_y;
+    particles[i].theta  = sample_theta;
+    particles[i].weight = 1.0;
+  }
 
 }
 

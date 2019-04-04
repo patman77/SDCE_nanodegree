@@ -120,6 +120,7 @@ void ParticleFilter::dataAssociation(vector<LandmarkObs> predicted,
   unsigned int num_landmarks = predicted.size();
   for (int i = 0; i < num_obs; ++i) {
     int closest_landmark = 0;
+    int closest_mapId = -1;
     int min_dist = 999999;
     int curr_dist;
     // Iterate through all landmarks to check which is closest
@@ -131,8 +132,11 @@ void ParticleFilter::dataAssociation(vector<LandmarkObs> predicted,
       if (curr_dist < min_dist) {
         min_dist = curr_dist;
         closest_landmark = j;
+        closest_mapId = predicted[closest_landmark].id;
       }
     }
+    // update observation identifier:
+    observations[i].id = closest_mapId;
   }
 }
 

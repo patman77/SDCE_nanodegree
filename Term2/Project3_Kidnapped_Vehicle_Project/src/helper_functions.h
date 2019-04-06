@@ -248,4 +248,16 @@ inline bool read_landmark_data(std::string filename,
   return true;
 }
 
+inline double multivariate_gaussian_2d(double x, double y,
+                                       double mu_x, double mu_y,
+                                       double sigma_x, double sigma_y)
+{
+  double factor = 1.0 / (2.0*M_PI*sigma_x*sigma_y);
+  double term   = pow(M_E,
+                      -( (pow(x-mu_x, 2.0)) / (2.0*pow(sigma_x, 2.0)) +
+                        (pow(y-mu_y, 2.0)) / (2.0*pow(sigma_y, 2.0))
+                        ) );
+  return factor*term;
+}
+
 #endif  // HELPER_FUNCTIONS_H_

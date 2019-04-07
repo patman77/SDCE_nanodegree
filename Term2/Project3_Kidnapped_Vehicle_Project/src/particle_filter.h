@@ -113,6 +113,14 @@ class ParticleFilter {
 
  private:
   //! 2d homogeneous transform
+  //! @param x_part translation x direction
+  //! @param y_part translation y direction
+  //! @param x_obs input x coord
+  //! @param y_obs input y coord
+  //! @param theta rotation angle
+  //! @param x_map inout param x coord result
+  //! @param y_map inout param y coord result
+
   void transform2d(double x_part, double y_part, double x_obs, double y_obs, double theta,
                    double& x_map, double& y_map);
   // Number of particles to draw

@@ -248,6 +248,17 @@ inline bool read_landmark_data(std::string filename,
   return true;
 }
 
+/**
+ * Calculates and returns multivariate 2d gaussian
+ * @param x value to be evaluated, first axis
+ * @param y value to be evaluated, second axis
+ * @param mu_x mean value first axis
+ * @param mu_y mean value fsecond axis
+ * @param sigma_x std dev, first axis
+ * @param sigma_y std dev, second axis
+
+ * @output True if opening and reading file was successful
+ */
 inline double multivariate_gaussian_2d(double x, double y,
                                        double mu_x, double mu_y,
                                        double sigma_x, double sigma_y)

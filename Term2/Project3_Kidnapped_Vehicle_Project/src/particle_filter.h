@@ -112,6 +112,9 @@ class ParticleFilter {
   std::vector<Particle> particles;
 
  private:
+  //! 2d homogeneous transform
+  void transform2d(double x_part, double y_part, double x_obs, double y_obs, double theta,
+                   double& x_map, double& y_map);
   // Number of particles to draw
   int num_particles; 
   

@@ -207,3 +207,15 @@ string ParticleFilter::getSenseCoord(Particle best, string coord) {
   s = s.substr(0, s.length()-1);  // get rid of the trailing space
   return s;
 }
+
+// --------------------------------------------------------------------------------------------
+// private methods
+// --------------------------------------------------------------------------------------------
+void ParticleFilter::transform2d(double x_part, double y_part, double x_obs, double y_obs, double theta,
+                 double& x_map, double& y_map)
+{
+  // transform to map x coordinate
+  x_map = x_part + (cos(theta) * x_obs) - (sin(theta) * y_obs);
+  // transform to map y coordinate
+  y_map = y_part + (sin(theta) * x_obs) + (cos(theta) * y_obs);
+}

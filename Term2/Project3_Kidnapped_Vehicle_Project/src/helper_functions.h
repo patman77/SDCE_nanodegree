@@ -260,8 +260,8 @@ inline bool read_landmark_data(std::string filename,
  * @output True if opening and reading file was successful
  */
 inline double multivariate_gaussian_2d(double x, double y,
-                                       double mu_x, double mu_y,
-                                       double sigma_x, double sigma_y)
+                                   double mu_x, double mu_y,
+                                   double sigma_x, double sigma_y)
 {
   double factor = 1.0 / (2.0*M_PI*sigma_x*sigma_y);
   double term   = pow(M_E,

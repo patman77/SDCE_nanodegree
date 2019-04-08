@@ -156,7 +156,22 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
    *   and the following is a good resource for the actual equation to implement
    *   (look at equation 3.33) http://planning.cs.uiuc.edu/node99.html
    */
-
+  // The Multivariate-Gaussian is evaluated at the point of the transformed measurement's position.
+  for(int i=0; i<particles.size(); ++i)
+  {
+    for(int j=0; j<observations.size(); ++j)
+    {
+      double x_map, y_map;
+      transform2d(particles[i].x, particles[i].y,
+                  observations[j].x, observations[j].y, -M_PI/2.0,
+                  x_map, y_map);
+      double weight = multivariate_gaussian_2d(x_map, y_map,
+                                             map_landmarks.landmark_list[observations[j].id].x_f,
+                                             map_landmarks.landmark_list[observations[j].id].y_f,
+                                             std_landmark[0], std_landmark[1]);
+      particles[i].weight = weight;
+    }
+  }
 }
 
 void ParticleFilter::resample() {
@@ -211,6 +226,7 @@ string ParticleFilter::getSenseCoord(Particle best, string coord) {
 // --------------------------------------------------------------------------------------------
 // private methods
 // --------------------------------------------------------------------------------------------
+                                                                            
 void ParticleFilter::transform2d(double x_part, double y_part, double x_obs, double y_obs, double theta,
                  double& x_map, double& y_map)
 {

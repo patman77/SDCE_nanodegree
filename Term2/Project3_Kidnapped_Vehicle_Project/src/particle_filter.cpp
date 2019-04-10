@@ -61,7 +61,7 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
     particles[i].theta  = sample_theta;
     particles[i].weight = 1.0;
   }
-
+  is_initialized = true;
 }
 
 void ParticleFilter::prediction(double delta_t, double std_pos[], 
@@ -181,30 +181,25 @@ void ParticleFilter::resample() {
    * NOTE: You may find std::discrete_distribution helpful here.
    *   http://en.cppreference.com/w/cpp/numeric/random/discrete_distribution
    */
-  // taken from Lesson 13, Particle Filters, lesson 20> Resampling Wheel
+  // inspired by Lesson 13, Particle Filters, lesson 20> Resampling Wheel
   std::random_device rd;
   std::mt19937 gen(rd());
   std::discrete_distribution<> d(weights.begin(), weights.end());
 
   auto maxiter = std::max_element(weights.begin(), weights.end());
   double maximum = *maxiter;
-  std::discrete_distribution<> d2(); // TODO random * 2 * maximum
 
-  double beta = 0.0;
-  std::vector<Particle> resampled_particles;
+  std::vector<Particle> resampled_particles(num_particles);
+  std::vector<double> resampled_weights(num_particles);
 
   for(int i=0; i<num_particles; ++i)
   {
-    double uniformdist = d(gen);
-    beta += uniformdist;
-    while(weights[i] < beta)
-    {
-      beta -= weights[i];
-      i = (i+1)%num_particles;
-    }
-    resampled_particles.push_back(particles[i]);
+    Particle& particle_sample = particles[d(gen)];
+    resampled_particles[i] = particle_sample;
+    resampled_weights[i] = particle_sample.weight;
   }
   particles = resampled_particles;
+  weights = resampled_weights;
 }
 
 void ParticleFilter::SetAssociations(Particle& particle, 

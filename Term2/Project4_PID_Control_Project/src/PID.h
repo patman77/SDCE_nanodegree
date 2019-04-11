@@ -31,7 +31,20 @@ class PID {
    */
   double TotalError();
 
- private:
+  /**
+    * twiddle optimizes the parameters Kp, Ki and Kd with a simple gradient descent
+    *
+   */
+  void twiddle(double f_tolerance);
+
+  double GetKp() { return Kp; }
+  void SetKp(double newkp) { Kp = newkp; }
+  double GetKi() { return Ki; }
+  void SetKi(double newki) { Ki = newki; }
+  double GetKd() { return Kd; }
+  void SetKd(double newkd) { Kd = newkd; }
+
+private:
   /**
    * PID Errors
    */

@@ -28,3 +28,8 @@ double PID::TotalError() {
    */
   return 0.0;  // TODO: Add your total error calc here!
 }
+
+void PID::twiddle(double f_tolerance)
+{
+  
+}

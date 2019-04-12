@@ -120,6 +120,8 @@ int main() {
           auto msg = "42[\"steer\"," + msgJson.dump() + "]";
           std::cout << msg << std::endl;
           ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
+          t += dt;
+          std::cout<<"t = "<<t<<std::endl;
           prev_time = curr_time;
         }  // end "telemetry" if
       } else {

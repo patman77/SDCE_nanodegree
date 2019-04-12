@@ -35,9 +35,9 @@ int main() {
 
   PID pid;
   /**
-   * TODO: Initialize the pid variable.
+   * DONE: Initialize the pid variable.
    */
-  pid.Init(0.3, 3.0, 0.00000);
+  pid.Init(0.2, 3.0, 0.004, true);
 
   h.onMessage([&pid](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, 
                      uWS::OpCode opCode) {
@@ -64,6 +64,17 @@ int main() {
            * NOTE: Feel free to play around with the throttle and speed.
            *   Maybe use another PID controller to control the speed!
            */
+          if(pid.getFirstCall())
+          {
+            std::cout<<"firstcall"<<std::endl;
+            pid.SetPError(cte); // for the first frame, there is no previous value, so use the very first cte
+            pid.setFirstCall(false);
+          }
+          else
+          {
+            std::cout<<"not firstcall"<<std::endl;
+          }
+          pid.UpdateError(cte);
           steer_value = pid.getSteerAngle();
           
           // DEBUG
@@ -85,7 +96,7 @@ int main() {
     }  // end websocket message if
   }); // end h.onMessage
 
-  h.onConnection([&h](uWS::WebSocket<uWS::SERVER> ws, uWS::HttpRequest req) {
+   h.onConnection([&h](uWS::WebSocket<uWS::SERVER> ws, uWS::HttpRequest req) {
     std::cout << "Connected!!!" << std::endl;
   });
 

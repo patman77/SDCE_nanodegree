@@ -10,16 +10,23 @@ PID::~PID() {}
 
 void PID::Init(double Kp_, double Ki_, double Kd_) {
   /**
-   * TODO: Initialize PID coefficients (and errors, if needed)
+   * DONE: Initialize PID coefficients (and errors, if needed)
    */
+  Kp = Kp_;
+  Ki = Ki_;
+  Kd = Kd_;
 
+  // init PID errors
+  p_error = i_error = d_error = 0.0;
 }
 
 void PID::UpdateError(double cte) {
   /**
-   * TODO: Update PID errors based on cte.
+   * DONE: Update PID errors based on cte.
    */
-
+  d_error = cte - p_error;
+  p_error = cte;
+  i_error += cte;
 }
 
 double PID::TotalError() {

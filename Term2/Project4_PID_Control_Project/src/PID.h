@@ -37,6 +37,11 @@ class PID {
    */
   void twiddle(double f_tolerance);
 
+ /**
+   * returns steering angle
+   */
+  double getSteerAngle();
+
   double GetKp() { return Kp; }
   void SetKp(double newkp) { Kp = newkp; }
   double GetKi() { return Ki; }

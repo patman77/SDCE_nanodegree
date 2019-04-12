@@ -33,10 +33,15 @@ double PID::TotalError() {
   /**
    * TODO: Calculate and return the total error
    */
-  return 0.0;  // TODO: Add your total error calc here!
+  return i_error;  // DONE: Add your total error calc here!
 }
 
 void PID::twiddle(double f_tolerance)
 {
   
+}
+
+double PID::getSteerAngle()
+{
+  return -Kp*p_error - Kd*d_error - Ki*i_error;
 }

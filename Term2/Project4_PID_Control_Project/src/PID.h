@@ -17,13 +17,14 @@ class PID {
    * Initialize PID.
    * @param (Kp_, Ki_, Kd_) The initial PID coefficients
    */
-  void Init(double Kp_, double Ki_, double Kd_);
+  void Init(double Kp_, double Ki_, double Kd_, bool firstcall);
 
   /**
    * Update the PID error variables given cross track error.
    * @param cte The current cross track error
+   * @param dt delta t, time between two successive frames
    */
-  void UpdateError(double cte);
+  void UpdateError(double cte, double dt);
 
   /**
    * Calculate the total PID error.
@@ -48,6 +49,10 @@ class PID {
   void SetKi(double newki) { Ki = newki; }
   double GetKd() { return Kd; }
   void SetKd(double newkd) { Kd = newkd; }
+  void SetPError(double newperror) { p_error = newperror; }
+  bool getFirstCall();
+  void setFirstCall(bool rhs);
+  double GetPError() { return p_error; }
 
 private:
   /**
@@ -63,6 +68,11 @@ private:
   double Kp;
   double Ki;
   double Kd;
+
+  /**
+   * firstcall
+   */
+  bool firstcall;
 };
 
 #endif  // PID_H

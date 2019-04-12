@@ -34,12 +34,17 @@ int main() {
   uWS::Hub h;
 
   PID pid;
+  double curr_time = 0.0; // current timestamp
+  double prev_time = 0.0; // timestamp of previous frame
+  double t = 0.0;         // total time
   /**
    * DONE: Initialize the pid variable.
    */
-  pid.Init(0.2, 3.0, 0.004, true);
+  //pid.Init(0.2, 0.004, 3.0, true); // parameters from the course
+  pid.Init(0.35, 0.01, 0.004, true);
+  //pid.Init(0.0, 0.0, 0.0, true); // cross check: this should drive straight
 
-  h.onMessage([&pid](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, 
+  h.onMessage([&pid, &curr_time, &prev_time, &t](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
                      uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
@@ -64,18 +69,44 @@ int main() {
            * NOTE: Feel free to play around with the throttle and speed.
            *   Maybe use another PID controller to control the speed!
            */
+          curr_time = clock();
+          double dt = (curr_time - prev_time) / CLOCKS_PER_SEC;
+          double throttle = 0.81; // inspired by discussions on study-hall
+          if(fabs(cte)>0.5)
+          {
+            throttle = 0.8;
+          }
+          // following inspired by discussions on study-hall.udacity.com
+          if(fabs(pid.GetPError()-cte) > 0.1 && fabs(pid.GetPError()<= 0.2))
+          {
+            throttle = 0.0;
+          }
+          else if(fabs(pid.GetPError()-cte) > 0.2 && speed > 30.0)
+          {
+            throttle = -0.2; // break
+          }
+          std::cout<<"JSON DATA: cte="<<cte<<", speed="<<speed<<", angle="<<angle<<std::endl;
           if(pid.getFirstCall())
           {
-            std::cout<<"firstcall"<<std::endl;
+            //std::cout<<"firstcall"<<std::endl;
             pid.SetPError(cte); // for the first frame, there is no previous value, so use the very first cte
             pid.setFirstCall(false);
           }
           else
           {
-            std::cout<<"not firstcall"<<std::endl;
+            //std::cout<<"___________CALL INBETWEEN__________"<<std::endl;
           }
-          pid.UpdateError(cte);
+          pid.UpdateError(cte, dt);
           steer_value = pid.getSteerAngle();
+          // correct steering angle to interval [-1,1]
+          if(steer_value > 1.0)
+          {
+            steer_value = 1.0;
+          }
+          else if(steer_value < -1.0)
+          {
+            steer_value = -1.0;
+          }
           
           // DEBUG
           std::cout << "CTE: " << cte << " Steering Value: " << steer_value 
@@ -83,10 +114,13 @@ int main() {
 
           json msgJson;
           msgJson["steering_angle"] = steer_value;
-          msgJson["throttle"] = 0.3;
+          //msgJson["throttle"] = 0.3; // original line
+          msgJson["throttle"] = throttle;
+          //msgJson["throttle"] = (1.0 - std::abs(steer_value)) * 0.5 + 0.2; // inspired by discussion on study-hall.udacity.com
           auto msg = "42[\"steer\"," + msgJson.dump() + "]";
           std::cout << msg << std::endl;
           ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
+          prev_time = curr_time;
         }  // end "telemetry" if
       } else {
         // Manual driving

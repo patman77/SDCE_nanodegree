@@ -79,7 +79,7 @@ void ParticleFilter::prediction(double delta_t, double std_pos[],
 
 
     // calculate prediction
-    if(yaw_rate == 0)
+    if(fabs(yaw_rate) < 0.0001)
     {
       new_x     = particles[i].x + velocity*delta_t*cos(particles[i].theta);
       new_y     = particles[i].y + velocity*delta_t*sin(particles[i].theta);
@@ -121,7 +121,7 @@ void ParticleFilter::dataAssociation(vector<LandmarkObs> predicted,
   for (int i = 0; i < num_obs; ++i) {
     int closest_landmark = 0;
     int closest_mapId = -1;
-    int min_dist = 999999;
+    int min_dist = std::numeric_limits<double>::max();
     int curr_dist;
     // Iterate through all landmarks to check which is closest
     for (int j = 0; j < num_landmarks; ++j) {
@@ -159,18 +159,84 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
   // The Multivariate-Gaussian is evaluated at the point of the transformed measurement's position.
   for(int i=0; i<particles.size(); ++i)
   {
+    vector<LandmarkObs> transformed_observations;
     for(int j=0; j<observations.size(); ++j)
     {
       double x_map, y_map;
       transform2d(particles[i].x, particles[i].y,
-                  observations[j].x, observations[j].y, -M_PI/2.0,
+                  observations[j].x, observations[j].y, particles[i].theta,
                   x_map, y_map);
-      double weight = multivariate_gaussian_2d(x_map, y_map,
-                                             map_landmarks.landmark_list[observations[j].id].x_f,
-                                             map_landmarks.landmark_list[observations[j].id].y_f,
-                                             std_landmark[0], std_landmark[1]);
-      particles[i].weight = weight;
+      LandmarkObs lmo;
+      lmo.x = x_map;
+      lmo.y = y_map;
     }
+    // collect landmarks in sensor range
+    vector<LandmarkObs> potential_landmarkobs;
+    for(int lm = 0; lm < map_landmarks.landmark_list.size(); lm++)
+    {
+      if(dist(particles[i].x, particles[i].y,
+                                        map_landmarks.landmark_list[lm].x_f,
+                                        map_landmarks.landmark_list[lm].y_f) <= sensor_range)
+      {
+        Map::single_landmark_s landmark = map_landmarks.landmark_list[lm];
+        LandmarkObs landmarkobs;
+        landmarkobs.id = landmark.id_i;
+        landmarkobs.x  = landmark.x_f;
+        landmarkobs.y  = landmark.y_f;
+        potential_landmarkobs.push_back(landmarkobs);
+      }
+    }
+
+    //dataAssociation(transformed_observations, potential_landmarkobs);
+    if (potential_landmarkobs.size() > 0)
+    {
+      vector<int> associations;
+      vector<double> obs_x;
+      vector<double> obs_y;
+      for (int i = 0; i < transformed_observations.size(); i++) {
+        double minDist = std::numeric_limits<double>::max();
+        int bestIndex = 0;
+        for (int p = 0; p < potential_landmarkobs.size(); p++) {
+          double d = dist(potential_landmarkobs[p].x, potential_landmarkobs[p].y,
+                         transformed_observations[i].x, transformed_observations[i].y);
+          if (d < minDist) {
+            minDist = d;
+            bestIndex = p;
+          }
+        }
+        associations.push_back(potential_landmarkobs[bestIndex].id);
+        obs_x.push_back(transformed_observations[i].x);
+        obs_y.push_back(transformed_observations[i].y);
+      }
+
+      particles[i].associations = associations;
+      particles[i].sense_x = obs_x;
+      particles[i].sense_y = obs_y;
+
+      // Calc particle's new weight
+      double particle_weight = 1.0;
+      for (int j = 0; i < particles[j].associations.size(); j++) {
+        int landmark_id = particles[j].associations[j];
+        // NOTE: obeye zero-based vs 1-based index
+        Map::single_landmark_s landmark = map_landmarks.landmark_list[landmark_id-1];
+        double x_lm = landmark.x_f;
+        double y_lm = landmark.y_f;
+        double x_obs = particles[i].sense_x[i];
+        double y_obs = particles[i].sense_y[i];
+
+        double prob = multivariate_gaussian_2d(x_obs, y_obs, x_lm, y_lm, std_landmark[0], std_landmark[1]);
+
+        particle_weight *= prob;
+      }
+
+      particles[i].weight = particle_weight;
+      weights[i]         = particle_weight;
+    }
+       //double weight = multivariate_gaussian_2d(x_map, y_map,
+       //                                       map_landmarks.landmark_list[observations[j].id].x_f,
+       //                                       map_landmarks.landmark_list[observations[j].id].y_f,
+       //                                       std_landmark[0], std_landmark[1]);
+       //particles[i].weight = weight;
   }
 }
 
@@ -184,7 +250,7 @@ void ParticleFilter::resample() {
   // inspired by Lesson 13, Particle Filters, lesson 20> Resampling Wheel
   //std::random_device rd;
   //std::mt19937 gen(rd());
-  std::discrete_distribution<int> distribution(weights.begin(), weights.end());
+  std::discrete_distribution<double> distribution(weights.begin(), weights.end());
 
   std::vector<Particle> resampled_particles;
 

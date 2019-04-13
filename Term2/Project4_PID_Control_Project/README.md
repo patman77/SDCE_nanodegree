@@ -1,6 +1,24 @@
 # CarND-Controls-PID
 Self-Driving Car Engineer Nanodegree Program
 
+In PID_Control_Project the goal is to implement a PID controller in order to drive a car automatically around a track without leaving the lane, i.e. steering properly.
+
+Source: https://en.wikipedia.org/wiki/PID_controller and https://www.youtube.com/watch?v=4Y7zG48uHRo:<br>
+A proportional–integral–derivative controller (PID controller or three-term controller) is a control loop feedback mechanism widely used in industrial control systems and a variety of other applications requiring continuously modulated control. A PID controller continuously calculates an error value e ( t ) {\displaystyle e(t)} e(t) as the difference between a desired setpoint (SP) and a measured process variable (PV) and applies a correction based on proportional, integral, and derivative terms (denoted P, I, and D respectively), hence the name. 
+
+P is proportional to to deviation of the car against the center line (the so called Cross Track Error cte) where it should drive. Problem is that the car overshoots when this is used alone, also it oscillates.<br>
+D To avoid the overshoot and thus the oscillating an additional term D can be introduced measuring the derivative of the cross track error cte. When weighted properly, it countersteers and gives a graceful steering towards the target line.<br>
+I A third term can be introduced to penalize lane offsets, e.g. induced by side winds, rocks etc. If the car is driving perfectly parallel to the line, but with a small offset, this would not be corrected when using P and D alone. This can be corrected with integrating all previous cross track errors.<br>
+
+# Parameters
+  Parameters have been found manually. First the combination from the course have been used.
+  ```
+  pid.Init(0.2, 0.004, 3.0, true); // parameters from the course
+  ```
+  But this led to some instable behaviour. After some manual tuning, this set parameters worked quite well: 
+  ```
+  pid.Init(0.35, 0.01, 0.004, true); // parameters from 1st submission
+  ```
 ---
 
 ## Dependencies

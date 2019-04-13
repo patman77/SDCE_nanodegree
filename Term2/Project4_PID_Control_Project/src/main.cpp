@@ -71,20 +71,6 @@ int main() {
            */
           curr_time = clock();
           double dt = (curr_time - prev_time) / CLOCKS_PER_SEC;
-          double throttle = 0.81; // inspired by discussions on study-hall
-          if(fabs(cte)>0.5)
-          {
-            throttle = 0.8;
-          }
-          // following inspired by discussions on study-hall.udacity.com
-          if(fabs(pid.GetPError()-cte) > 0.1 && fabs(pid.GetPError()<= 0.2))
-          {
-            throttle = 0.0;
-          }
-          else if(fabs(pid.GetPError()-cte) > 0.2 && speed > 30.0)
-          {
-            throttle = -0.2; // break
-          }
           std::cout<<"JSON DATA: cte="<<cte<<", speed="<<speed<<", angle="<<angle<<std::endl;
           if(pid.getFirstCall())
           {
@@ -108,6 +94,26 @@ int main() {
             steer_value = -1.0;
           }
           
+          double throttle = 0.8; // inspired by discussions on study-hall
+#define SIMPLE_THROTTLE_LOGIC
+#ifdef SIMPLE_THROTTLE_LOGIC
+          throttle = 1.0 - 0.5 * fabs(steer_value);
+#else
+          if(fabs(cte)>0.5)
+          {
+            throttle = 0.8;
+          }
+          // following inspired by discussions on study-hall.udacity.com
+          if(fabs(pid.GetPError()-cte) > 0.1 && fabs(pid.GetPError()<= 0.2))
+          {
+            throttle = 0.0;
+          }
+          else if(fabs(pid.GetPError()-cte) > 0.2 && speed > 30.0)
+          {
+            throttle = -0.2; // break
+          }
+#endif
+
           // DEBUG
           std::cout << "CTE: " << cte << " Steering Value: " << steer_value 
                     << std::endl;

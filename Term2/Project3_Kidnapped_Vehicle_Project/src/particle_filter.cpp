@@ -181,24 +181,17 @@ void ParticleFilter::resample() {
    *   http://en.cppreference.com/w/cpp/numeric/random/discrete_distribution
    */
   // inspired by Lesson 13, Particle Filters, lesson 20> Resampling Wheel
-  std::random_device rd;
-  std::mt19937 gen(rd());
-  std::discrete_distribution<> d(weights.begin(), weights.end());
+  //std::random_device rd;
+  //std::mt19937 gen(rd());
+  std::discrete_distribution<int> distribution(weights.begin(), weights.end());
 
-  auto maxiter = std::max_element(weights.begin(), weights.end());
-  double maximum = *maxiter;
-
-  std::vector<Particle> resampled_particles(num_particles);
-  std::vector<double> resampled_weights(num_particles);
+  std::vector<Particle> resampled_particles;
 
   for(int i=0; i<num_particles; ++i)
   {
-    Particle& particle_sample = particles[d(gen)];
-    resampled_particles[i] = particle_sample;
-    resampled_weights[i] = particle_sample.weight;
+    resampled_particles.push_back(particles[distribution(gen)]);
   }
   particles = resampled_particles;
-  weights = resampled_weights;
 }
 
 void ParticleFilter::SetAssociations(Particle& particle, 

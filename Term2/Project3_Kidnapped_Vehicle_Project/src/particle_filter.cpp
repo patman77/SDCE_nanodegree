@@ -30,9 +30,8 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
    * NOTE: Consult particle_filter.h for more information about this method 
    *   (and others in this file).
    */
-  num_particles = 1000;  // DONE: Set the number of particles
+  num_particles = 110;  // DONE: Set the number of particles
   // From lesson 14, chapter 5:
-  std::default_random_engine gen;
   // This line creates a normal (Gaussian) distribution for x
   std::normal_distribution<double> dist_x(x, std[0]);
   // Create normal distributions for y and theta
@@ -74,7 +73,7 @@ void ParticleFilter::prediction(double delta_t, double std_pos[],
    *  http://www.cplusplus.com/reference/random/default_random_engine/
    */
   // Lesson 14, chapter 8,9
-  std::default_random_engine gen;
+
 
   for(int i=0; i<num_particles; ++i)
   {

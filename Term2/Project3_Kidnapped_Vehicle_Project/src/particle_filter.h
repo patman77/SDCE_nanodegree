@@ -11,6 +11,7 @@
 
 #include <string>
 #include <vector>
+#include <random>
 #include "helper_functions.h"
 
 struct Particle {
@@ -130,7 +131,9 @@ class ParticleFilter {
   bool is_initialized;
   
   // Vector of weights of all particles
-  std::vector<double> weights; 
+  std::vector<double> weights;
+
+  std::default_random_engine gen;
 };
 
 #endif  // PARTICLE_FILTER_H_

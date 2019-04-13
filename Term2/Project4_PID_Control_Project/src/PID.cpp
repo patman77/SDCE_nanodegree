@@ -46,7 +46,10 @@ void PID::twiddle(double f_tolerance)
 
 double PID::getSteerAngle()
 {
-  return (-Kp*p_error - Kd*d_error - Ki*i_error);
+  return (-Kp*p_error - Kd*d_error - Ki*i_error); // full PID controller
+  //return (-Kp*p_error); // just proportional term
+  //return (-Kp*p_error - Kd*d_error); // just proportional term + derivative term
+  //return -Ki*i_error; // just integral term
 }
 
 bool PID::getFirstCall()

@@ -41,7 +41,7 @@ int main() {
    * DONE: Initialize the pid variable.
    */
   //pid.Init(0.2, 0.004, 3.0, true); // parameters from the course
-  pid.Init(0.35, 0.01, 0.004, true);
+  pid.Init(0.8, 0.0001, 4.0, true);
   //pid.Init(0.0, 0.0, 0.0, true); // cross check: this should drive straight
 
   h.onMessage([&pid, &curr_time, &prev_time, &t](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
@@ -97,7 +97,8 @@ int main() {
           double throttle = 0.8; // inspired by discussions on study-hall
 #define SIMPLE_THROTTLE_LOGIC
 #ifdef SIMPLE_THROTTLE_LOGIC
-          throttle = 1.0 - 0.5 * fabs(steer_value);
+          throttle = 0.1*(1.0 - 0.5 * fabs(steer_value));
+          if(speed > 10.0) throttle = -speed/50.0;
 #else
           if(fabs(cte)>0.5)
           {

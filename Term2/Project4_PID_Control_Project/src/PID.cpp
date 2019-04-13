@@ -36,7 +36,7 @@ double PID::TotalError() {
   /**
    * TODO: Calculate and return the total error
    */
-  return i_error;  // DONE: Add your total error calc here!
+  return (-Kp*p_error - Kd*d_error - Ki*i_error);  // DONE: Add your total error calc here!
 }
 
 void PID::twiddle(double f_tolerance)

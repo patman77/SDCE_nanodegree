@@ -41,7 +41,10 @@ int main() {
    * DONE: Initialize the pid variable.
    */
   //pid.Init(0.2, 0.004, 3.0, true); // parameters from the course
-  pid.Init(0.8, 0.0001, 4.0, true);
+  pid.Init(0.35, 0.01, 0.004, true); // parameters from 1st submission
+  //pid.Init(0.001, 0.0002, 5.0, true);
+  //pid.Init(0.0933784, 0.0, 1.64645, true); // found out with twiddle
+  //pid.Init(0.0001, 0.0, 0.0, true); // only p param
   //pid.Init(0.0, 0.0, 0.0, true); // cross check: this should drive straight
 
   h.onMessage([&pid, &curr_time, &prev_time, &t](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
@@ -70,7 +73,12 @@ int main() {
            *   Maybe use another PID controller to control the speed!
            */
           curr_time = clock();
+//#define USE_ELAPSED_TIME_PER_FRAME
+#ifdef USE_ELAPSED_TIME_PER_FRAME
           double dt = (curr_time - prev_time) / CLOCKS_PER_SEC;
+#else
+          double dt = 1.0;
+#endif
           std::cout<<"JSON DATA: cte="<<cte<<", speed="<<speed<<", angle="<<angle<<std::endl;
           if(pid.getFirstCall())
           {
@@ -97,8 +105,8 @@ int main() {
           double throttle = 0.8; // inspired by discussions on study-hall
 #define SIMPLE_THROTTLE_LOGIC
 #ifdef SIMPLE_THROTTLE_LOGIC
-          throttle = 0.1*(1.0 - 0.5 * fabs(steer_value));
-          if(speed > 10.0) throttle = -speed/50.0;
+          throttle = (1.0 - 0.8 * fabs(steer_value));
+          //if(speed > 20.0) throttle = -speed/10.0;
 #else
           if(fabs(cte)>0.5)
           {

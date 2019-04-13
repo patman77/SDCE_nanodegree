@@ -105,7 +105,7 @@ int main() {
           double throttle = 0.8; // inspired by discussions on study-hall
 #define SIMPLE_THROTTLE_LOGIC
 #ifdef SIMPLE_THROTTLE_LOGIC
-          throttle = (1.0 - 0.8 * fabs(steer_value));
+          throttle = (1.0 - 0.5 * fabs(steer_value));
           //if(speed > 20.0) throttle = -speed/10.0;
 #else
           if(fabs(cte)>0.5)

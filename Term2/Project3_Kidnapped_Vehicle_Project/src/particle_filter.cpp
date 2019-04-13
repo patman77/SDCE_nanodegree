@@ -100,11 +100,6 @@ void ParticleFilter::prediction(double delta_t, double std_pos[],
     particles[i].x     = dist_x(gen);
     particles[i].y     = dist_y(gen);
     particles[i].theta = dist_theta(gen);
-
-    // add original position plus prediction
-    particles[i].x += new_x;
-    particles[i].y += new_y;
-    particles[i].theta += new_theta;
   }
 
 }

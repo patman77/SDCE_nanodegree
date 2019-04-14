@@ -70,36 +70,30 @@ void ParticleFilter::prediction(double delta_t, double std_pos[],
    */
   // Lesson 14, chapter 8,9
 
+  std::normal_distribution<double> dist_x(0.0, std_pos[0]);
+  std::normal_distribution<double> dist_y(0.0, std_pos[1]);
+  std::normal_distribution<double> dist_theta(0.0, std_pos[2]);
 
   for(int i=0; i<num_particles; ++i)
   {
-    double new_x;
-    double new_y;
-    double new_theta;
-
-
     // calculate prediction
     if(fabs(yaw_rate) < 0.0001)
     {
-      new_x     = particles[i].x + velocity*delta_t*cos(particles[i].theta);
-      new_y     = particles[i].y + velocity*delta_t*sin(particles[i].theta);
-      new_theta = particles[i].theta;
+      particles[i].x += cos(particles[i].theta) * velocity * delta_t;
+      particles[i].y += sin(particles[i].theta) * velocity * delta_t;
     }
     else
     {
-      new_x     = particles[i].x + velocity/yaw_rate * (sin(particles[i].theta + yaw_rate*delta_t) - sin(particles[i].theta));
-      new_y     = particles[i].y + velocity/yaw_rate * (cos(particles[i].theta - cos(particles[i].theta + yaw_rate*delta_t)));
-      new_theta = particles[i].theta + yaw_rate * delta_t;
+      double delta_theta = yaw_rate * delta_t;
+      particles[i].x += (velocity / yaw_rate) * (sin(particles[i].theta + delta_theta) - sin(particles[i].theta));
+      particles[i].y += (velocity / yaw_rate) * (cos(particles[i].theta) - cos(particles[i].theta + delta_theta));
+      particles[i].theta += yaw_rate * delta_t;
     }
 
-    std::normal_distribution<double> dist_x(new_x, std_pos[0]);
-    std::normal_distribution<double> dist_y(new_y, std_pos[1]);
-    std::normal_distribution<double> dist_theta(new_theta, std_pos[2]);
-
     // add random noise
-    particles[i].x     = dist_x(gen);
-    particles[i].y     = dist_y(gen);
-    particles[i].theta = dist_theta(gen);
+    particles[i].x += dist_x(gen);
+    particles[i].y += dist_y(gen);
+    particles[i].y += dist_theta(gen);
   }
 
 }

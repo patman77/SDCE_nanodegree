@@ -67,9 +67,9 @@ std::vector<double> MPC::Solve(const VectorXd &state, const VectorXd &coeffs) {
    */
   size_t n_vars = 6*N + 2*(N-1);
   /**
-   * TODO: Set the number of constraints
+   * DONE: Set the number of constraints
    */
-  size_t n_constraints = 0;
+  size_t n_constraints = 6*N;
 
   // Initial value of the independent variables.
   // SHOULD BE 0 besides initial state.

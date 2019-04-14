@@ -250,7 +250,7 @@ void ParticleFilter::resample() {
   // inspired by Lesson 13, Particle Filters, lesson 20> Resampling Wheel
   //std::random_device rd;
   //std::mt19937 gen(rd());
-  std::discrete_distribution<double> distribution(weights.begin(), weights.end());
+  std::discrete_distribution<int> distribution(weights.begin(), weights.end());
 
   std::vector<Particle> resampled_particles;
 

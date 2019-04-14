@@ -94,8 +94,29 @@ std::vector<double> MPC::Solve(const VectorXd &state, const VectorXd &coeffs) {
   Dvector vars_lowerbound(n_vars);
   Dvector vars_upperbound(n_vars);
   /**
-   * TODO: Set lower and upper limits for variables.
+   * DONE: Set lower and upper limits for variables.
    */
+  // Set all non-actuators upper and lowerlimits
+  // to the max negative and positive values.
+  for (int i = 0; i < delta_start; ++i) {
+    vars_lowerbound[i] = -1.0e19;
+    vars_upperbound[i] = 1.0e19;
+  }
+
+  // The upper and lower limits of delta are set to -25 and 25
+  // degrees (values in radians).
+  // NOTE: Feel free to change this to something else.
+  for (int i = delta_start; i < a_start; ++i) {
+    vars_lowerbound[i] = -0.436332;
+    vars_upperbound[i] = 0.436332;
+  }
+
+  // Acceleration/decceleration upper and lower limits.
+  // NOTE: Feel free to change this to something else.
+  for (int i = a_start; i < n_vars; ++i) {
+    vars_lowerbound[i] = -1.0;
+    vars_upperbound[i] = 1.0;
+  }
 
   // Lower and upper limits for the constraints
   // Should be 0 besides initial state.

@@ -10,10 +10,10 @@ using CppAD::AD;
 using Eigen::VectorXd;
 
 /**
- * TODO: Set the timestep length and duration
+ * DONE: Set the timestep length and duration
  */
-size_t N = 0;
-double dt = 0;
+size_t N = 9;      // according to lesson 06. Putting It All Together
+double dt = 0.025;  // start with 40 ms
 
 // This value assumes the model presented in the classroom is used.
 //

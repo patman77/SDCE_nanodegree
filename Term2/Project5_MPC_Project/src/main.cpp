@@ -49,11 +49,40 @@ int main() {
           double v = j[1]["speed"];
 
           /**
-           * TODO: Calculate steering angle and throttle using MPC.
+           * DONE: Calculate steering angle and throttle using MPC.
            * Both are in between [-1, 1].
            */
-          double steer_value;
-          double throttle_value;
+          for(int i=0; i<ptsx.size(); ++i)
+          {
+            // shift car reference angle to 90 degrees
+            double shift_x = ptsx[i]-px;
+            double shift_y = ptsy[i]-py;
+
+            ptsx[i] = (shift_x * cos(0-psi)-shift_y*sin(0-psi));
+            ptsy[i] = (shift_x * sin(0-psi)+shift_y*cos(0-psi));
+          }
+
+          double* ptrx = &ptsx[0];
+          Eigen::Map<Eigen::VectorXd> ptsx_transform(ptrx, 6);
+
+          double* ptry = &ptsy[0];
+          Eigen::Map<Eigen::VectorXd> ptsy_transform(ptry, 6);
+
+          auto coeffs = polyfit(ptsx_transform, ptsy_transform, 3); // fit to polynomial of degree 3
+
+          // calculate cte and epsi
+          double cte = polyeval(coeffs, 0);
+          double epsi = psi - atan(coeffs[1] + 2*px*coeffs[2] + 3*coeffs[3]*pow(px,2)); // derivative of 3rd order polynomial
+          // double epsi = -atan(coeffs[1]); // derivate of 1st order polynomial (== affine function)
+
+          double steer_value = j[1]["steering_angle"]; // grab from json, inspired by video walkthrough
+          double throttle_value = j[1]["throttle"];    // grab from json, inspired by video walkthrough
+
+          Eigen::VectorXd state(6);
+          state << 0, 0, 0, v, cte, epsi; // fill state vector
+
+          auto vars = mpc.Solve(state, coeffs);
+
 
           json msgJson;
           // NOTE: Remember to divide by deg2rad(25) before you send the 
@@ -63,11 +92,13 @@ int main() {
           msgJson["throttle"] = throttle_value;
 
           // Display the MPC predicted trajectory 
-          vector<double> mpc_x_vals;
-          vector<double> mpc_y_vals;
+          const double poly_inc = 2.5; // 2.5 distance between points predicted ahead
+          const int num_points  = 25; // 25 points into the potential future
 
+          vector<double> mpc_x_vals(num_points-2);
+          vector<double> mpc_y_vals(num_points-2);
           /**
-           * TODO: add (x,y) points to list here, points are in reference to 
+           * DONE: add (x,y) points to list here, points are in reference to 
            *   the vehicle's coordinate system the points in the simulator are 
            *   connected by a Green line
            */
@@ -75,9 +106,31 @@ int main() {
           msgJson["mpc_x"] = mpc_x_vals;
           msgJson["mpc_y"] = mpc_y_vals;
 
+          for(int i=2; i<vars.size(); ++i)
+          {
+            if(i%2 == 0)
+            {
+              //mpc_x_vals.push_back(vars[i]); // push_back can slow down
+              mpc_x_vals[i] = vars[i];
+            }
+            else
+            {
+              //mpc_y_vals.push_back(vars[i]); // push_back can slow down
+              mpc_y_vals[i] = vars[i];
+            }
+          }
+
           // Display the waypoints/reference line
-          vector<double> next_x_vals;
-          vector<double> next_y_vals;
+          vector<double> next_x_vals(num_points-1);
+          vector<double> next_y_vals(num_points-1);
+
+          for(int i=1; i<num_points; ++i)
+          {
+            //next_x_vals.push_back(poly_inc*i);                   // push_back can get really slow
+            //next_y_vals.push_back(polyeval(coeffs, poly_inc*i)); // push_back can get really slow
+            next_x_vals[i-1] = poly_inc*i;
+            next_y_vals[i-1] = polyeval(coeffs, poly_inc*i);
+          }
 
           /**
            * TODO: add (x,y) points to list here, points are in reference to 

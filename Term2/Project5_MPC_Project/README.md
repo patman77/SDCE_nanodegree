@@ -1,6 +1,60 @@
 # CarND-Controls-MPC
 Self-Driving Car Engineer Nanodegree Program
 
+# Description of the model
+
+State:
+The used state is (x, y, psi, v), i.e. contains the vehicle position (x, y), the vehicle orientation psi, measured against a straight line to the front, the so called cross track error cte, giving the perpendicual distance from the vehicle to the reference line, and the orientation error epsi.
+
+Actuators:
+We simplify such that there is no shifting of gears. Therefore, the remaining actuators are steering and acceleration, (delta, a). The braking is modelled as negative acceleration, so no additional actuator is necessary.
+
+Update equations:
+The equations for the model are:
+```
+// Recall the equations for the model:
+// x_[t] = x[t-1] + v[t-1] * cos(psi[t-1]) * dt
+// y_[t] = y[t-1] + v[t-1] * sin(psi[t-1]) * dt
+// psi_[t] = psi[t-1] + v[t-1] / Lf * delta[t-1] * dt
+// v_[t] = v[t-1] + a[t-1] * dt
+```
+
+Essentially, the new position at time step t is given from the old position at time step t-1 plus the previous velocity times the discrete elapsed time dt per frame. For this, the increment for component x and y receives its contribution from the projection to each axis (cosine for x and sine for y).
+Orientation psi is additively increased by a multiplicative factor of the steering angle, delta.
+Lf measures the distance between the center of mass of the vehicle and it's front axle. The larger the vehicle, the slower the turn rate.
+At higher speeds you turn quicker than at lower speeds. This is why v is the included in the update.
+
+Speed v is increased by acceleration a times dt, if a is 0, speed remains constant.
+a can take values between and including -1 and 1.
+
+# Description of Timestep Length and Elapsed Duration (N & dt)
+
+The timestep length N and elapsed duration dt were experimentally tried out to be 10 and 0.1, respectively.
+
+The total prediction time (let's call it tpt) into the future is the product of both, so N*dt = 10*0.1sec = 1 sec.
+
+If N is too high the solver would run longer as matrix size depends on N. Being too slow is not good in a real time system. Also, tpt would be higher by tendency, and there is no benefit of looking too far into the future. Realistically, the reference line is not globally known (unless some kind of a high accuracy map plus localization is used), but rather comes from e.g. a lane detection. When going into the curve, the detection is naturally limited because sensors such as cameras usually "look" with straight "detection lines" into the world, and after some point in prediction time, there is no valid information any more.
+On the other hand, if N is too low, there is not enough information, and the vehicle is unlikely to go back to reference line.
+dt was to be chosen such that tpt is around 1 sec, which turned out to be a good value for prediction. As the number of variables is 6*N+2(N-1), N=10 already leads to 78 variables. This leads to dt=0.1 so that tpt becomes 1 sec.
+
+# Description of Polynomial Fitting and MPC Preprocessing
+
+A polynomial of degree 3 is fitted to the waypoints, see line 71 in main.cpp:
+
+```
+ auto coeffs = polyfit(ptsx_transform, ptsy_transform, 3); // fit to polynomial of degree 3
+ ```
+
+MPC procedure follows without any preprocessing, see line 84 in main.cpp:
+
+```
+auto vars = mpc.Solve(state, coeffs);
+````
+
+# Description of the Model Predictive Control with Latency
+
+
+
 ---
 
 ## Dependencies

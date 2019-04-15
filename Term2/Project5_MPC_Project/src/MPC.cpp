@@ -64,6 +64,7 @@ class FG_eval {
 
     fg[0] = 0; // start with zero cost
 #define USE_MPC_QUIZ_INSTEAD_OF_VIDEO_WALKTHROUGH
+#undef USE_MPC_QUIZ_INSTEAD_OF_VIDEO_WALKTHROUGH
     // Reference State Cost
     /**
      * DONE: Define the cost related the reference state and
@@ -89,7 +90,7 @@ class FG_eval {
       fg[0] += CppAD::pow(vars[delta_start + t], 2); // minimize use of steering
       fg[0] += CppAD::pow(vars[a_start + t], 2);     // minimize use of acceleration
 #else // video walkthrough, different weighting
-      fg[0] += 5.0*CppAD::pow(vars[delta_start + t], 2); // minimize use of steering
+      fg[0] += 50.0*CppAD::pow(vars[delta_start + t], 2); // minimize use of steering
       fg[0] += 5.0*CppAD::pow(vars[a_start + t], 2);     // minimize use of acceleration
 #endif
     }
@@ -100,7 +101,7 @@ class FG_eval {
       fg[0] += CppAD::pow(vars[delta_start + t + 1] - vars[delta_start + t], 2); // minimize sequential steering gaps
       fg[0] += CppAD::pow(vars[a_start + t + 1] - vars[a_start + t], 2);         // minimize sequential acceleration gaps
 #else // video walkthrough, different weighting
-      fg[0] += 200.0*CppAD::pow(vars[delta_start + t + 1] - vars[delta_start + t], 2); // minimize sequential steering gaps
+      fg[0] += 500.0*CppAD::pow(vars[delta_start + t + 1] - vars[delta_start + t], 2); // minimize sequential steering gaps
       fg[0] += 10.0 *CppAD::pow(vars[a_start + t + 1] - vars[a_start + t], 2);         // minimize sequential acceleration gaps
 #endif
     }

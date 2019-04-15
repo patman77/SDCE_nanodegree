@@ -27,7 +27,7 @@ AD<double> dt = 0.025 ;
 const double Lf = 2.67;
 
 // NOTE: feel free to play around with this or do something completely different
-double ref_v = 40;
+double ref_v = 40; // reference speed
 
 // The solver takes all the state variables and actuator
 // variables in a singular vector. Thus, we should to establish
@@ -60,7 +60,25 @@ class FG_eval {
      * TODO: Define the cost related the reference state and
      *   anything you think may be beneficial.
      */
-
+    // part of the cost based on reference state
+    for(int t=0; t<N; ++t)
+    {
+      fg[0] += CppAD::pow(vars[cte_start + t], 2);       // minimize Cross Track Error for every time step
+      fg[0] += CppAD::pow(vars[epsi_start + t], 2);      // minimize orientation error for every time step
+      fg[0] += CppAD::pow(vars[v_start + t] - ref_v, 2); // minimize deviation to reference speed
+    }
+    // minimize use of actuators
+    for(int t=0; t<N-1; ++t)
+    {
+      fg[0] += CppAD::pow(vars[delta_start + t], 2); // minimize use of steering
+      fg[0] += CppAD::pow(vars[a_start + t], 2);     // minimize use of acceleration
+    }
+    // minimize value gap between sequential actuations
+    for(int t=0; t<N-2; ++t)
+    {
+      fg[0] += CppAD::pow(vars[delta_start + t + 1] - vars[delta_start + t], 2); // minimize use of steering
+      fg[0] += CppAD::pow(vars[a_start + t + 1] - vars[a_start + t], 2);         // minimize use of acceleration
+    }
     //
     // Setup Constraints
     //

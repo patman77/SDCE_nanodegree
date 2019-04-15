@@ -98,7 +98,7 @@ int main() {
           vector<double> mpc_x_vals(num_points-2);
           vector<double> mpc_y_vals(num_points-2);
           /**
-           * DONE: add (x,y) points to list here, points are in reference to 
+           * DONE: add (x,y) points to list here, points are in reference to
            *   the vehicle's coordinate system the points in the simulator are 
            *   connected by a Green line
            */
@@ -133,14 +133,20 @@ int main() {
           }
 
           /**
-           * TODO: add (x,y) points to list here, points are in reference to 
+           * DONE: add (x,y) points to list here, points are in reference to
            *   the vehicle's coordinate system the points in the simulator are 
            *   connected by a Yellow line
            */
+          double Lf = 2.67;
+
+          msgJson["steering_angle"] = vars[0]/(deg2rad(25)*Lf);
+          msgJson["throttle"]       = vars[1];
 
           msgJson["next_x"] = next_x_vals;
           msgJson["next_y"] = next_y_vals;
 
+          msgJson["mpc_x"] = mpc_x_vals;
+          msgJson["next_y"] = mpc_y_vals;
 
           auto msg = "42[\"steer\"," + msgJson.dump() + "]";
           std::cout << msg << std::endl;

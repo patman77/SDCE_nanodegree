@@ -1,0 +1,647 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXAggregateTarget section */
+		881DC700EA4D45A5B3CC3433 /* ALL_BUILD */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = F29F855FE9634D309C5EE7A7 /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */;
+			buildPhases = (
+				A8B0E31D8B794775ACF35ED0 /* CMake Rules */,
+			);
+			dependencies = (
+				112D4B6B8AC4468A83C3F979 /* PBXTargetDependency */,
+				933CEC316410474BA8FD1506 /* PBXTargetDependency */,
+			);
+			name = ALL_BUILD;
+			productName = ALL_BUILD;
+		};
+		8E63FA3414FB4BD7B7B40D03 /* ZERO_CHECK */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 1DE25C6C555545CAA80C8CC1 /* Build configuration list for PBXAggregateTarget "ZERO_CHECK" */;
+			buildPhases = (
+				0024FC95C7D6454E90894F67 /* CMake Rules */,
+			);
+			dependencies = (
+			);
+			name = ZERO_CHECK;
+			productName = ZERO_CHECK;
+		};
+/* End PBXAggregateTarget section */
+
+/* Begin PBXBuildFile section */
+		088D6F21E2B54F13A6D0D16F /* /Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/src/main.cpp */ = {isa = PBXBuildFile; fileRef = DCBECC2AE6AB4C35AC899F98 /* /Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/src/main.cpp */; };
+		5A5158366C144551B612D048 /* /Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/src/MPC.cpp */ = {isa = PBXBuildFile; fileRef = 7E3BCF4630AB42319CDBE58D /* /Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/src/MPC.cpp */; };
+		948F731A2DED4B83895E22E6 /* /Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/CMakeLists.txt */ = {isa = PBXBuildFile; fileRef = 02F9FE6A35B24A36A4CDBDB5 /* /Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/CMakeLists.txt */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXBuildStyle section */
+		29A256AAC47543EEB4CD3771 /* Debug */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = Debug;
+		};
+		98E783BE59D3424889BFAD1F /* MinSizeRel */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = MinSizeRel;
+		};
+		BFD1A151C23F4AB38E67AEB1 /* RelWithDebInfo */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = RelWithDebInfo;
+		};
+		F4B7D9F2234F4E31B7D3ACF3 /* Release */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = Release;
+		};
+/* End PBXBuildStyle section */
+
+/* Begin PBXContainerItemProxy section */
+		0836B05D5214467C8FA3E847 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 32A0690D2D824AC0B1125088 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8E63FA3414FB4BD7B7B40D03;
+			remoteInfo = ZERO_CHECK;
+		};
+		A181077822F946CDAE29A53B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 32A0690D2D824AC0B1125088 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8E63FA3414FB4BD7B7B40D03;
+			remoteInfo = ZERO_CHECK;
+		};
+		ED794D25398B4458B1F3B5F1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 32A0690D2D824AC0B1125088 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AE8308A9A7604162A37E75FC;
+			remoteInfo = mpc;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		02F9FE6A35B24A36A4CDBDB5 /* /Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		613F0CFD399E4F6C9E5A7630 /* mpc */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; path = mpc; sourceTree = BUILT_PRODUCTS_DIR; };
+		7E3BCF4630AB42319CDBE58D /* /Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/src/MPC.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = MPC.cpp; path = src/MPC.cpp; sourceTree = SOURCE_ROOT; };
+		993B48C28A2D4C7F9E7F5BB6 /* /Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		DCBECC2AE6AB4C35AC899F98 /* /Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/src/main.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = main.cpp; path = src/main.cpp; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		6E072959D81A44708DD4862F /* ALL_BUILD */ = {
+			isa = PBXGroup;
+			children = (
+				8F7C25268853409CB42747D0 /* CMake Rules */,
+				993B48C28A2D4C7F9E7F5BB6 /* /Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/CMakeLists.txt */,
+			);
+			name = ALL_BUILD;
+			sourceTree = "<group>";
+		};
+		8F7C25268853409CB42747D0 /* CMake Rules */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "CMake Rules";
+			sourceTree = "<group>";
+		};
+		B7C48437E33F4071A8A8BD3C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				613F0CFD399E4F6C9E5A7630 /* mpc */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		CE812A59C3AF435FB9D93440 /* mpc */ = {
+			isa = PBXGroup;
+			children = (
+				FE5047E9DE5A4ECC8A9052F9 /* Source Files */,
+				02F9FE6A35B24A36A4CDBDB5 /* /Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/CMakeLists.txt */,
+			);
+			name = mpc;
+			sourceTree = "<group>";
+		};
+		F863F1BD9F6343B0BFEE8F2E = {
+			isa = PBXGroup;
+			children = (
+				CE812A59C3AF435FB9D93440 /* mpc */,
+				6E072959D81A44708DD4862F /* ALL_BUILD */,
+				B7C48437E33F4071A8A8BD3C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		FE5047E9DE5A4ECC8A9052F9 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				7E3BCF4630AB42319CDBE58D /* /Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/src/MPC.cpp */,
+				DCBECC2AE6AB4C35AC899F98 /* /Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/src/main.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		AE8308A9A7604162A37E75FC /* mpc */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BA8B6A1BD89A4812B5708D4A /* Build configuration list for PBXNativeTarget "mpc" */;
+			buildPhases = (
+				648127B2A5F44F3280A10165 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				521CB2848D47462ABC29A4CC /* PBXTargetDependency */,
+			);
+			name = mpc;
+			productName = mpc;
+			productReference = 613F0CFD399E4F6C9E5A7630 /* mpc */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		32A0690D2D824AC0B1125088 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1010;
+			};
+			buildConfigurationList = 07CCE7AE71E84EF98806599E /* Build configuration list for PBXProject "mpc" */;
+			buildSettings = {
+			};
+			buildStyles = (
+				29A256AAC47543EEB4CD3771 /* Debug */,
+				F4B7D9F2234F4E31B7D3ACF3 /* Release */,
+				98E783BE59D3424889BFAD1F /* MinSizeRel */,
+				BFD1A151C23F4AB38E67AEB1 /* RelWithDebInfo */,
+			);
+			compatibilityVersion = "Xcode 3.2";
+			hasScannedForEncodings = 0;
+			mainGroup = F863F1BD9F6343B0BFEE8F2E;
+			projectDirPath = ../;
+			projectRoot = "";
+			targets = (
+				881DC700EA4D45A5B3CC3433 /* ALL_BUILD */,
+				8E63FA3414FB4BD7B7B40D03 /* ZERO_CHECK */,
+				AE8308A9A7604162A37E75FC /* mpc */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0024FC95C7D6454E90894F67 /* CMake Rules */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "CMake Rules";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "make -C /Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/build-xcode -f /Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/build-xcode/CMakeScripts/ZERO_CHECK_cmakeRulesBuildPhase.make$CONFIGURATION all";
+			showEnvVarsInLog = 0;
+		};
+		A12637A95B9B4DE2BAC035C2 = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# shell script goes here
+exit 0";
+			showEnvVarsInLog = 0;
+		};
+		A8B0E31D8B794775ACF35ED0 /* CMake Rules */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "CMake Rules";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "make -C /Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/build-xcode -f /Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/build-xcode/CMakeScripts/ALL_BUILD_cmakeRulesBuildPhase.make$CONFIGURATION all";
+			showEnvVarsInLog = 0;
+		};
+		F969530DE96546B581663EAE = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# shell script goes here
+exit 0";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		648127B2A5F44F3280A10165 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5A5158366C144551B612D048 /* /Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/src/MPC.cpp */,
+				088D6F21E2B54F13A6D0D16F /* /Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/src/main.cpp */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		112D4B6B8AC4468A83C3F979 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AE8308A9A7604162A37E75FC /* mpc */;
+			targetProxy = ED794D25398B4458B1F3B5F1 /* PBXContainerItemProxy */;
+		};
+		521CB2848D47462ABC29A4CC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8E63FA3414FB4BD7B7B40D03 /* ZERO_CHECK */;
+			targetProxy = 0836B05D5214467C8FA3E847 /* PBXContainerItemProxy */;
+		};
+		933CEC316410474BA8FD1506 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8E63FA3414FB4BD7B7B40D03 /* ZERO_CHECK */;
+			targetProxy = A181077822F946CDAE29A53B /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		032789EFD2EB4CA1B1E8F88D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/src/Eigen-3.3",/usr/local/include);
+				INSTALL_PATH = "";
+				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = " /usr/local/lib/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME) /usr/local/lib";
+				OTHER_CPLUSPLUSFLAGS = "-Wall     -DNDEBUG   -std=c++11";
+				OTHER_LDFLAGS = " -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -lipopt -lpython";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = mpc;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/build-xcode";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = Release;
+		};
+		22FAADAF282C4BE4ABB14F23 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/build-xcode";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+		23E0BCCC1E8D421899A28D35 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/src/Eigen-3.3",/usr/local/include);
+				INSTALL_PATH = "";
+				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = " /usr/local/lib/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME) /usr/local/lib";
+				OTHER_CPLUSPLUSFLAGS = "-Wall        -DNDEBUG   -std=c++11";
+				OTHER_LDFLAGS = " -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -lipopt -lpython";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = mpc;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/build-xcode";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		44D1658B5C504482851D9F94 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk;
+				SYMROOT = "/Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/build-xcode/build";
+			};
+			name = Release;
+		};
+		614A430414AB4D6D9E16B3F8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/src/Eigen-3.3",/usr/local/include);
+				INSTALL_PATH = "";
+				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = " /usr/local/lib/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME) /usr/local/lib";
+				OTHER_CPLUSPLUSFLAGS = "-Wall      -std=c++11";
+				OTHER_LDFLAGS = " -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -lipopt -lpython";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = mpc;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/build-xcode";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = Debug;
+		};
+		6991D146ABDA4DC59B92A346 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/build-xcode";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = Release;
+		};
+		6C7B131EACF1457889BCE3DC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk;
+				SYMROOT = "/Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/build-xcode/build";
+			};
+			name = Debug;
+		};
+		76808A6931FB498F9237387D /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/build-xcode";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		AD27492D33804A53A22738C1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/build-xcode";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = Release;
+		};
+		B2FBE5F9520D44FFA4012A7B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/build-xcode";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = Debug;
+		};
+		B9A9DCDC9A2F4305AEFB944A /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/src/Eigen-3.3",/usr/local/include);
+				INSTALL_PATH = "";
+				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = " /usr/local/lib/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME) /usr/local/lib";
+				OTHER_CPLUSPLUSFLAGS = "-Wall     -DNDEBUG   -std=c++11";
+				OTHER_LDFLAGS = " -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -lipopt -lpython";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = mpc;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/build-xcode";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+		C11A5D64FD294D7689C90F18 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/build-xcode";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = Debug;
+		};
+		C39A2804EDB6402DB5266ACB /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/build-xcode";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		CBCD74281904488FB3C4AFB0 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/build-xcode";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+		EE11915DE6FF4442B634D6E4 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk;
+				SYMROOT = "/Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/build-xcode/build";
+			};
+			name = RelWithDebInfo;
+		};
+		F58C90E6B75A484A99B20045 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk;
+				SYMROOT = "/Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/build-xcode/build";
+			};
+			name = MinSizeRel;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		07CCE7AE71E84EF98806599E /* Build configuration list for PBXProject "mpc" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6C7B131EACF1457889BCE3DC /* Debug */,
+				44D1658B5C504482851D9F94 /* Release */,
+				F58C90E6B75A484A99B20045 /* MinSizeRel */,
+				EE11915DE6FF4442B634D6E4 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		1DE25C6C555545CAA80C8CC1 /* Build configuration list for PBXAggregateTarget "ZERO_CHECK" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C11A5D64FD294D7689C90F18 /* Debug */,
+				6991D146ABDA4DC59B92A346 /* Release */,
+				CBCD74281904488FB3C4AFB0 /* MinSizeRel */,
+				76808A6931FB498F9237387D /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		BA8B6A1BD89A4812B5708D4A /* Build configuration list for PBXNativeTarget "mpc" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				614A430414AB4D6D9E16B3F8 /* Debug */,
+				032789EFD2EB4CA1B1E8F88D /* Release */,
+				B9A9DCDC9A2F4305AEFB944A /* MinSizeRel */,
+				23E0BCCC1E8D421899A28D35 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		F29F855FE9634D309C5EE7A7 /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B2FBE5F9520D44FFA4012A7B /* Debug */,
+				AD27492D33804A53A22738C1 /* Release */,
+				22FAADAF282C4BE4ABB14F23 /* MinSizeRel */,
+				C39A2804EDB6402DB5266ACB /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 32A0690D2D824AC0B1125088 /* Project object */;
+}

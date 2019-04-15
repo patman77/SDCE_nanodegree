@@ -12,7 +12,7 @@ using Eigen::VectorXd;
  * DONE: Set N and dt
  */
 size_t N = 9 ;
-double dt = 0.025 ;
+AD<double> dt = 0.025 ;
 
 // This value assumes the model presented in the classroom is used.
 //
@@ -95,6 +95,8 @@ class FG_eval {
       //
       // NOTE: The use of `AD<double>` and use of `CppAD`!
       // CppAD can compute derivatives and pass these to the solver.
+      AD<double> y0 = vars[y_start + t - 1];
+      AD<double> y1 = vars[y_start + t];
       AD<double> psi1 = vars[psi_start + t];
       AD<double> v1 = vars[v_start + t];
       AD<double> delta0 = vars[delta_start + t - 1];

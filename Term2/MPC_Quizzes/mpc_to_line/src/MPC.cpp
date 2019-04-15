@@ -76,7 +76,7 @@ class FG_eval {
     // minimize value gap between sequential actuations
     for(int t=0; t<N-2; ++t)
     {
-      fg[0] += CppAD::pow(vars[delta_start + t + 1] - vars[delta_start + t], 2); // minimize use sequential gap in steering
+      fg[0] += 500.0*CppAD::pow(vars[delta_start + t + 1] - vars[delta_start + t], 2); // minimize use sequential gap in steering
       fg[0] += CppAD::pow(vars[a_start + t + 1] - vars[a_start + t], 2);         // minimize use sequential gap in acceleration
     }
     //

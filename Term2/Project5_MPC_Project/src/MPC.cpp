@@ -104,6 +104,73 @@ class FG_eval {
       fg[0] += 10.0 *CppAD::pow(vars[a_start + t + 1] - vars[a_start + t], 2);         // minimize sequential acceleration gaps
 #endif
     }
+
+    //
+    // Setup Constraints
+    //
+    // NOTE: In this section you'll setup the model constraints.
+
+    // Initial constraints
+    //
+    // We add 1 to each of the starting indices due to cost being located at
+    // index 0 of `fg`.
+    // This bumps up the position of all the other values.
+    fg[1 + x_start]    = vars[x_start];
+    fg[1 + y_start]    = vars[y_start];
+    fg[1 + psi_start]  = vars[psi_start];
+    fg[1 + v_start]    = vars[v_start];
+    fg[1 + cte_start]  = vars[cte_start];
+    fg[1 + epsi_start] = vars[epsi_start];
+
+    // The rest of the constraints
+    for (int t = 1; t < N; ++t) {
+      /**
+       * DONE: Grab the rest of the states at t+1 and t.
+       *   We have given you parts of these states below.
+       */
+      AD<double> x1 = vars[x_start + t];
+
+      AD<double> x0 = vars[x_start + t - 1];
+      AD<double> psi0 = vars[psi_start + t - 1];
+      AD<double> v0 = vars[v_start + t - 1];
+
+      // Here's `x` to get you started.
+      // The idea here is to constraint this value to be 0.
+      //
+      // NOTE: The use of `AD<double>` and use of `CppAD`!
+      // CppAD can compute derivatives and pass these to the solver.
+      AD<double> y0 = vars[y_start + t - 1];
+      AD<double> y1 = vars[y_start + t];
+      AD<double> psi1 = vars[psi_start + t];
+      AD<double> v1 = vars[v_start + t];
+      AD<double> delta0 = vars[delta_start + t - 1];
+      AD<double> a0 = vars[a_start + t - 1];
+      AD<double> cte1 = vars[cte_start + t];
+      AD<double> cte0 = vars[cte_start + t - 1];
+      AD<double> epsi1 = vars[epsi_start + t];
+      AD<double> epsi0 = vars[epsi_start + t - 1];
+
+      AD<double> f0 = coeffs[0] + coeffs[1] * x0;
+      //AD<double> psides0 = CppAD::atan(coeffs[1]); // angle is between -PI/2 and PI/2, so atan is enough. variant for polynomial order 1
+      AD<double> psides0 = CppAD::atan(3*coeffs[3]*x0*x0+2*coeffs[2]*x0+coeffs[1]); // angle is between -PI/2 and PI/2, so atan is enough. variant for polynomial order 3
+      /**
+       * DONE: Setup the rest of the model constraints
+       */
+      // Recall the equations for the model:
+      // x_[t] = x[t-1] + v[t-1] * cos(psi[t-1]) * dt
+      // y_[t] = y[t-1] + v[t-1] * sin(psi[t-1]) * dt
+      // psi_[t] = psi[t-1] + v[t-1] / Lf * delta[t-1] * dt
+      // v_[t] = v[t-1] + a[t-1] * dt
+      // cte[t] = f(x[t-1]) - y[t-1] + v[t-1] * sin(epsi[t-1]) * dt
+      // epsi[t] = psi[t] - psides[t-1] + v[t-1] * delta[t-1] / Lf * dt
+
+      fg[1 + x_start + t   ] = x1 - (x0 + v0 * CppAD::cos(psi0) * dt);
+      fg[1 + y_start + t   ] = y1 - (y0 + v0 * CppAD::sin(psi0) * dt);
+      fg[1 + psi_start + t ] = psi1 - (psi0 + v0/Lf * delta0 * dt);
+      fg[1 + v_start + t   ] = v1 - (v0 + a0 * dt);
+      fg[1 + cte_start + t ] = cte1 - (f0 - y0 + (v0 * CppAD::sin(epsi0) * dt));
+      fg[1 + epsi_start + t] = epsi1 - (psi0 - psides0 + (v0/Lf * delta0 * dt));
+    }
   }
 };
 
@@ -116,6 +183,13 @@ MPC::~MPC() {}
 std::vector<double> MPC::Solve(const VectorXd &state, const VectorXd &coeffs) {
   bool ok = true;
   typedef CPPAD_TESTVECTOR(double) Dvector;
+
+  double x    = state[0];
+  double y    = state[1];
+  double psi  = state[2];
+  double v    = state[3];
+  double cte  = state[4];
+  double epsi = state[5];
 
   /**
    * DONE: Set the number of model variables (includes both states and inputs).
@@ -156,15 +230,25 @@ std::vector<double> MPC::Solve(const VectorXd &state, const VectorXd &coeffs) {
   // degrees (values in radians).
   // NOTE: Feel free to change this to something else.
   for (int i = delta_start; i < a_start; ++i) {
+#ifdef USE_MPC_QUIZ_INSTEAD_OF_VIDEO_WALKTHROUGH
     vars_lowerbound[i] = -0.436332;
-    vars_upperbound[i] = 0.436332;
+    vars_upperbound[i] =  0.436332;
+#else
+    vars_lowerbound[i] = -1.0;
+    vars_upperbound[i] =  1.0;
+#endif
   }
 
   // Acceleration/decceleration upper and lower limits.
   // NOTE: Feel free to change this to something else.
   for (int i = a_start; i < n_vars; ++i) {
+#ifdef USE_MPC_QUIZ_INSTEAD_OF_VIDEO_WALKTHROUGH
     vars_lowerbound[i] = -1.0;
-    vars_upperbound[i] = 1.0;
+    vars_upperbound[i] =  1.0;
+#else
+    vars_lowerbound[i] = -0.436332*Lf;
+    vars_upperbound[i] =  0.436332*Lf;
+#endif
   }
 
   // Lower and upper limits for the constraints

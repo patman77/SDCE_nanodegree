@@ -17,6 +17,7 @@ This git repository is currently organized as follows, according to the three te
  |---Project2_Unscented_Kalman_Filter_Project
  |---Project3_Kidnapped_Vehicle_Project
  |---Project4_PID-Control-Project
+ |---Project5_MPC-Project
  |-Term3
 </code></pre>
 

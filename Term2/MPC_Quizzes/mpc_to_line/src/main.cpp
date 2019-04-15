@@ -13,7 +13,7 @@ using std::vector;
 
 int main() {
   MPC mpc;
-  int iters = 50;
+  int iters = 60;
 
   VectorXd ptsx(2);
   VectorXd ptsy(2);

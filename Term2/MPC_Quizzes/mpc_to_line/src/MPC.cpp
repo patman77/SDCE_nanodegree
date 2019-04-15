@@ -11,8 +11,8 @@ using Eigen::VectorXd;
 /**
  * DONE: Set N and dt
  */
-size_t N = 9 ;
-AD<double> dt = 0.025 ;
+size_t N = 25;
+AD<double> dt = 0.05;
 
 // This value assumes the model presented in the classroom is used.
 //
@@ -76,8 +76,8 @@ class FG_eval {
     // minimize value gap between sequential actuations
     for(int t=0; t<N-2; ++t)
     {
-      fg[0] += CppAD::pow(vars[delta_start + t + 1] - vars[delta_start + t], 2); // minimize use of steering
-      fg[0] += CppAD::pow(vars[a_start + t + 1] - vars[a_start + t], 2);         // minimize use of acceleration
+      fg[0] += CppAD::pow(vars[delta_start + t + 1] - vars[delta_start + t], 2); // minimize use sequential gap in steering
+      fg[0] += CppAD::pow(vars[a_start + t + 1] - vars[a_start + t], 2);         // minimize use sequential gap in acceleration
     }
     //
     // Setup Constraints

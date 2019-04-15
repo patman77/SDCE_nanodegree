@@ -109,29 +109,22 @@ void ParticleFilter::dataAssociation(vector<LandmarkObs> predicted,
    *   during the updateWeights phase.
    */
   // Iterate through each transformed observation to associate to a landmark
-  double product = 1.0;
-  unsigned int num_obs = observations.size();
-  unsigned int num_landmarks = predicted.size();
-  for (int i = 0; i < num_obs; ++i) {
-    int closest_landmark = 0;
-    int closest_mapId = -1;
-    int min_dist = std::numeric_limits<double>::max();
-    int curr_dist;
-    // Iterate through all landmarks to check which is closest
-    for (int j = 0; j < num_landmarks; ++j) {
-      // Calculate Euclidean distance
-      curr_dist = sqrt(pow(predicted[i].x - observations[j].x, 2)
-                       + pow(predicted[i].y - observations[j].y, 2));
-      // Compare to min_dist and update if closest
-      if (curr_dist < min_dist) {
-        min_dist = curr_dist;
-        closest_landmark = j;
-        closest_mapId = predicted[closest_landmark].id;
+  for (int i = 0; i < observations.size(); i++) {
+    LandmarkObs& observation = observations[i];
+
+    double dist_to_predict = -1;
+    int predict_id = -1;
+    for (int j = 0; j < predicted.size(); j++) {
+      LandmarkObs predict = predicted[j];
+
+      double distance = dist(observation.x, observation.y, predict.x, predict.y);
+      if (dist_to_predict == -1 || distance < dist_to_predict) {
+        dist_to_predict = distance;
+        predict_id = predict.id;
       }
     }
-    // update observation identifier:
-    observations[i].id = closest_mapId;
-  }
+    observation.id = predict_id;
+  }    
 }
 
 void ParticleFilter::updateWeights(double sensor_range, double std_landmark[], 

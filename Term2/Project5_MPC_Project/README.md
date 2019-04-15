@@ -31,7 +31,7 @@ a can take values between and including -1 and 1.
 
 The timestep length N and elapsed duration dt were experimentally tried out to be 10 and 0.1, respectively.
 
-The total prediction time (let's call it tpt) into the future is the product of both, so N*dt = 10*0.1sec = 1 sec.
+The total prediction time (let's call it tpt) into the future is the product of both, so N*dt = 10 * 0.1 sec = 1 sec.
 
 If N is too high the solver would run longer as matrix size depends on N. Being too slow is not good in a real time system. Also, tpt would be higher by tendency, and there is no benefit of looking too far into the future. Realistically, the reference line is not globally known (unless some kind of a high accuracy map plus localization is used), but rather comes from e.g. a lane detection. When going into the curve, the detection is naturally limited because sensors such as cameras usually "look" with straight "detection lines" into the world, and after some point in prediction time, there is no valid information any more.
 On the other hand, if N is too low, there is not enough information, and the vehicle is unlikely to go back to reference line.
@@ -53,7 +53,11 @@ auto vars = mpc.Solve(state, coeffs);
 
 # Description of the Model Predictive Control with Latency
 
+After the steering angle and the throttle has been determined by the solver, it is sent back to the simulator and thereby to the actuators steering wheel and gas pedal / break. As actuators have a latency given by their mechanical nature, the effect will be delayed. This is modeled in the entire processing chain by waiting for 100 ms after sending values to the actuators, see line 161 main.cpp:
 
+```
+std::this_thread::sleep_for(std::chrono::milliseconds(100));
+```
 
 ---
 

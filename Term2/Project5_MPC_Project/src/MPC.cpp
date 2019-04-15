@@ -12,8 +12,10 @@ using Eigen::VectorXd;
 /**
  * DONE: Set the timestep length and duration
  */
-size_t N = 9;      // according to lesson 06. Putting It All Together
-double dt = 0.025;  // start with 40 ms
+//size_t N = 9;      // according to lesson 06. Putting It All Together
+//double dt = 0.025; // start with 40 ms
+size_t N = 10;       // according to video walkthrough
+double dt = 0.1;     // according to video walkthrough, not too small. Totally 1 second into the future
 
 // This value assumes the model presented in the classroom is used.
 //
@@ -27,18 +29,22 @@ double dt = 0.025;  // start with 40 ms
 // This is the length from front to CoG that has a similar radius.
 const double Lf = 2.67;
 
+double ref_cte  = 0.0;
+double ref_epsi = 0.0;
+double ref_v    = 100.0;
+
 // Taken from the MPC quiz:
 // The solver takes all the state variables and actuator
 // variables in a singular vector. Thus, we should to establish
 // when one variable starts and another ends to make our lifes easier.
-size_t x_start = 0;
-size_t y_start = x_start + N;
-size_t psi_start = y_start + N;
-size_t v_start = psi_start + N;
-size_t cte_start = v_start + N;
-size_t epsi_start = cte_start + N;
+size_t x_start     = 0;
+size_t y_start     = x_start + N;
+size_t psi_start   = y_start + N;
+size_t v_start     = psi_start + N;
+size_t cte_start   = v_start + N;
+size_t epsi_start  = cte_start + N;
 size_t delta_start = epsi_start + N;
-size_t a_start = delta_start + N - 1;
+size_t a_start     = delta_start + N - 1;
 
 class FG_eval {
  public:
@@ -55,6 +61,49 @@ class FG_eval {
      * NOTE: You'll probably go back and forth between this function and
      *   the Solver function below.
      */
+
+    fg[0] = 0; // start with zero cost
+#define USE_MPC_QUIZ_INSTEAD_OF_VIDEO_WALKTHROUGH
+    // Reference State Cost
+    /**
+     * TODO: Define the cost related the reference state and
+     *   anything you think may be beneficial.
+     */
+    // part of the cost based on reference state
+    for(int t=0; t<N; ++t)
+    {
+#ifdef USE_MPC_QUIZ_INSTEAD_OF_VIDEO_WALKTHROUGH
+      fg[0] += CppAD::pow(vars[cte_start + t], 2);       // minimize Cross Track Error for every time step
+      fg[0] += CppAD::pow(vars[epsi_start + t], 2);      // minimize orientation error for every time step
+      fg[0] += CppAD::pow(vars[v_start + t] - ref_v, 2); // minimize deviation to reference speed
+#else // video walkthrough, different weighting
+      fg[0] += 2000.0*CppAD::pow(vars[cte_start + t], 2);       // minimize Cross Track Error for every time step
+      fg[0] += 2000.0*CppAD::pow(vars[epsi_start + t], 2);      // minimize orientation error for every time step
+      fg[0] += 1.0   *CppAD::pow(vars[v_start + t] - ref_v, 2); // minimize deviation to reference speed
+#endif
+    }
+    // minimize use of actuators
+    for(int t=0; t<N-1; ++t)
+    {
+#ifdef USE_MPC_QUIZ_INSTEAD_OF_VIDEO_WALKTHROUGH
+      fg[0] += CppAD::pow(vars[delta_start + t], 2); // minimize use of steering
+      fg[0] += CppAD::pow(vars[a_start + t], 2);     // minimize use of acceleration
+#else // video walkthrough, different weighting
+      fg[0] += 5.0*CppAD::pow(vars[delta_start + t], 2); // minimize use of steering
+      fg[0] += 5.0*CppAD::pow(vars[a_start + t], 2);     // minimize use of acceleration
+#endif
+    }
+    // minimize value gap between sequential actuations
+    for(int t=0; t<N-2; ++t)
+    {
+#ifdef USE_MPC_QUIZ_INSTEAD_OF_VIDEO_WALKTHROUGH
+      fg[0] += CppAD::pow(vars[delta_start + t + 1] - vars[delta_start + t], 2); // minimize sequential steering gaps
+      fg[0] += CppAD::pow(vars[a_start + t + 1] - vars[a_start + t], 2);         // minimize sequential acceleration gaps
+#else // video walkthrough, different weighting
+      fg[0] += 200.0*CppAD::pow(vars[delta_start + t + 1] - vars[delta_start + t], 2); // minimize sequential steering gaps
+      fg[0] += 10.0 *CppAD::pow(vars[a_start + t + 1] - vars[a_start + t], 2);         // minimize sequential acceleration gaps
+#endif
+    }
   }
 };
 

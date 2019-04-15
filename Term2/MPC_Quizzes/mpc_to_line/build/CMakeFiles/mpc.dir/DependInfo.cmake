@@ -4,8 +4,8 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/Users/mac/Developer/udacity/CarND/CarND-MPC-Quizzes/mpc_to_line/src/MPC.cpp" "/Users/mac/Developer/udacity/CarND/CarND-MPC-Quizzes/mpc_to_line/build/CMakeFiles/mpc.dir/src/MPC.cpp.o"
-  "/Users/mac/Developer/udacity/CarND/CarND-MPC-Quizzes/mpc_to_line/src/main.cpp" "/Users/mac/Developer/udacity/CarND/CarND-MPC-Quizzes/mpc_to_line/build/CMakeFiles/mpc.dir/src/main.cpp.o"
+  "/Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/src/MPC.cpp" "/Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/build/CMakeFiles/mpc.dir/src/MPC.cpp.o"
+  "/Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/src/main.cpp" "/Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/build/CMakeFiles/mpc.dir/src/main.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "Clang")
 

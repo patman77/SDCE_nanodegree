@@ -1,4 +1,4 @@
-# Install script for directory: /Users/mac/Developer/udacity/CarND/CarND-MPC-Quizzes/mpc_to_line
+# Install script for directory: /Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -40,5 +40,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/Users/mac/Developer/udacity/CarND/CarND-MPC-Quizzes/mpc_to_line/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

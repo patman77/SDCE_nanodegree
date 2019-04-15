@@ -43,10 +43,10 @@ RM = /opt/local/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/mac/Developer/udacity/CarND/CarND-MPC-Quizzes/mpc_to_line
+CMAKE_SOURCE_DIR = /Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/mac/Developer/udacity/CarND/CarND-MPC-Quizzes/mpc_to_line/build
+CMAKE_BINARY_DIR = /Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/mpc.dir/depend.make
@@ -59,29 +59,29 @@ include CMakeFiles/mpc.dir/flags.make
 
 CMakeFiles/mpc.dir/src/MPC.cpp.o: CMakeFiles/mpc.dir/flags.make
 CMakeFiles/mpc.dir/src/MPC.cpp.o: ../src/MPC.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/mac/Developer/udacity/CarND/CarND-MPC-Quizzes/mpc_to_line/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/mpc.dir/src/MPC.cpp.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/mpc.dir/src/MPC.cpp.o -c /Users/mac/Developer/udacity/CarND/CarND-MPC-Quizzes/mpc_to_line/src/MPC.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/mpc.dir/src/MPC.cpp.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/mpc.dir/src/MPC.cpp.o -c /Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/src/MPC.cpp
 
 CMakeFiles/mpc.dir/src/MPC.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mpc.dir/src/MPC.cpp.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/mac/Developer/udacity/CarND/CarND-MPC-Quizzes/mpc_to_line/src/MPC.cpp > CMakeFiles/mpc.dir/src/MPC.cpp.i
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/src/MPC.cpp > CMakeFiles/mpc.dir/src/MPC.cpp.i
 
 CMakeFiles/mpc.dir/src/MPC.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mpc.dir/src/MPC.cpp.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/mac/Developer/udacity/CarND/CarND-MPC-Quizzes/mpc_to_line/src/MPC.cpp -o CMakeFiles/mpc.dir/src/MPC.cpp.s
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/src/MPC.cpp -o CMakeFiles/mpc.dir/src/MPC.cpp.s
 
 CMakeFiles/mpc.dir/src/main.cpp.o: CMakeFiles/mpc.dir/flags.make
 CMakeFiles/mpc.dir/src/main.cpp.o: ../src/main.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/mac/Developer/udacity/CarND/CarND-MPC-Quizzes/mpc_to_line/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/mpc.dir/src/main.cpp.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/mpc.dir/src/main.cpp.o -c /Users/mac/Developer/udacity/CarND/CarND-MPC-Quizzes/mpc_to_line/src/main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/mpc.dir/src/main.cpp.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/mpc.dir/src/main.cpp.o -c /Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/src/main.cpp
 
 CMakeFiles/mpc.dir/src/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mpc.dir/src/main.cpp.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/mac/Developer/udacity/CarND/CarND-MPC-Quizzes/mpc_to_line/src/main.cpp > CMakeFiles/mpc.dir/src/main.cpp.i
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/src/main.cpp > CMakeFiles/mpc.dir/src/main.cpp.i
 
 CMakeFiles/mpc.dir/src/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mpc.dir/src/main.cpp.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/mac/Developer/udacity/CarND/CarND-MPC-Quizzes/mpc_to_line/src/main.cpp -o CMakeFiles/mpc.dir/src/main.cpp.s
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/src/main.cpp -o CMakeFiles/mpc.dir/src/main.cpp.s
 
 # Object files for target mpc
 mpc_OBJECTS = \
@@ -95,7 +95,7 @@ mpc: CMakeFiles/mpc.dir/src/MPC.cpp.o
 mpc: CMakeFiles/mpc.dir/src/main.cpp.o
 mpc: CMakeFiles/mpc.dir/build.make
 mpc: CMakeFiles/mpc.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/mac/Developer/udacity/CarND/CarND-MPC-Quizzes/mpc_to_line/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable mpc"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable mpc"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/mpc.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -108,6 +108,6 @@ CMakeFiles/mpc.dir/clean:
 .PHONY : CMakeFiles/mpc.dir/clean
 
 CMakeFiles/mpc.dir/depend:
-	cd /Users/mac/Developer/udacity/CarND/CarND-MPC-Quizzes/mpc_to_line/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/mac/Developer/udacity/CarND/CarND-MPC-Quizzes/mpc_to_line /Users/mac/Developer/udacity/CarND/CarND-MPC-Quizzes/mpc_to_line /Users/mac/Developer/udacity/CarND/CarND-MPC-Quizzes/mpc_to_line/build /Users/mac/Developer/udacity/CarND/CarND-MPC-Quizzes/mpc_to_line/build /Users/mac/Developer/udacity/CarND/CarND-MPC-Quizzes/mpc_to_line/build/CMakeFiles/mpc.dir/DependInfo.cmake --color=$(COLOR)
+	cd /Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line /Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line /Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/build /Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/build /Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/build/CMakeFiles/mpc.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/mpc.dir/depend
 

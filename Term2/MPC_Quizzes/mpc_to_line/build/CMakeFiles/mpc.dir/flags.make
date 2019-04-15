@@ -6,5 +6,5 @@ CXX_FLAGS = -Wall   -std=c++11
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/Users/mac/Developer/udacity/CarND/CarND-MPC-Quizzes/mpc_to_line/src/Eigen-3.3 -I/usr/local/include 
+CXX_INCLUDES = -I/Users/mac/Developer/udacity/CarND/SDCE_nanodegree/Term2/MPC_Quizzes/mpc_to_line/src/Eigen-3.3 -I/usr/local/include 
 

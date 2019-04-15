@@ -55,7 +55,7 @@ class FG_eval {
   typedef CPPAD_TESTVECTOR(AD<double>) ADvector;
   void operator()(ADvector& fg, const ADvector& vars) {
     /**
-     * TODO: implement MPC
+     * DONE: implement MPC
      * `fg` is a vector of the cost constraints, `vars` is a vector of variable 
      *   values (state & actuators)
      * NOTE: You'll probably go back and forth between this function and
@@ -66,7 +66,7 @@ class FG_eval {
 #define USE_MPC_QUIZ_INSTEAD_OF_VIDEO_WALKTHROUGH
     // Reference State Cost
     /**
-     * TODO: Define the cost related the reference state and
+     * DONE: Define the cost related the reference state and
      *   anything you think may be beneficial.
      */
     // part of the cost based on reference state
@@ -223,7 +223,7 @@ std::vector<double> MPC::Solve(const VectorXd &state, const VectorXd &coeffs) {
   // to the max negative and positive values.
   for (int i = 0; i < delta_start; ++i) {
     vars_lowerbound[i] = -1.0e19;
-    vars_upperbound[i] = 1.0e19;
+    vars_upperbound[i] =  1.0e19;
   }
 
   // The upper and lower limits of delta are set to -25 and 25
@@ -234,21 +234,16 @@ std::vector<double> MPC::Solve(const VectorXd &state, const VectorXd &coeffs) {
     vars_lowerbound[i] = -0.436332;
     vars_upperbound[i] =  0.436332;
 #else
-    vars_lowerbound[i] = -1.0;
-    vars_upperbound[i] =  1.0;
+    vars_lowerbound[i] = -0.436332*Lf;
+    vars_upperbound[i] =  0.436332*Lf;
 #endif
   }
 
   // Acceleration/decceleration upper and lower limits.
   // NOTE: Feel free to change this to something else.
   for (int i = a_start; i < n_vars; ++i) {
-#ifdef USE_MPC_QUIZ_INSTEAD_OF_VIDEO_WALKTHROUGH
     vars_lowerbound[i] = -1.0;
     vars_upperbound[i] =  1.0;
-#else
-    vars_lowerbound[i] = -0.436332*Lf;
-    vars_upperbound[i] =  0.436332*Lf;
-#endif
   }
 
   // Lower and upper limits for the constraints
@@ -259,6 +254,19 @@ std::vector<double> MPC::Solve(const VectorXd &state, const VectorXd &coeffs) {
     constraints_lowerbound[i] = 0;
     constraints_upperbound[i] = 0;
   }
+  constraints_lowerbound[x_start]    = x;
+  constraints_lowerbound[y_start]    = y;
+  constraints_lowerbound[psi_start]  = psi;
+  constraints_lowerbound[v_start]    = v;
+  constraints_lowerbound[cte_start]  = cte;
+  constraints_lowerbound[epsi_start] = epsi;
+
+  constraints_upperbound[x_start]    = x;
+  constraints_upperbound[y_start]    = y;
+  constraints_upperbound[psi_start]  = psi;
+  constraints_upperbound[v_start]    = v;
+  constraints_upperbound[cte_start]  = cte;
+  constraints_upperbound[epsi_start] = epsi;
 
   // object that computes objective and constraints
   FG_eval fg_eval(coeffs);
@@ -294,11 +302,22 @@ std::vector<double> MPC::Solve(const VectorXd &state, const VectorXd &coeffs) {
   std::cout << "Cost " << cost << std::endl;
 
   /**
-   * TODO: Return the first actuator values. The variables can be accessed with
+   * DONE: Return the first actuator values. The variables can be accessed with
    *   `solution.x[i]`.
    *
    * {...} is shorthand for creating a vector, so auto x1 = {1.0,2.0}
    *   creates a 2 element double vector.
    */
-  return {};
+
+  std::vector<double> result;
+
+  result.push_back(solution.x[delta_start]);
+  result.push_back(solution.x[a_start]);
+
+  for(int i=0; i<N-1; ++i)
+  {
+    result.push_back(solution.x[x_start + i + 1]);
+    result.push_back(solution.x[y_start + i + 1]);)
+  }
+  return result;
 }

@@ -144,9 +144,13 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
    *   (look at equation 3.33) http://planning.cs.uiuc.edu/node99.html
    */
   // The Multivariate-Gaussian is evaluated at the point of the transformed measurement's position.
+  std::cout<<"entering updateWeights, sensor_range="<<sensor_range<<", #obs="<<observations.size()
+  <<", #map landmarks="<<map_landmarks.landmark_list.size()<<std::endl;
   for(int i=0; i<particles.size(); ++i)
   {
+    std::cout<<"particle id="<<particles[i].id<<", particle x="<<particles[i].x<<", particle y="<<particles[i].y<<std::endl;
     vector<LandmarkObs> transformed_observations;
+
     for(int j=0; j<observations.size(); ++j)
     {
       double x_map, y_map;
@@ -156,7 +160,9 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
       LandmarkObs lmo;
       lmo.x = x_map;
       lmo.y = y_map;
+      transformed_observations.push_back(lmo);
     }
+    std::cout<<"transformed landmarks"<<std::endl;
     // collect landmarks in sensor range
     vector<LandmarkObs> potential_landmarkobs;
     for(int lm = 0; lm < map_landmarks.landmark_list.size(); lm++)
@@ -173,6 +179,7 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
         potential_landmarkobs.push_back(landmarkobs);
       }
     }
+    std::cout<<"collected landmarks in sensor range"<<std::endl;
 
     //dataAssociation(transformed_observations, potential_landmarkobs);
     if (potential_landmarkobs.size() > 0)
@@ -180,51 +187,48 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
       vector<int> associations;
       vector<double> obs_x;
       vector<double> obs_y;
-      for (int i = 0; i < transformed_observations.size(); i++) {
+      for (int k = 0; k < transformed_observations.size(); k++) {
         double minDist = std::numeric_limits<double>::max();
         int bestIndex = 0;
         for (int p = 0; p < potential_landmarkobs.size(); p++) {
           double d = dist(potential_landmarkobs[p].x, potential_landmarkobs[p].y,
-                         transformed_observations[i].x, transformed_observations[i].y);
+                         transformed_observations[k].x, transformed_observations[k].y);
           if (d < minDist) {
             minDist = d;
             bestIndex = p;
           }
         }
         associations.push_back(potential_landmarkobs[bestIndex].id);
-        obs_x.push_back(transformed_observations[i].x);
-        obs_y.push_back(transformed_observations[i].y);
+        obs_x.push_back(transformed_observations[k].x);
+        obs_y.push_back(transformed_observations[k].y);
       }
 
       particles[i].associations = associations;
       particles[i].sense_x = obs_x;
       particles[i].sense_y = obs_y;
+      std::cout<<"finished associations"<<std::endl;
 
       // Calc particle's new weight
       double particle_weight = 1.0;
-      for (int j = 0; i < particles[j].associations.size(); j++) {
-        int landmark_id = particles[j].associations[j];
+      for (int j = 0; j < particles[i].associations.size(); j++) {
+        int landmark_id = particles[i].associations[j];
         // NOTE: obeye zero-based vs 1-based index
         Map::single_landmark_s landmark = map_landmarks.landmark_list[landmark_id-1];
         double x_lm = landmark.x_f;
         double y_lm = landmark.y_f;
-        double x_obs = particles[i].sense_x[i];
-        double y_obs = particles[i].sense_y[i];
+        double x_obs = particles[i].sense_x[j];
+        double y_obs = particles[i].sense_y[j];
 
         double prob = multivariate_gaussian_2d(x_obs, y_obs, x_lm, y_lm, std_landmark[0], std_landmark[1]);
 
         particle_weight *= prob;
-      }
+      } // traverse particles[j] associations
 
       particles[i].weight = particle_weight;
-      weights[i]         = particle_weight;
-    }
-       //double weight = multivariate_gaussian_2d(x_map, y_map,
-       //                                       map_landmarks.landmark_list[observations[j].id].x_f,
-       //                                       map_landmarks.landmark_list[observations[j].id].y_f,
-       //                                       std_landmark[0], std_landmark[1]);
-       //particles[i].weight = weight;
-  }
+      weights[i]          = particle_weight;
+    } // any potential landmark observations?
+
+  } // traverse all particles
 }
 
 void ParticleFilter::resample() {

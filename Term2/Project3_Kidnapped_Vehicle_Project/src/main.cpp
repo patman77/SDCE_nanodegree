@@ -108,7 +108,15 @@ int main() {
           }
 
           // Update the weights and resample
+          std::cout<<"calling updateWeights, noisy_observations.size=="<<noisy_observations.size()<<std::endl;
+          if(noisy_observations.size()>0)
+          {
+            std::cout<<"id="<<noisy_observations[0].id<<std::endl;
+            std::cout<<"x="<<noisy_observations[0].x<<std::endl;
+            std::cout<<"y="<<noisy_observations[0].y<<std::endl;
+          }
           pf.updateWeights(sensor_range, sigma_landmark, noisy_observations, map);
+          std::cout<<"calling resample"<<std::endl;
           pf.resample();
 
           // Calculate and output the average weighted error of the particle 

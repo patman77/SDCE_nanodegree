@@ -127,7 +127,57 @@ void ParticleFilter::dataAssociation(vector<LandmarkObs> predicted,
   }    
 }
 
-void ParticleFilter::updateWeights(double sensor_range, double std_landmark[], 
+void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
+                                      const vector<LandmarkObs> &observations,
+                                      const Map &map_landmarks) {
+  /**
+   * DONE: Update the weights of each particle using a mult-variate Gaussian
+   *   distribution. You can read more about this distribution here:
+   *   https://en.wikipedia.org/wiki/Multivariate_normal_distribution
+   * NOTE: The observations are given in the VEHICLE'S coordinate system.
+   *   Your particles are located according to the MAP'S coordinate system.
+   *   You will need to transform between the two systems. Keep in mind that
+   *   this transformation requires both rotation AND translation (but no scaling).
+   *   The following is a good resource for the theory:
+   *   https://www.willamette.edu/~gorr/classes/GeneralGraphics/Transforms/transforms2d.htm
+   *   and the following is a good resource for the actual equation to implement
+   *   (look at equation 3.33) http://planning.cs.uiuc.edu/node99.html
+   */
+  // The Multivariate-Gaussian is evaluated at the point of the transformed measurement's position.
+  std::cout<<"entering updateWeights, sensor_range="<<sensor_range<<", #obs="<<observations.size()
+  <<", #map landmarks="<<map_landmarks.landmark_list.size()<<std::endl;
+  for(int i=0; i<particles.size(); ++i)
+  {
+    std::cout<<"particle id="<<particles[i].id<<", particle x="<<particles[i].x<<", particle y="<<particles[i].y<<std::endl;
+    //vector<LandmarkObs> transformed_observations;
+    Particle particle = particles[i];
+    double new_weight = 1.0;
+    for(int j=0; j<observations.size(); ++j)
+    {
+      double x_map, y_map;
+      transform2d(particles[i].x, particles[i].y,
+                  observations[j].x, observations[j].y, particles[i].theta,
+                  x_map, y_map);
+      LandmarkObs lmo;
+      lmo.x = x_map;
+      lmo.y = y_map;
+      lmo.id = observations[j].id;
+      Particle map_coordinates;
+      map_coordinates.x = lmo.x;
+      map_coordinates.y = lmo.y;
+
+      Map::single_landmark_s closest_landmark = findClosestLandmark(map_coordinates, map_landmarks);
+      double prob = multivariate_gaussian_2d(map_coordinates.x, map_coordinates.y,
+                                             closest_landmark.x_f, closest_landmark.y_f,
+                                             std_landmark[0], std_landmark[1]);
+      new_weight *= prob;
+    }
+    particle.weight = new_weight;
+    weights[i]      = new_weight;
+  }
+}
+
+void ParticleFilter::updateWeightsOld(double sensor_range, double std_landmark[], 
                                    const vector<LandmarkObs> &observations, 
                                    const Map &map_landmarks) {
   /**
@@ -162,7 +212,8 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
       lmo.y = y_map;
       transformed_observations.push_back(lmo);
     }
-    std::cout<<"transformed landmarks"<<std::endl;
+    std::cout<<"transformed observations from vehicle to map coord system"<<std::endl;
+
     // collect landmarks in sensor range
     vector<LandmarkObs> potential_landmarkobs;
     for(int lm = 0; lm < map_landmarks.landmark_list.size(); lm++)
@@ -302,4 +353,21 @@ void ParticleFilter::transform2d(double x_part, double y_part, double x_obs, dou
   x_map = x_part + (cos(theta) * x_obs) - (sin(theta) * y_obs);
   // transform to map y coordinate
   y_map = y_part + (sin(theta) * x_obs) + (cos(theta) * y_obs);
+}
+
+Map::single_landmark_s ParticleFilter::findClosestLandmark(Particle map_coordinates, Map map_landmarks)
+{
+  Map::single_landmark_s closest_landmark = map_landmarks.landmark_list.at(0);
+  double distance = dist(closest_landmark.x_f, closest_landmark.y_f, map_coordinates.x, map_coordinates.y);
+
+  for(int i=1; i<map_landmarks.landmark_list.size(); ++i) {
+    Map::single_landmark_s current_landmark = map_landmarks.landmark_list.at(i);
+    double current_distance = dist(current_landmark.x_f, current_landmark.y_f, map_coordinates.x, map_coordinates.y);
+
+    if(current_distance < distance) {
+      distance = current_distance;
+      closest_landmark = current_landmark;
+    }
+  }
+  return closest_landmark;
 }

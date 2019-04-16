@@ -79,7 +79,10 @@ class ParticleFilter {
   void updateWeights(double sensor_range, double std_landmark[], 
                      const std::vector<LandmarkObs> &observations,
                      const Map &map_landmarks);
-  
+  void updateWeightsOld(double sensor_range, double std_landmark[],
+                     const std::vector<LandmarkObs> &observations,
+                     const Map &map_landmarks);
+
   /**
    * resample Resamples from the updated set of particles to form
    *   the new set of particles.
@@ -124,6 +127,8 @@ class ParticleFilter {
 
   void transform2d(double x_part, double y_part, double x_obs, double y_obs, double theta,
                    double& x_map, double& y_map);
+  //! find closest map landmark to transformed particle observation
+  Map::single_landmark_s findClosestLandmark(Particle map_coordinates, Map map_landmarks);
   // Number of particles to draw
   int num_particles; 
   
